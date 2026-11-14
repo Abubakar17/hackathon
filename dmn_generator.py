@@ -1,15 +1,25 @@
 """
 DMN Generator and Rule Evaluator.
 Produces OMG DMN 1.3 compliant XML and executes deterministic decision logic.
+Reads the canonical policy file from credit_policy.dmn if present.
 """
+import os
 from typing import Dict, Any, Tuple, List
 from xml.sax.saxutils import escape
 from models import FinancialRatios, ExtractedFinancials, ConstraintEvaluation
 
+CANONICAL_DMN_PATH = os.path.join(os.path.dirname(__file__), "credit_policy.dmn")
+
 def generate_dmn_xml(model_name: str = "Commercial_Credit_Ruling_Model") -> str:
     """
-    Generates a valid OMG DMN 1.3 XML file containing the loan approval decision table.
+    Returns the OMG DMN 1.3 XML definition.
+    Loads from canonical credit_policy.dmn if present on disk.
     """
+    if os.path.exists(CANONICAL_DMN_PATH):
+        with open(CANONICAL_DMN_PATH, "r", encoding="utf-8") as f:
+            return f.read()
+
+    # Fallback inline definition
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
              xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
