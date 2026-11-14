@@ -33,6 +33,10 @@
     .GRANTED .big { color:var(--ok); } .DENIED .big { color:var(--bad); } .ABSTAIN .big { color:var(--warn); }
     .box { background:var(--well); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-top:8px; }
     .box.cf { border-color:var(--primary); }
+    .box.cited { border-color:var(--ok); } .box.uncited { border-color:var(--warn); }
+    .box blockquote { border-left:3px solid var(--border); padding-left:10px; margin:6px 0; font-style:italic; }
+    a { color:#7dd3fc; }
+    .chip.cited { color:var(--ok); border-color:var(--ok); } .chip.uncited { color:var(--warn); border-color:var(--warn); }
     .tblwrap { overflow-x:auto; }
     table { width:100%; border-collapse:collapse; font-size:.8rem; }
     th, td { border:1px solid var(--border); padding:6px 8px; text-align:left; vertical-align:top; }
@@ -56,7 +60,7 @@
   <header>
     <div>
       <h1>Credit Decision Console</h1>
-      <div class="sub">The agent reads the document. A DMN decision table decides. Every decision cites its rule and policy version.</div>
+      <div class="sub">The agent reads the document. A DMN decision table decides. Every decision cites its rule, its policy version, and the public source of the rule where there is one.</div>
     </div>
     <div class="row" style="margin:0">
       {% if has_gateway_key %}<span class="chip on">AI gateway key found · {{ model }}</span>
@@ -73,6 +77,7 @@
         <button onclick="loadSample('alpha_logistics')">Clean application</button>
         <button onclick="loadSample('beta_precision')">Weak application</button>
         <button onclick="loadSample('gamma_biotech')">Incomplete application</button>
+        <button onclick="loadSample('delta_packaging')">Leveraged application</button>
       </div>
       <div class="row">
         <label><input type="checkbox" id="useAi" {% if has_gateway_key %}checked{% else %}disabled{% endif %}>
@@ -100,10 +105,12 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const eur = v => '€' + Number(v).toLocaleString('en-US', {maximumFractionDigits: 0});
   const FIELDS = [
-    ['requested_amount_eur','Requested amount',true], ['ebitda_eur','EBITDA',true],
-    ['annual_debt_service_eur','Annual debt service',true], ['collateral_value_eur','Collateral value',true],
-    ['years_in_business','Years in business',true], ['tax_returns_verified','Tax returns verified',true],
-    ['annual_revenue_eur','Annual revenue',false], ['total_existing_debt_eur','Total existing debt',false]];
+    ['requested_amount_eur','Requested amount',''], ['ebitda_eur','EBITDA',''],
+    ['annual_debt_service_eur','Annual debt service',''], ['collateral_value_eur','Collateral value',''],
+    ['years_in_business','Years in business',''], ['tax_returns_verified','Tax returns verified',''],
+    ['total_existing_debt_eur','Total existing debt','optional'], ['equity_eur','Net equity','optional'],
+    ['days_past_due','Days past due','optional'], ['annual_revenue_eur','Annual revenue','not used by the rules']];
+  const NO_CITATION = "No external citation · the bank's own credit policy";
   let record = null, policy = null, replayHtml = '', changeHtml = '', notice = '';
 
   async function api(url, body) {
@@ -143,7 +150,7 @@
   function fmtValue(name, v) {
     if (v === null || v === undefined) return '<span class="missing">missing</span>';
     if (name === 'tax_returns_verified') return v ? 'yes' : 'no';
-    if (name === 'years_in_business') return esc(v);
+    if (name === 'years_in_business' || name === 'days_past_due') return esc(v);
     return eur(v);
   }
 
@@ -151,7 +158,29 @@
     if (v === null || v === undefined) return '—';
     if (input === 'ltv') return (v * 100).toFixed(1) + '%';
     if (input === 'dscr') return Number(v).toFixed(2);
+    if (input === 'leverage') return Number(v).toFixed(2) + 'x';
+    if (input === 'equity_eur') return eur(v);
     return String(v);
+  }
+
+  // Only http(s) links are rendered; the citation comes from the policy file.
+  const safeUrl = u => /^https?:\/\//i.test(u || '') ? esc(u) : '';
+
+  function basisBox(c) {
+    if (!c) return `<div class="box uncited"><span class="chip uncited">${NO_CITATION}</span>
+      <div style="margin-top:6px">The thresholds of this rule were set by the bank. No law, regulation or published guidance is cited for them.</div></div>`;
+    const url = safeUrl(c.url);
+    return `<div class="box cited"><span class="chip cited">Cited rule</span>
+      <div style="margin-top:6px"><b>${esc(c.source)}</b>, ${esc(c.locator)}</div>
+      <blockquote>“${esc(c.quote)}”</blockquote>
+      ${url ? `<div><a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a></div>` : ''}
+      <div class="sub" style="margin-top:6px"><b>How far the source goes:</b> ${esc(c.note)}</div></div>`;
+  }
+
+  function basisCell(c) {
+    if (!c) return '<span class="chip uncited" title="' + esc(NO_CITATION) + '">no citation · internal</span>';
+    const url = safeUrl(c.url), label = esc(c.source.split(',')[0]) + ' · ' + esc(c.locator);
+    return `<span class="chip cited">cited</span><div class="sub">${url ? `<a href="${url}" target="_blank" rel="noopener noreferrer" title="${esc(c.quote)}">${label}</a>` : label}</div>`;
   }
 
   function render() {
@@ -160,9 +189,10 @@
     const traceBy = Object.fromEntries(r.trace.map(t => [t.rule_id, t]));
     const gate = r.rule.id === 'GATE_INPUT_COMPLETENESS';
 
-    const inputs = FIELDS.map(([k, label, req]) => {
+    const inputs = FIELDS.map(([k, label, tag]) => {
       const f = r.inputs[k] || {};
-      return `<tr><td>${label}${req ? '' : ' <span class="sub">(not used by the rules)</span>'}</td><td>${fmtValue(k, f.value)}</td>
+      const val = tag && (f.value === null || f.value === undefined) ? '<span class="sub">not given</span>' : fmtValue(k, f.value);
+      return `<tr><td>${label}${tag ? ` <span class="sub">(${tag})</span>` : ''}</td><td>${val}</td>
         <td>${f.quote ? '<span class="q">“' + esc(f.quote) + '”</span>' : '<span class="sub">not found in the document</span>'}
         ${f.note ? '<div class="missing" style="font-weight:400">' + esc(f.note) + '</div>' : ''}</td></tr>`;
     }).join('');
@@ -171,17 +201,26 @@
       const t = traceBy[rule.id], fired = rule.id === r.rule.id;
       const cells = policy.inputs.map(inp => {
         const c = t && t.checks.find(x => x.input === inp.id);
-        const cls = c && rule.tests[inp.id] !== '-' ? (c.ok ? 'hit' : 'miss') : '';
-        return `<td class="${cls}" contenteditable="true" data-rule="${esc(rule.id)}" data-input="${esc(inp.id)}" data-old="${esc(rule.tests[inp.id])}" title="Click to edit this test">${esc(rule.tests[inp.id])}</td>`;
+        const test = rule.tests[inp.id] ?? '-';
+        const cls = c && test !== '-' ? (c.ok ? 'hit' : 'miss') : '';
+        const tip = rule.citation ? 'Click to edit this test. Editing a cited rule removes its citation.' : 'Click to edit this test';
+        return `<td class="${cls}" contenteditable="true" data-rule="${esc(rule.id)}" data-input="${esc(inp.id)}" data-old="${esc(test)}" title="${tip}">${esc(test)}</td>`;
       }).join('');
       return `<tr class="${fired ? 'fired' : (t ? '' : 'skipped')}"><td>${fired ? '▶ ' : ''}${esc(rule.id)}<div class="sub">${esc(rule.label)}</div></td>${cells}
-        <td>${esc(rule.out.status)}${rule.out.apr != null ? ' · ' + rule.out.apr + '%' : ''}</td></tr>`;
+        <td>${esc(rule.out.status)}${rule.out.apr != null ? ' · ' + rule.out.apr + '%' : ''}</td><td>${basisCell(rule.citation)}</td></tr>`;
     }).join('');
+    const citedCount = policy.rules.filter(x => x.citation).length;
+    const skipped = (r.not_checked || []);
+    const skippedHtml = skipped.length ? `<div class="msg missing" style="font-weight:400">Not checked, because the document does not give the input: ${
+      skipped.map(s => `${esc(s.rule_id)} (${esc(s.missing_input)}${s.cited ? ', cited rule' : ''})`).join('; ')}.</div>` : '';
 
     $('out').innerHTML = `
       <div class="banner ${esc(o.status)}">
         <div><div class="big">${title}</div><div>${esc(o.reason)}</div>
-          <div class="sub" style="margin-top:6px">${esc(r.applicant)} · record ${esc(r.record_id)} · rule <b>${esc(r.rule.id)}</b> · policy v${esc(r.policy.version)} [${esc(r.policy.sha256)}]</div></div>
+          <div class="sub" style="margin-top:6px">${esc(r.applicant)} · record ${esc(r.record_id)} · rule <b>${esc(r.rule.id)}</b> · policy v${esc(r.policy.version)} [${esc(r.policy.sha256)}]</div>
+          <div style="margin-top:6px">${r.rule.citation
+            ? `<span class="chip cited">Cited: ${esc(r.rule.citation.source.split(',')[0])}, ${esc(r.rule.citation.locator)}</span>`
+            : `<span class="chip uncited">${NO_CITATION}</span>`}</div></div>
         ${o.apr != null ? `<div style="text-align:right"><div class="big">${o.apr}%</div><div class="sub">APR</div></div>` : ''}
       </div>
 
@@ -190,13 +229,18 @@
       ${r.counterfactual ? `<div class="box cf"><b>What would change the result:</b> ${esc(r.counterfactual.text)}
         <span class="sub">${r.counterfactual.confirmed_by_rerun ? '(confirmed by re-running the table on the changed figures)' : ''}</span></div>` : ''}
 
-      <h2>3 · Inputs read from the document <small>${esc(r.extraction.engine)}</small></h2>
-      <div class="tblwrap"><table><thead><tr><th>Input</th><th>Value</th><th>Evidence in the document</th></tr></thead><tbody>${inputs}</tbody></table></div>
-      <div class="sub" style="margin-top:6px">Derived: DSCR ${fmtActual('dscr', d.dscr)} · LTV ${fmtActual('ltv', d.ltv)} · debt/EBITDA ${d.debt_to_ebitda != null ? Number(d.debt_to_ebitda).toFixed(2) + 'x' : '—'}</div>
+      <h2>3 · Where the rule comes from <small>${esc(r.rule.id)}</small></h2>
+      ${basisBox(r.rule.citation)}
 
-      <h2>4 · Decision table <small>DMN 1.3, first matching row wins · click a test to change it</small></h2>
+      <h2>4 · Inputs read from the document <small>${esc(r.extraction.engine)}</small></h2>
+      <div class="tblwrap"><table><thead><tr><th>Input</th><th>Value</th><th>Evidence in the document</th></tr></thead><tbody>${inputs}</tbody></table></div>
+      <div class="sub" style="margin-top:6px">Derived: DSCR ${fmtActual('dscr', d.dscr)} · LTV ${fmtActual('ltv', d.ltv)} · leverage after the new loan ${fmtActual('leverage', d.leverage)}</div>
+
+      <h2>5 · Decision table <small>DMN 1.3, first matching row wins · click a test to change it</small></h2>
       ${gate ? '<div class="msg missing">The table was not run: required inputs are missing, so the completeness gate stopped the case first.</div>' : ''}
-      <div class="tblwrap"><table><thead><tr><th>Rule</th>${policy.inputs.map(i => `<th>${esc(i.label)}</th>`).join('')}<th>Outcome</th></tr></thead><tbody>${rules}</tbody></table></div>
+      <div class="sub" style="margin-bottom:6px">${citedCount} of ${policy.rules.length} rules cite a public source. The other ${policy.rules.length - citedCount} are the bank's own policy and are marked “no citation”.</div>
+      <div class="tblwrap"><table><thead><tr><th>Rule</th>${policy.inputs.map(i => `<th>${esc(i.label)}</th>`).join('')}<th>Outcome</th><th>Basis</th></tr></thead><tbody>${rules}</tbody></table></div>
+      ${skippedHtml}
       <div class="row" style="margin-top:10px">
         <button onclick="doReplay()">Replay this record</button>
         <button onclick="location.href='/api/dmn'">Download policy as .dmn</button>
@@ -259,8 +303,8 @@
       <div class="${allOk ? 'ok' : 'bad'}" style="font-size:1.05rem;margin-bottom:8px">${d.passed}/${d.total} cases pass under policy v${esc(d.policy_version)} · ${d.properties.filter(p => p.pass).length}/${d.properties.length} properties hold</div>
       ${d.policy_version !== 1 ? '<div class="msg missing">The expected results are written for the v1 rules. Reset the policy to compare like with like.</div>' : ''}
       <table><thead><tr><th>Property</th><th></th></tr></thead><tbody>${d.properties.map(p => `<tr><td>${esc(p.name)}</td><td class="${p.pass ? 'ok' : 'bad'}">${p.pass ? 'holds' : 'FAILS'}</td></tr>`).join('')}</tbody></table>
-      <table style="margin-top:12px"><thead><tr><th>Case</th><th>What it tests</th><th>Expected</th><th>Got</th><th>Rule</th><th></th></tr></thead><tbody>
-      ${d.cases.map(c => `<tr><td>${esc(c.id)}</td><td>${esc(c.name)}</td><td>${esc(c.expected_status)}</td><td>${esc(c.got_status)}</td><td>${esc(c.rule_id)}</td><td class="${c.pass ? 'ok' : 'bad'}">${c.pass ? 'pass' : 'FAIL'}</td></tr>`).join('')}</tbody></table>`;
+      <table style="margin-top:12px"><thead><tr><th>Case</th><th>What it tests</th><th>Expected</th><th>Got</th><th>Rule</th><th>Basis</th><th></th></tr></thead><tbody>
+      ${d.cases.map(c => `<tr><td>${esc(c.id)}</td><td>${esc(c.name)}</td><td>${esc(c.expected_status)}</td><td>${esc(c.got_status)}</td><td>${esc(c.rule_id)}</td><td>${c.cited ? '<span class="chip cited">cited</span>' : '<span class="chip uncited">no citation</span>'}</td><td class="${c.pass ? 'ok' : 'bad'}">${c.pass ? 'pass' : 'FAIL'}</td></tr>`).join('')}</tbody></table>`;
   }
 
   api('/api/policy').then(p => { if (!p.error) setPolicy(p); loadSample('alpha_logistics'); });

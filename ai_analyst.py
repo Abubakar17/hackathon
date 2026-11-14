@@ -28,6 +28,8 @@ Return ONLY a JSON object of this shape, with no other text:
   "annual_debt_service_eur": {"value": number or null, "quote": "string or null"},
   "total_existing_debt_eur": {"value": number or null, "quote": "string or null"},
   "collateral_value_eur": {"value": number or null, "quote": "string or null"},
+  "equity_eur": {"value": number or null, "quote": "string or null"},
+  "days_past_due": {"value": integer or null, "quote": "string or null"},
   "years_in_business": {"value": integer or null, "quote": "string or null"},
   "tax_returns_verified": {"value": true, false or null, "quote": "string or null"}}}
 Rules:
@@ -35,7 +37,8 @@ Rules:
 2. "quote" is copied character for character from one line of the document, at most 120 characters, and contains the figure.
 3. If a figure is absent, or the document calls it pending, unverified, draft or not provided, value is null. A figure the document states plainly is extracted even if it is labelled "estimated" or carries a comment. Liabilities count as existing debt. Never calculate or guess a figure.
 4. tax_returns_verified is true only if the document says the returns are verified or audited, false if it says they are unverified, draft, pending or missing, null if it does not say.
-5. Do not judge the application. Do not recommend anything."""
+5. equity_eur is the company's net (shareholders') equity and may be negative. days_past_due is the number of days the applicant is stated to be past due on a credit obligation; it is null unless the document gives the number.
+6. Do not judge the application. Do not recommend anything."""
 
 
 def load_gateway_key() -> Optional[str]:
@@ -103,7 +106,7 @@ def ground(name: str, proposed: Any, source_norm: str) -> Dict[str, Any]:
         return drop("the document marks this figure as pending or unverified")
     if not any(abs(n - value) <= 0.005 * max(abs(value), 1) for n in numbers_in(quote)):
         return drop("the number is not in its quote")
-    return {"value": int(value) if name == "years_in_business" else float(value), "quote": quote, "note": None}
+    return {"value": int(value) if name in ("years_in_business", "days_past_due") else float(value), "quote": quote, "note": None}
 
 
 def extract(raw_text: str, use_ai: bool = True) -> Dict[str, Any]:

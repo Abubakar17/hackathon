@@ -25,6 +25,8 @@ FINANCIAL SUMMARY (FY 2025 Audited):
 - Operating Profit / EBITDA: €720,000 EUR
 - Existing Annual Debt Service (P&I): €380,000 EUR
 - Total Existing Liabilities: €1,100,000 EUR
+- Shareholders' Equity: €1,400,000 EUR
+Payment record: 0 days past due on all existing facilities.
 
 COLLATERAL & SECURITY:
 Primary security offered: Freehold commercial distribution warehouse in Rivoli (Turin).
@@ -93,6 +95,39 @@ Collateral Value: [Independent appraisal pending - unverified book value €450k
 
 TAX & REGULATORY STATUS:
 Tax Filings: unverified draft provided; final audited 2025 declaration not yet submitted to Agenzia delle Entrate.
+        """
+    },
+
+    "delta_packaging": {
+        "title": "Delta Packaging SpA (Leveraged - Cited Referral)",
+        "expected_ruling": "ABSTAIN",
+        "expected_category": "REFER_LEVERAGED_TRANSACTION",
+        "raw_text": """
+COMMERCIAL CREDIT APPLICATION & UNDERWRITING MEMORANDUM
+Date: November 13, 2026
+Applicant Entity: Delta Packaging SpA
+Headquarters: Strada del Drosso 33, Turin, Italy
+Facility Request: €600,000 Senior Secured Term Loan
+Purpose: Second corrugated board line.
+
+COMPANY OVERVIEW:
+Packaging manufacturer, acquired in 2023 with bank financing.
+Operating History: 8 years in business.
+
+FINANCIAL SUMMARY (FY 2025 Audited):
+- Gross Revenue: €5,600,000 EUR
+- Operating Profit / EBITDA: €500,000 EUR
+- Existing Annual Debt Service (P&I): €300,000 EUR
+- Total Existing Liabilities: €1,900,000 EUR
+- Shareholders' Equity: €850,000 EUR
+Payment record: 0 days past due on all existing facilities.
+
+COLLATERAL & SECURITY:
+Primary security offered: Freehold production site in Moncalieri (Turin).
+Independent RICS Real Estate Appraisal: €1,000,000 EUR.
+
+COMPLIANCE & TAX RECORDS:
+Tax Filings: verified and audited. All fiscal declarations compliant through Q3 2026.
         """
     }
 }

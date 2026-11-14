@@ -1,32 +1,37 @@
 {
-  "record_id": "DEC-8F159F58D1",
-  "decided_at": "2026-11-14T16:22:49",
-  "applicant": "Alpha Logistics SpA",
+  "record_id": "DEC-CEC01FABD2",
+  "decided_at": "2026-11-14T16:39:17",
+  "applicant": "Delta Industrial",
   "outcome": {
     "status": "GRANTED",
-    "category": "APPROVED_PRIME",
-    "apr": 5.5,
-    "reason": "Prime tier: strong debt coverage and conservative loan-to-value"
+    "category": "APPROVED_STANDARD",
+    "apr": 7.2,
+    "reason": "Standard tier: coverage and loan-to-value within policy limits"
   },
   "rule": {
-    "id": "R5_Prime",
-    "label": "Prime tier",
+    "id": "R6_Standard",
+    "label": "Standard tier",
     "tests": {
-      "dscr": ">= 1.35",
-      "ltv": "<= 0.70",
-      "years_in_business": ">= 3",
-      "tax_returns_verified": "true"
-    }
+      "dscr": ">= 1.20",
+      "ltv": "<= 0.80",
+      "years_in_business": ">= 2",
+      "tax_returns_verified": "true",
+      "equity_eur": "-",
+      "days_past_due": "-",
+      "leverage": "-"
+    },
+    "citation": null
   },
   "policy": {
     "name": "Commercial Credit Policy",
     "version": 1,
-    "sha256": "16ca416ba2f1"
+    "sha256": "3007d2c594fe"
   },
   "derived": {
-    "dscr": 1.8947,
-    "ltv": 0.5263,
-    "debt_to_ebitda": 1.5278
+    "dscr": 1.28,
+    "ltv": 0.75,
+    "debt_to_ebitda": null,
+    "leverage": null
   },
   "missing": [],
   "trace": [
@@ -37,19 +42,19 @@
         {
           "input": "dscr",
           "test": "-",
-          "actual": 1.8947,
+          "actual": 1.28,
           "ok": true
         },
         {
           "input": "ltv",
           "test": "-",
-          "actual": 0.5263,
+          "actual": 0.75,
           "ok": true
         },
         {
           "input": "years_in_business",
           "test": "-",
-          "actual": 6,
+          "actual": 3,
           "ok": true
         },
         {
@@ -57,6 +62,168 @@
           "test": "false",
           "actual": true,
           "ok": false
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "rule_id": "C1_PastDue90",
+      "matched": false,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "-",
+          "actual": 1.28,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "-",
+          "actual": 0.75,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": "-",
+          "actual": 3,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "-",
+          "actual": true,
+          "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "> 90",
+          "actual": null,
+          "ok": false
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "rule_id": "C2_NegativeEquity",
+      "matched": false,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "-",
+          "actual": 1.28,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "-",
+          "actual": 0.75,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": "-",
+          "actual": 3,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "-",
+          "actual": true,
+          "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "< 0",
+          "actual": null,
+          "ok": false
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "rule_id": "C3_DSCRBelowOne",
+      "matched": false,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "< 1",
+          "actual": 1.28,
+          "ok": false
+        },
+        {
+          "input": "ltv",
+          "test": "-",
+          "actual": 0.75,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": "-",
+          "actual": 3,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "-",
+          "actual": true,
+          "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
+          "ok": true
         }
       ]
     },
@@ -67,25 +234,43 @@
         {
           "input": "dscr",
           "test": "< 1.15",
-          "actual": 1.8947,
+          "actual": 1.28,
           "ok": false
         },
         {
           "input": "ltv",
           "test": "-",
-          "actual": 0.5263,
+          "actual": 0.75,
           "ok": true
         },
         {
           "input": "years_in_business",
           "test": "-",
-          "actual": 6,
+          "actual": 3,
           "ok": true
         },
         {
           "input": "tax_returns_verified",
           "test": "-",
           "actual": true,
+          "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
           "ok": true
         }
       ]
@@ -97,25 +282,43 @@
         {
           "input": "dscr",
           "test": "-",
-          "actual": 1.8947,
+          "actual": 1.28,
           "ok": true
         },
         {
           "input": "ltv",
           "test": "> 0.85",
-          "actual": 0.5263,
+          "actual": 0.75,
           "ok": false
         },
         {
           "input": "years_in_business",
           "test": "-",
-          "actual": 6,
+          "actual": 3,
           "ok": true
         },
         {
           "input": "tax_returns_verified",
           "test": "-",
           "actual": true,
+          "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
           "ok": true
         }
       ]
@@ -127,19 +330,19 @@
         {
           "input": "dscr",
           "test": "-",
-          "actual": 1.8947,
+          "actual": 1.28,
           "ok": true
         },
         {
           "input": "ltv",
           "test": "-",
-          "actual": 0.5263,
+          "actual": 0.75,
           "ok": true
         },
         {
           "input": "years_in_business",
           "test": "< 2",
-          "actual": 6,
+          "actual": 3,
           "ok": false
         },
         {
@@ -147,29 +350,143 @@
           "test": "-",
           "actual": true,
           "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "rule_id": "C4_ExceptionalLeverage",
+      "matched": false,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "-",
+          "actual": 1.28,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "-",
+          "actual": 0.75,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": "-",
+          "actual": 3,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "-",
+          "actual": true,
+          "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "> 6",
+          "actual": null,
+          "ok": false
+        }
+      ]
+    },
+    {
+      "rule_id": "C5_Leveraged",
+      "matched": false,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "-",
+          "actual": 1.28,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "-",
+          "actual": 0.75,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": "-",
+          "actual": 3,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "-",
+          "actual": true,
+          "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "> 4",
+          "actual": null,
+          "ok": false
         }
       ]
     },
     {
       "rule_id": "R5_Prime",
-      "matched": true,
+      "matched": false,
       "checks": [
         {
           "input": "dscr",
           "test": ">= 1.35",
-          "actual": 1.8947,
-          "ok": true
+          "actual": 1.28,
+          "ok": false
         },
         {
           "input": "ltv",
           "test": "<= 0.70",
-          "actual": 0.5263,
-          "ok": true
+          "actual": 0.75,
+          "ok": false
         },
         {
           "input": "years_in_business",
           "test": ">= 3",
-          "actual": 6,
+          "actual": 3,
           "ok": true
         },
         {
@@ -177,57 +494,159 @@
           "test": "true",
           "actual": true,
           "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "rule_id": "R6_Standard",
+      "matched": true,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": ">= 1.20",
+          "actual": 1.28,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "<= 0.80",
+          "actual": 0.75,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": ">= 2",
+          "actual": 3,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "true",
+          "actual": true,
+          "ok": true
+        },
+        {
+          "input": "equity_eur",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "days_past_due",
+          "test": "-",
+          "actual": null,
+          "ok": true
+        },
+        {
+          "input": "leverage",
+          "test": "-",
+          "actual": null,
+          "ok": true
         }
       ]
     }
   ],
-  "explanation": "Granted at 5.5% APR. Rule applied: R5_Prime (Prime tier), policy version 1 [16ca416ba2f1]. This rule applies when debt service coverage (DSCR) is at least 1.35 and loan-to-value is at most 70% and years in business is at least 3 and tax returns are verified. Figures used: DSCR 1.89 (EBITDA €720,000 ÷ annual debt service €380,000); loan-to-value 52.6% (requested €500,000 ÷ collateral €950,000); 6 years in business; tax returns verified.",
+  "not_checked": [
+    {
+      "rule_id": "C1_PastDue90",
+      "label": "More than 90 days past due",
+      "missing_input": "days past due",
+      "cited": true
+    },
+    {
+      "rule_id": "C2_NegativeEquity",
+      "label": "Negative net equity",
+      "missing_input": "net equity",
+      "cited": true
+    },
+    {
+      "rule_id": "C4_ExceptionalLeverage",
+      "label": "Leverage above 6 times EBITDA",
+      "missing_input": "total existing debt (needed for leverage)",
+      "cited": true
+    },
+    {
+      "rule_id": "C5_Leveraged",
+      "label": "Leveraged transaction",
+      "missing_input": "total existing debt (needed for leverage)",
+      "cited": true
+    }
+  ],
+  "explanation": "Granted at 7.2% APR. Rule applied: R6_Standard (Standard tier), policy version 1 [3007d2c594fe]. This rule applies when debt service coverage (DSCR) is at least 1.2 and loan-to-value is at most 80% and years in business is at least 2 and tax returns are verified. Figures used: DSCR 1.28 (EBITDA €320,000 ÷ annual debt service €250,000); loan-to-value 75.0% (requested €300,000 ÷ collateral €400,000); 3 years in business; tax returns verified. This rule is the bank's own credit policy; no external source is cited for its thresholds.",
   "counterfactual": null,
   "inputs": {
     "requested_amount_eur": {
-      "value": 500000.0,
-      "quote": "Facility Request: €500,000",
+      "value": 300000.0,
+      "quote": "Requested Amount: €300,000",
       "note": null
     },
     "annual_revenue_eur": {
-      "value": 4250000.0,
-      "quote": "Gross Revenue: €4,250,000",
+      "value": 2500000.0,
+      "quote": "Annual Revenue: €2,500,000",
       "note": null
     },
     "ebitda_eur": {
-      "value": 720000.0,
-      "quote": "Operating Profit / EBITDA: €720,000",
+      "value": 320000.0,
+      "quote": "EBITDA: €320,000",
       "note": null
     },
     "annual_debt_service_eur": {
-      "value": 380000.0,
-      "quote": "Annual Debt Service (P&I): €380,000",
+      "value": 250000.0,
+      "quote": "Annual Debt Service: €250,000",
       "note": null
     },
     "total_existing_debt_eur": {
-      "value": 1100000.0,
-      "quote": "Total Existing Liabilities: €1,100,000",
+      "value": null,
+      "quote": null,
       "note": null
     },
     "collateral_value_eur": {
-      "value": 950000.0,
-      "quote": "Real Estate Appraisal: €950,000",
+      "value": 400000.0,
+      "quote": "Collateral Value: €400,000",
+      "note": null
+    },
+    "equity_eur": {
+      "value": null,
+      "quote": null,
       "note": null
     },
     "years_in_business": {
-      "value": 6,
-      "quote": "Operating History: 6",
+      "value": 3,
+      "quote": "Years in Business: 3",
+      "note": null
+    },
+    "days_past_due": {
+      "value": null,
+      "quote": null,
       "note": null
     },
     "tax_returns_verified": {
       "value": true,
-      "quote": "Tax Filings: verified and audited by PwC Italy",
+      "quote": "Tax Filings: verified",
       "note": null
     }
   },
   "extraction": {
     "engine": "Rule-based extractor (offline)",
     "dropped": [],
-    "document_sha256": "5bdfd8a148b8"
+    "document_sha256": "4840fe69ddc0"
   }
 }

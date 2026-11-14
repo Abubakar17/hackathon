@@ -18,8 +18,9 @@ AMOUNT_LABELS = {
     "annual_debt_service_eur": r"(?:Annual\s+Debt\s+Service|Debt\s+Service|Annual\s+P&I|P&I)",
     "total_existing_debt_eur": r"(?:Total\s+Existing\s+Liabilities|Total\s+Existing\s+Debt|Total\s+Liabilities|Existing\s+Debt)",
     "collateral_value_eur": r"(?:Collateral(?:\s+Value)?|Real\s+Estate\s+Appraisal|Appraisal)",
+    "equity_eur": r"(?:Net\s+Equity|Shareholders'?\s+Equity|Total\s+Equity|Net\s+Worth|Patrimonio\s+Netto)",
 }
-ALL_FIELDS = list(AMOUNT_LABELS) + ["years_in_business", "tax_returns_verified"]
+ALL_FIELDS = list(AMOUNT_LABELS) + ["years_in_business", "tax_returns_verified", "days_past_due"]
 
 
 def parse_amount(text: Optional[str]) -> Optional[float]:
@@ -78,6 +79,13 @@ def extract_with_rules(raw_text: str) -> Dict[str, Any]:
     m = (re.search(r"(?:Years\s+in\s+Business|Operating\s+History)[ \t]*[:=][ \t]*([0-9]+)", raw_text, re.I)
          or re.search(r"([0-9]+)\+?\s+years?\s+in\s+business", raw_text, re.I))
     fields["years_in_business"] = _field(int(m.group(1)), " ".join(m.group(0).split())) if m else _field()
+
+    m = (re.search(r"(?:Days\s+Past\s+Due|\bDPD\b)[^\n\r:=0-9]{0,25}[:=]?[ \t]*([0-9]+)", raw_text, re.I)
+         or re.search(r"([0-9]+)\s+days?\s+past\s+due", raw_text, re.I))
+    if m and HEDGE.search(m.group(0)):
+        fields["days_past_due"] = _field(None, " ".join(m.group(0).split()), "the document marks this figure as pending or unverified, so it is not used")
+    else:
+        fields["days_past_due"] = _field(int(m.group(1)), " ".join(m.group(0).split())) if m else _field()
 
     tax = _field()
     for m in re.finditer(r"Tax\s+(?:Returns?|Filings?)[^\n\r:]{0,20}:[ \t]*([^\n\r.;]{0,60})", raw_text, re.I):

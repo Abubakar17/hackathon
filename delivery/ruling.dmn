@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="Definitions_CreditPolicy" name="Commercial Credit Policy"
-             namespace="https://example.org/dmn/credit-policy">
+             xmlns:cite="https://example.org/dmn/citation" namespace="https://example.org/dmn/credit-policy">
   <decision id="Decision_CreditRuling" name="Credit ruling">
     <decisionTable id="DecisionTable_CreditPolicy" hitPolicy="FIRST">
       <input id="Input_dscr" label="DSCR (EBITDA / annual debt service)">
@@ -15,6 +15,15 @@
       <input id="Input_tax_returns_verified" label="Tax returns verified">
         <inputExpression id="InputExpr_tax_returns_verified" typeRef="boolean"><text>tax_returns_verified</text></inputExpression>
       </input>
+      <input id="Input_equity_eur" label="Net equity (€)">
+        <inputExpression id="InputExpr_equity_eur" typeRef="number"><text>equity_eur</text></inputExpression>
+      </input>
+      <input id="Input_days_past_due" label="Days past due">
+        <inputExpression id="InputExpr_days_past_due" typeRef="number"><text>days_past_due</text></inputExpression>
+      </input>
+      <input id="Input_leverage" label="Leverage ((existing debt + requested) / EBITDA)">
+        <inputExpression id="InputExpr_leverage" typeRef="number"><text>leverage</text></inputExpression>
+      </input>
       <output id="Output_status" name="status" label="status" typeRef="string" />
       <output id="Output_category" name="category" label="category" typeRef="string" />
       <output id="Output_apr" name="apr" label="apr" typeRef="number" />
@@ -25,10 +34,58 @@
         <inputEntry id="R1_TaxUnverified_in_ltv"><text>-</text></inputEntry>
         <inputEntry id="R1_TaxUnverified_in_years_in_business"><text>-</text></inputEntry>
         <inputEntry id="R1_TaxUnverified_in_tax_returns_verified"><text>false</text></inputEntry>
+        <inputEntry id="R1_TaxUnverified_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="R1_TaxUnverified_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="R1_TaxUnverified_in_leverage"><text>-</text></inputEntry>
         <outputEntry id="R1_TaxUnverified_out_status"><text>"ABSTAIN"</text></outputEntry>
         <outputEntry id="R1_TaxUnverified_out_category"><text>"ABSTAIN_DATA_INCOMPLETE"</text></outputEntry>
         <outputEntry id="R1_TaxUnverified_out_apr"><text>null</text></outputEntry>
         <outputEntry id="R1_TaxUnverified_out_reason"><text>"Tax returns are stated as not verified; a credit officer must review the case"</text></outputEntry>
+      </rule>
+      <rule id="C1_PastDue90">
+        <description>More than 90 days past due</description>
+        <extensionElements><cite:citation source="Regulation (EU) No 575/2013 (CRR), OJ L 176, 27.6.2013" locator="Article 178(1)(b)" quote="the obligor is past due more than 90 days on any material credit obligation to the institution" url="https://www.legislation.gov.uk/eur/2013/575/article/178/adopted" note="The article defines default towards the lending institution. Here it is applied to any past-due figure stated in the application, and the materiality threshold of Delegated Regulation (EU) 2018/171 is not tested. Quote read in the as-adopted text." /></extensionElements>
+        <inputEntry id="C1_PastDue90_in_dscr"><text>-</text></inputEntry>
+        <inputEntry id="C1_PastDue90_in_ltv"><text>-</text></inputEntry>
+        <inputEntry id="C1_PastDue90_in_years_in_business"><text>-</text></inputEntry>
+        <inputEntry id="C1_PastDue90_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="C1_PastDue90_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="C1_PastDue90_in_days_past_due"><text>&gt; 90</text></inputEntry>
+        <inputEntry id="C1_PastDue90_in_leverage"><text>-</text></inputEntry>
+        <outputEntry id="C1_PastDue90_out_status"><text>"DENIED"</text></outputEntry>
+        <outputEntry id="C1_PastDue90_out_category"><text>"DENIED_PAST_DUE_DEFAULT"</text></outputEntry>
+        <outputEntry id="C1_PastDue90_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="C1_PastDue90_out_reason"><text>"The applicant is more than 90 days past due on a credit obligation"</text></outputEntry>
+      </rule>
+      <rule id="C2_NegativeEquity">
+        <description>Negative net equity</description>
+        <extensionElements><cite:citation source="CNDCEC, Gli indici dell'allerta ex art. 13, co. 2 Codice della Crisi e dell'Insolvenza (draft of 19 October 2019)" locator="section 3.1, index (i)" quote="Sono indici che fanno ragionevolmente presumere la sussistenza di uno stato di crisi dell'impresa, i seguenti: i. patrimonio netto negativo" url="https://www.dirittobancario.it/wp-content/uploads/sites/default/files/allegati/inidici_dallerta.pdf" note="An Italian professional early-warning index, not a lending rule; the bank uses it as a ground for refusal. Its current legal status was not verified." /></extensionElements>
+        <inputEntry id="C2_NegativeEquity_in_dscr"><text>-</text></inputEntry>
+        <inputEntry id="C2_NegativeEquity_in_ltv"><text>-</text></inputEntry>
+        <inputEntry id="C2_NegativeEquity_in_years_in_business"><text>-</text></inputEntry>
+        <inputEntry id="C2_NegativeEquity_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="C2_NegativeEquity_in_equity_eur"><text>&lt; 0</text></inputEntry>
+        <inputEntry id="C2_NegativeEquity_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="C2_NegativeEquity_in_leverage"><text>-</text></inputEntry>
+        <outputEntry id="C2_NegativeEquity_out_status"><text>"DENIED"</text></outputEntry>
+        <outputEntry id="C2_NegativeEquity_out_category"><text>"DENIED_CRISIS_INDICATOR"</text></outputEntry>
+        <outputEntry id="C2_NegativeEquity_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="C2_NegativeEquity_out_reason"><text>"Net equity is negative, which is a recognised indicator of a state of crisis"</text></outputEntry>
+      </rule>
+      <rule id="C3_DSCRBelowOne">
+        <description>Debt service not covered</description>
+        <extensionElements><cite:citation source="CNDCEC, Gli indici dell'allerta ex art. 13, co. 2 Codice della Crisi e dell'Insolvenza (draft of 19 October 2019)" locator="section 3.1, index (ii)" quote="DSCR a sei mesi inferiore a 1" url="https://www.dirittobancario.it/wp-content/uploads/sites/default/files/allegati/inidici_dallerta.pdf" note="The source measures DSCR on forecast cash flows over the next six months. This table uses annual EBITDA over annual debt service as a proxy. Professional early-warning index; its current legal status was not verified." /></extensionElements>
+        <inputEntry id="C3_DSCRBelowOne_in_dscr"><text>&lt; 1</text></inputEntry>
+        <inputEntry id="C3_DSCRBelowOne_in_ltv"><text>-</text></inputEntry>
+        <inputEntry id="C3_DSCRBelowOne_in_years_in_business"><text>-</text></inputEntry>
+        <inputEntry id="C3_DSCRBelowOne_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="C3_DSCRBelowOne_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="C3_DSCRBelowOne_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="C3_DSCRBelowOne_in_leverage"><text>-</text></inputEntry>
+        <outputEntry id="C3_DSCRBelowOne_out_status"><text>"DENIED"</text></outputEntry>
+        <outputEntry id="C3_DSCRBelowOne_out_category"><text>"DENIED_CRISIS_INDICATOR"</text></outputEntry>
+        <outputEntry id="C3_DSCRBelowOne_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="C3_DSCRBelowOne_out_reason"><text>"Debt service coverage ratio is below 1: earnings do not cover debt service"</text></outputEntry>
       </rule>
       <rule id="R2_LowDSCR">
         <description>Debt service coverage below floor</description>
@@ -36,6 +93,9 @@
         <inputEntry id="R2_LowDSCR_in_ltv"><text>-</text></inputEntry>
         <inputEntry id="R2_LowDSCR_in_years_in_business"><text>-</text></inputEntry>
         <inputEntry id="R2_LowDSCR_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="R2_LowDSCR_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="R2_LowDSCR_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="R2_LowDSCR_in_leverage"><text>-</text></inputEntry>
         <outputEntry id="R2_LowDSCR_out_status"><text>"DENIED"</text></outputEntry>
         <outputEntry id="R2_LowDSCR_out_category"><text>"DENIED_CREDIT_POLICY"</text></outputEntry>
         <outputEntry id="R2_LowDSCR_out_apr"><text>null</text></outputEntry>
@@ -47,6 +107,9 @@
         <inputEntry id="R3_HighLTV_in_ltv"><text>&gt; 0.85</text></inputEntry>
         <inputEntry id="R3_HighLTV_in_years_in_business"><text>-</text></inputEntry>
         <inputEntry id="R3_HighLTV_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="R3_HighLTV_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="R3_HighLTV_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="R3_HighLTV_in_leverage"><text>-</text></inputEntry>
         <outputEntry id="R3_HighLTV_out_status"><text>"DENIED"</text></outputEntry>
         <outputEntry id="R3_HighLTV_out_category"><text>"DENIED_CREDIT_POLICY"</text></outputEntry>
         <outputEntry id="R3_HighLTV_out_apr"><text>null</text></outputEntry>
@@ -58,10 +121,43 @@
         <inputEntry id="R4_ShortHistory_in_ltv"><text>-</text></inputEntry>
         <inputEntry id="R4_ShortHistory_in_years_in_business"><text>&lt; 2</text></inputEntry>
         <inputEntry id="R4_ShortHistory_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="R4_ShortHistory_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="R4_ShortHistory_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="R4_ShortHistory_in_leverage"><text>-</text></inputEntry>
         <outputEntry id="R4_ShortHistory_out_status"><text>"DENIED"</text></outputEntry>
         <outputEntry id="R4_ShortHistory_out_category"><text>"DENIED_CREDIT_POLICY"</text></outputEntry>
         <outputEntry id="R4_ShortHistory_out_apr"><text>null</text></outputEntry>
         <outputEntry id="R4_ShortHistory_out_reason"><text>"Fewer than 2 years in business"</text></outputEntry>
+      </rule>
+      <rule id="C4_ExceptionalLeverage">
+        <description>Leverage above 6 times EBITDA</description>
+        <extensionElements><cite:citation source="ECB Banking Supervision, Guidance on leveraged transactions (May 2017)" locator="section 5" quote="For most industries, a leverage level in excess of 6.0 times Total Debt to EBITDA raises concerns." url="https://www.bankingsupervision.europa.eu/ecb/pub/pdf/ssm.leveraged_transactions_guidance_201705.en.pdf" note="The guidance is addressed to significant banks and leaves out SMEs and exposures below €5 million; the bank borrows its threshold as a referral trigger. Total debt is taken as existing debt plus the requested amount; undrawn commitments are not captured." /></extensionElements>
+        <inputEntry id="C4_ExceptionalLeverage_in_dscr"><text>-</text></inputEntry>
+        <inputEntry id="C4_ExceptionalLeverage_in_ltv"><text>-</text></inputEntry>
+        <inputEntry id="C4_ExceptionalLeverage_in_years_in_business"><text>-</text></inputEntry>
+        <inputEntry id="C4_ExceptionalLeverage_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="C4_ExceptionalLeverage_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="C4_ExceptionalLeverage_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="C4_ExceptionalLeverage_in_leverage"><text>&gt; 6</text></inputEntry>
+        <outputEntry id="C4_ExceptionalLeverage_out_status"><text>"ABSTAIN"</text></outputEntry>
+        <outputEntry id="C4_ExceptionalLeverage_out_category"><text>"REFER_EXCEPTIONAL_LEVERAGE"</text></outputEntry>
+        <outputEntry id="C4_ExceptionalLeverage_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="C4_ExceptionalLeverage_out_reason"><text>"Total debt after the new loan exceeds 6 times EBITDA; the case is escalated to a credit officer"</text></outputEntry>
+      </rule>
+      <rule id="C5_Leveraged">
+        <description>Leveraged transaction</description>
+        <extensionElements><cite:citation source="ECB Banking Supervision, Guidance on leveraged transactions (May 2017)" locator="section 3, condition 1" quote="all types of loan or credit exposure where the borrower's post-financing level of leverage exceeds a Total Debt to EBITDA ratio of 4.0 times" url="https://www.bankingsupervision.europa.eu/ecb/pub/pdf/ssm.leveraged_transactions_guidance_201705.en.pdf" note="The guidance is addressed to significant banks and leaves out SMEs and exposures below €5 million; the bank borrows its threshold as a referral trigger. Total debt is taken as existing debt plus the requested amount; undrawn commitments are not captured." /></extensionElements>
+        <inputEntry id="C5_Leveraged_in_dscr"><text>-</text></inputEntry>
+        <inputEntry id="C5_Leveraged_in_ltv"><text>-</text></inputEntry>
+        <inputEntry id="C5_Leveraged_in_years_in_business"><text>-</text></inputEntry>
+        <inputEntry id="C5_Leveraged_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="C5_Leveraged_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="C5_Leveraged_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="C5_Leveraged_in_leverage"><text>&gt; 4</text></inputEntry>
+        <outputEntry id="C5_Leveraged_out_status"><text>"ABSTAIN"</text></outputEntry>
+        <outputEntry id="C5_Leveraged_out_category"><text>"REFER_LEVERAGED_TRANSACTION"</text></outputEntry>
+        <outputEntry id="C5_Leveraged_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="C5_Leveraged_out_reason"><text>"Total debt after the new loan exceeds 4 times EBITDA; an independent risk review is required"</text></outputEntry>
       </rule>
       <rule id="R5_Prime">
         <description>Prime tier</description>
@@ -69,6 +165,9 @@
         <inputEntry id="R5_Prime_in_ltv"><text>&lt;= 0.70</text></inputEntry>
         <inputEntry id="R5_Prime_in_years_in_business"><text>&gt;= 3</text></inputEntry>
         <inputEntry id="R5_Prime_in_tax_returns_verified"><text>true</text></inputEntry>
+        <inputEntry id="R5_Prime_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="R5_Prime_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="R5_Prime_in_leverage"><text>-</text></inputEntry>
         <outputEntry id="R5_Prime_out_status"><text>"GRANTED"</text></outputEntry>
         <outputEntry id="R5_Prime_out_category"><text>"APPROVED_PRIME"</text></outputEntry>
         <outputEntry id="R5_Prime_out_apr"><text>5.5</text></outputEntry>
@@ -80,6 +179,9 @@
         <inputEntry id="R6_Standard_in_ltv"><text>&lt;= 0.80</text></inputEntry>
         <inputEntry id="R6_Standard_in_years_in_business"><text>&gt;= 2</text></inputEntry>
         <inputEntry id="R6_Standard_in_tax_returns_verified"><text>true</text></inputEntry>
+        <inputEntry id="R6_Standard_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="R6_Standard_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="R6_Standard_in_leverage"><text>-</text></inputEntry>
         <outputEntry id="R6_Standard_out_status"><text>"GRANTED"</text></outputEntry>
         <outputEntry id="R6_Standard_out_category"><text>"APPROVED_STANDARD"</text></outputEntry>
         <outputEntry id="R6_Standard_out_apr"><text>7.2</text></outputEntry>
@@ -91,6 +193,9 @@
         <inputEntry id="R7_Uncovered_in_ltv"><text>-</text></inputEntry>
         <inputEntry id="R7_Uncovered_in_years_in_business"><text>-</text></inputEntry>
         <inputEntry id="R7_Uncovered_in_tax_returns_verified"><text>-</text></inputEntry>
+        <inputEntry id="R7_Uncovered_in_equity_eur"><text>-</text></inputEntry>
+        <inputEntry id="R7_Uncovered_in_days_past_due"><text>-</text></inputEntry>
+        <inputEntry id="R7_Uncovered_in_leverage"><text>-</text></inputEntry>
         <outputEntry id="R7_Uncovered_out_status"><text>"ABSTAIN"</text></outputEntry>
         <outputEntry id="R7_Uncovered_out_category"><text>"REFER_UNCOVERED_CASE"</text></outputEntry>
         <outputEntry id="R7_Uncovered_out_apr"><text>null</text></outputEntry>
