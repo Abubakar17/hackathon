@@ -48,9 +48,9 @@ Test today: Run 10 messy credit application files through the pipeline; check if
 ### Q6 · First things to build
 | # | Build | Proves | Done when | Time box | Status |
 |---|-------|--------|-----------|----------|--------|
-| 1 | Walking skeleton | End-to-end flow: Raw credit application text → Decision Object + valid .dmn file | Script runs on sample applicant and emits valid .dmn | 30 min | in progress |
-| 2 | Riskiest piece: Abstention & Constraints | Pipeline reliably rejects or abstains when Debt Service Coverage Ratio (DSCR) is missing/insufficient | 3 edge cases (Pass, Reject, Abstain) execute deterministically | 45 min | pending |
-| 3 | Check set (10 cases) | Accuracy across standard loan approval rules | `python test_pipeline.py` prints >= 9/10 passed | 30 min | pending |
+| 1 | Walking skeleton | End-to-end flow: Raw credit application text → Decision Object + valid .dmn file | Script runs on sample applicant and emits valid .dmn | 30 min | done |
+| 2 | Riskiest piece: Abstention & Constraints | Pipeline reliably rejects or abstains when Debt Service Coverage Ratio (DSCR) is missing/insufficient | 3 edge cases (Pass, Reject, Abstain) execute deterministically | 45 min | done |
+| 3 | Check set (10 cases) | Accuracy across standard loan approval rules | `python check_set.py` passes 19 cases + 6 properties | 30 min | done |
 | 4 | "Now possible" moment | Interactive DMN inspection: show the exact rule row triggered and the generated DMN XML | UI/CLI renders ruling table + audit trace | 30 min | pending |
 | 5 | Fallbacks | Offline cached run | Demo functions with wifi disconnected | 15 min | pending |
 
@@ -77,10 +77,14 @@ Copy test: …
 
 ## Verification log
 | When | What an agent produced | What a human checked, and how | What the agent got wrong, and how we caught it |
-|------|------------------------|-------------------------------|------------------------------------------------|
+|---|---|---|---|
+| 13:54 | Initial extractor & DMN pipeline | Ran 10-case check set and multi-line memos | Regex missed uppercase EUR due to .replace() order before .lower(); caught by check set, fixed immediately to achieve 10/10 PASS |
+| 15:40 | First prototype (static .dmn + separate Python if-chain) | Probed 9 edge cases by script, then re-ran the rebuilt pipeline: 19 cases + 6 properties pass (`python check_set.py`), UI flow checked in the browser | Negative EBITDA was read as positive and got a prime approval; missing years in business gave a denial instead of ABSTAIN (kill criterion breached); a collateral figure marked 'pending - unverified' was used; the .dmn file was never executed and disagreed with the Python rules. All four fixed; the engine now executes the DMN XML |
+
 
 ## Checkpoints
-- 1st: works … · check set … · learned … · slipped … · cut … · question …
+- 1st (13:58): works end-to-end (messy text -> DMN XML + Decision Object) · check set 10/10 passed (100%) · learned: DMN decision tables cleanly enforce non-negotiable lending covenants while deterministic abstention stops ungrounded hallucination · slipped: none · cut: direct banking API integration · question for mentor: "How should we present the DMN XML export to non-technical jurors in the first 90 seconds?"
+
 - 2nd (feature freeze): …
 
 ## Pitch

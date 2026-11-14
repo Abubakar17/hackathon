@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pitch · loan4every1 · Credit Decision Console</title>
+<style>
+:root{--ink:#18181B;--accent:#2563EB;--sec:#64748B;--muted:#A1A1AA;--surface:#F4F4F5;--paper:#FFFFFF}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "Inter",system-ui,sans-serif}
+main{max-width:860px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:28px;line-height:1.2;margin:0 0 6px}
+h2{font-size:18px;margin:34px 0 10px;padding-top:12px;border-top:1px solid var(--surface)}
+p{margin:6px 0}
+.meta{color:var(--sec);font-size:13px}
+.box{background:var(--surface);border-radius:8px;padding:12px 14px;margin:10px 0}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}
+th,td{text-align:left;vertical-align:top;padding:7px 8px;border-bottom:1px solid #E4E4E7}
+th{color:var(--sec);font-weight:600}
+.v{color:var(--accent);font-weight:600}
+.m{color:var(--sec);font-size:12px}
+ul,ol{padding-left:20px;margin:6px 0}
+li{margin:3px 0}
+code{font-family:ui-monospace,"DejaVu Sans Mono",monospace;font-size:13px;background:var(--surface);padding:1px 4px;border-radius:4px}
+pre{font-family:ui-monospace,"DejaVu Sans Mono",monospace;font-size:12px;background:var(--surface);padding:10px 12px;border-radius:8px;overflow-x:auto;margin:8px 0}
+a{color:var(--accent)}
+</style></head>
+<body><main>
+<h1>loan4every1 · Credit Decision Console</h1>
+<p class="meta">Team Abubakar &amp; Martínez · Track 4 · Decision models in an AI brain for industry · 14 November 2026<br>
+Repo: <a href="https://github.com/Abubakar17/hackathon">github.com/Abubakar17/hackathon</a> (public) · Demo runs locally: <code>python app.py</code> · Facts marked [verified] · [declared] · [unverified]</p>
+
+<div class="box">
+<p><strong>In one line:</strong> a loan application arrives as a memo, email or document. An agent reads it and fills the inputs of a DMN decision table, quoting the document for every value. A rules engine, not the language model, applies the versioned policy and returns the decision with the rule row that fired and the policy version that decided. Missing data or a case no rule covers goes to a person, never to the model's guess.</p>
+</div>
+
+<h2>The problem</h2>
+<p>A commercial credit officer receives an application packet and spends 3–5 hours per file [declared] reading memos, tax filings and bank statements and re-keying figures into an Excel scoring template. When a customer or a supervisor later asks <em>why</em> the application was refused, the answer is rebuilt by hand from notes.</p>
+<p>That answer is now a legal duty: in C-203/22 Dun &amp; Bradstreet Austria (27 Feb 2025) the CJEU held that the controller must explain the procedure and principles actually applied [verified: CJEU press release 22/25], and in C-634/21 SCHUFA it held that a credit score with a determining role is an automated decision [verified: CJEU press release 186/23]. A chat copilot that "recommends" an outcome cannot replay a past decision or say which rule version applied.</p>
+
+<h2>What we built (works end to end today)</h2>
+<div class="tbl"><table>
+<tr><th>Step</th><th>What happens</th><th>Real or mocked</th></tr>
+<tr><td class="v">Read</td><td>Claude Haiku 5.5 (via Vercel AI Gateway) proposes each input with a verbatim quote. Code keeps a value only if the quote is in the document and the number is in the quote. Figures marked "pending" or "unverified" in the document are dropped.</td><td>Real. Offline fallback: rule-based extractor, same decisions on the 3 samples.</td></tr>
+<tr><td class="v">Gate</td><td>Completeness check before the table: a missing required input means <strong>ABSTAIN</strong> with the missing items listed.</td><td>Real</td></tr>
+<tr><td class="v">Decide</td><td>Policy is a DMN 1.3 decision table (hit policy FIRST), exported as <code>.dmn</code> XML. Our engine parses that XML and evaluates its rows.</td><td>Real. Own small engine; not yet run in Camunda/Drools.</td></tr>
+<tr><td class="v">Record</td><td>Decision object: inputs with evidence, derived ratios (DSCR, LTV, debt/EBITDA), every rule row checked, the rule that fired, policy version + hash, plain-words explanation, and a counterfactual confirmed by re-running the table.</td><td>Real</td></tr>
+<tr><td class="v">Replay</td><td>A stored record is re-run from frozen inputs under its original policy and under the current one. The language model is not in this path.</td><td>Real</td></tr>
+</table></div>
+
+<h2>The policy (DMN table, hit policy FIRST)</h2>
+<div class="tbl"><table>
+<tr><th>Rule</th><th>DSCR</th><th>LTV</th><th>Years</th><th>Tax verified</th><th>Outcome</th></tr>
+<tr><td>R1_TaxUnverified</td><td>-</td><td>-</td><td>-</td><td>false</td><td>Denied</td></tr>
+<tr><td>R2_LowDSCR</td><td>&lt; 1.15</td><td>-</td><td>-</td><td>-</td><td>Denied</td></tr>
+<tr><td>R3_HighLTV</td><td>-</td><td>&gt; 0.85</td><td>-</td><td>-</td><td>Denied</td></tr>
+<tr><td>R4_ShortHistory</td><td>-</td><td>-</td><td>&lt; 2</td><td>-</td><td>Denied</td></tr>
+<tr><td>R5_Prime</td><td>&gt;= 1.35</td><td>&lt;= 0.70</td><td>&gt;= 3</td><td>true</td><td>Granted, prime rate</td></tr>
+<tr><td>R6_Standard</td><td>&gt;= 1.20</td><td>&lt;= 0.80</td><td>&gt;= 2</td><td>true</td><td>Granted, standard rate</td></tr>
+<tr><td>R7_Uncovered</td><td>-</td><td>-</td><td>-</td><td>-</td><td>To a person</td></tr>
+</table></div>
+<p class="m">Thresholds and rates are set by the team for the demo [declared]; they are not a real bank's policy.</p>
+
+<h2>Demo path</h2>
+<ol>
+<li><strong>Weak application</strong> → declined by <code>R2_LowDSCR</code> (DSCR 1.05). Each input shows its quoted evidence; the explanation and the "what would change the result" line come from the record.</li>
+<li><strong>Incomplete application</strong> → no decision. Debt service is missing and the collateral figure is marked "pending – unverified" in the document, so it is not used.</li>
+<li><strong>Clean application</strong> → granted at 5.5% under <code>R5_Prime</code>, policy v1.</li>
+<li>Edit the DSCR test of <code>R5_Prime</code> to <code>&gt;= 2.0</code> in the table → policy becomes v2 with a new hash; the same case now lands on <code>R6_Standard</code>.</li>
+<li><strong>Replay the earlier record</strong> → identical under v1, different under v2. The record says which version decided.</li>
+<li><strong>Conflicting application</strong>, or upload the two sample PDFs together → no decision. The memo says EBITDA €520,000, the revised financials say €410,000; neither is chosen and both quotes are shown.</li>
+<li><strong>Final human review</strong> → the credit officer presses Accept or Reject. Overriding the engine, or deciding a case it abstained on, needs a note. The review is stored beside the record with the rule and policy version it signs off.</li>
+</ol>
+
+<h2>A decision record (excerpt)</h2>
+<pre>{
+  "record_id": "DEC-1A359ED7E7",
+  "applicant": "Beta Precision Tooling Srl",
+  "outcome": { "status": "DENIED",
+               "reason": "Debt service coverage ratio is below the minimum of 1.15" },
+  "rule":   { "id": "R2_LowDSCR", "tests": { "dscr": "&lt; 1.15", ... } },
+  "policy": { "name": "Commercial Credit Policy", "version": 1, "sha256": "16ca416ba2f1" },
+  "derived": { "dscr": 1.05, "ltv": 0.9444, "debt_to_ebitda": 7.8571 },
+  "missing": [],
+  "trace":  [ { "rule_id": "R1_TaxUnverified", "matched": false, ... },
+              { "rule_id": "R2_LowDSCR", "matched": true, ... } ]
+}</pre>
+<p class="m">The record id is a hash of the inputs and the policy hash: same inputs, same policy, same id.</p>
+
+<h2>Verification</h2>
+<div class="tbl"><table>
+<tr><th>Check</th><th>Result</th></tr>
+<tr><td>Check set, offline (<code>python check_set.py</code>)</td><td class="v">28/28 cases · 15/15 properties pass [verified: run 14 Nov, after adding the conflict, PDF and review checks]</td></tr>
+<tr><td>Properties tested</td><td>.dmn is well-formed and parses back to the same rules · same input + policy → same decision and record id · replay reproduces a stored record exactly · editing a rule changes the version and an affected outcome · the old version still gives the old outcome · every denial carries a counterfactual the engine confirms · two different values for one figure abstain and replay identically · a PDF gives the same record as its text · an unreadable file is refused · a review is tied to its record, and an override without a note is refused</td></tr>
+<tr><td>Rules from a public source</td><td>Second table encoded from the <strong>Fannie Mae Eligibility Matrix</strong> (manual underwriting, principal residence, purchase, 1 unit, zero-reserve tier; DTI max 45% per B3-6-02). 6/6 test applications hit the expected outcome and rule: 2 granted, 2 denied, 1 abstain on a missing credit score, 1 routed as uncovered (needs reserves the table does not encode) [verified: <code>real_test/results.json</code>]. The six applicants are written by the team [declared].</td></tr>
+<tr><td>Kill criterion (written before the build)</td><td>The pipeline returns a ruling on a missing mandatory metric instead of ABSTAIN in more than 0 cases. <span class="v">Observed: 0 in both check sets.</span></td></tr>
+</table></div>
+
+<h2>Who it is for</h2>
+<p><strong>Buyer:</strong> head of credit policy at a mid-sized bank or commercial lender; owns the rules, answers to the CRO and the supervisor. <strong>User:</strong> the credit officer who reads the packet today.</p>
+<p><strong>Why now:</strong> Directive (EU) 2023/2225 on consumer credit applies from 20 November 2026 and gives the right to an explanation and human review of automated creditworthiness assessments [unverified: EUR-Lex, to read before quoting]. Creditworthiness assessment of natural persons is high-risk under AI Act Annex III 5(b) [verified: AI Act Annex III]. Our design keeps the model out of the decision itself: it only fills inputs that code checks against the document.</p>
+
+<h2>Versus what exists</h2>
+<div class="tbl"><table>
+<tr><th>Alternative</th><th>What it lacks for this job</th></tr>
+<tr><td>Excel templates + manual reading</td><td>Inconsistent between people, no trace of which rule or which version decided</td></tr>
+<tr><td>Chat copilot (LLM decides)</td><td>Cannot replay a decision; the prompt is not a decision model</td></tr>
+<tr><td>FICO, IBM ODM, InRule, Corticon</td><td>Strong rules engines; the step from an unstructured packet to checked inputs is not their core [declared: vendor pages]</td></tr>
+<tr><td>Taktile, Camunda</td><td>Closest: agents + rules + human review [declared: vendor]. We show the rule row, the version and a replay in every record, with quote-checked inputs.</td></tr>
+</table></div>
+<p>Honest moat test: the engine is commodity (Drools is free). What is harder to copy is the evidence discipline: quote-checked extraction, abstention as a first-class outcome, and replayable versioned records. A strong team could copy it in weeks; the moat would come from policies encoded with real lenders and a check set built from their past files.</p>
+
+<h2>Limits (said out loud)</h2>
+<ul>
+<li>Text PDFs, TXT and pasted text only: no OCR, so scanned documents are refused.</li>
+<li>A conflict is detected when the same labelled figure appears with two values; it does not reconcile differently worded figures. The human review has no login: the reviewer name is typed in.</li>
+<li>The <code>.dmn</code> runs on our own small engine (comparisons, true/false, "-"); not yet run in Camunda or another DMN engine.</li>
+<li>DSCR uses existing debt service only; the new loan's repayments are not added.</li>
+<li>Sample applicants, commercial thresholds and rates are invented for the demo.</li>
+<li>No interview with a credit officer yet: the 3–5 hours per file is [declared].</li>
+</ul>
+
+<h2>What we test next, and what would stop us</h2>
+<p><strong>Next week:</strong> five commercial credit officers each bring one anonymised past file and their written policy; we encode the policy and run the files. <strong>Kill number:</strong> if fewer than 3 of 5 say they would accept the record as the audit trail for a refusal, we narrow to the explanation step only.</p>
+
+<h2>Models and tools used</h2>
+<ul>
+<li>In the product: Claude Haiku 5.5 (<code>anthropic/claude-haiku-5.5</code>) via the Vercel AI Gateway, temperature 0, for input extraction only.</li>
+<li>To build: Claude Code (Claude Opus) as coding agent; Python, Flask; DMN 1.3 XML.</li>
+</ul>
+</main></body></html>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="Definitions_CreditPolicy" name="Fannie Mae Eligibility Matrix, manual underwriting, principal residence, purchase, 1 unit (zero-reserve tier)"
+             namespace="https://example.org/dmn/credit-policy">
+  <decision id="Decision_CreditRuling" name="Credit ruling">
+    <decisionTable id="DecisionTable_CreditPolicy" hitPolicy="FIRST">
+      <input id="Input_ltv_pct" label="LTV % (loan amount / property value)">
+        <inputExpression id="InputExpr_ltv_pct" typeRef="number"><text>ltv_pct</text></inputExpression>
+      </input>
+      <input id="Input_dti_pct" label="DTI % (total monthly debt payments / gross monthly income)">
+        <inputExpression id="InputExpr_dti_pct" typeRef="number"><text>dti_pct</text></inputExpression>
+      </input>
+      <input id="Input_credit_score" label="Representative credit score">
+        <inputExpression id="InputExpr_credit_score" typeRef="number"><text>credit_score</text></inputExpression>
+      </input>
+      <output id="Output_status" name="status" label="status" typeRef="string" />
+      <output id="Output_category" name="category" label="category" typeRef="string" />
+      <output id="Output_apr" name="apr" label="apr" typeRef="number" />
+      <output id="Output_reason" name="reason" label="reason" typeRef="string" />
+      <rule id="FM1_LTVOverMax">
+        <description>LTV above the 95% maximum</description>
+        <inputEntry id="FM1_LTVOverMax_in_ltv_pct"><text>&gt; 95</text></inputEntry>
+        <inputEntry id="FM1_LTVOverMax_in_dti_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM1_LTVOverMax_in_credit_score"><text>-</text></inputEntry>
+        <outputEntry id="FM1_LTVOverMax_out_status"><text>"DENIED"</text></outputEntry>
+        <outputEntry id="FM1_LTVOverMax_out_category"><text>"INELIGIBLE"</text></outputEntry>
+        <outputEntry id="FM1_LTVOverMax_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="FM1_LTVOverMax_out_reason"><text>"LTV exceeds the 95% maximum for this transaction type"</text></outputEntry>
+      </rule>
+      <rule id="FM2_DTIOverMax">
+        <description>DTI above the 45% maximum</description>
+        <inputEntry id="FM2_DTIOverMax_in_ltv_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM2_DTIOverMax_in_dti_pct"><text>&gt; 45</text></inputEntry>
+        <inputEntry id="FM2_DTIOverMax_in_credit_score"><text>-</text></inputEntry>
+        <outputEntry id="FM2_DTIOverMax_out_status"><text>"DENIED"</text></outputEntry>
+        <outputEntry id="FM2_DTIOverMax_out_category"><text>"INELIGIBLE"</text></outputEntry>
+        <outputEntry id="FM2_DTIOverMax_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="FM2_DTIOverMax_out_reason"><text>"DTI exceeds the 45% maximum for manually underwritten loans (B3-6-02)"</text></outputEntry>
+      </rule>
+      <rule id="FM3_ScoreUnderMin">
+        <description>Credit score below 620</description>
+        <inputEntry id="FM3_ScoreUnderMin_in_ltv_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM3_ScoreUnderMin_in_dti_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM3_ScoreUnderMin_in_credit_score"><text>&lt; 620</text></inputEntry>
+        <outputEntry id="FM3_ScoreUnderMin_out_status"><text>"DENIED"</text></outputEntry>
+        <outputEntry id="FM3_ScoreUnderMin_out_category"><text>"INELIGIBLE"</text></outputEntry>
+        <outputEntry id="FM3_ScoreUnderMin_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="FM3_ScoreUnderMin_out_reason"><text>"Credit score is below the 620 minimum for fixed-rate loans (B3-5.1-01)"</text></outputEntry>
+      </rule>
+      <rule id="FM4_DTI36_LTV75">
+        <description>DTI up to 36%, LTV up to 75%, score 640+</description>
+        <inputEntry id="FM4_DTI36_LTV75_in_ltv_pct"><text>&lt;= 75</text></inputEntry>
+        <inputEntry id="FM4_DTI36_LTV75_in_dti_pct"><text>&lt;= 36</text></inputEntry>
+        <inputEntry id="FM4_DTI36_LTV75_in_credit_score"><text>&gt;= 640</text></inputEntry>
+        <outputEntry id="FM4_DTI36_LTV75_out_status"><text>"GRANTED"</text></outputEntry>
+        <outputEntry id="FM4_DTI36_LTV75_out_category"><text>"ELIGIBLE"</text></outputEntry>
+        <outputEntry id="FM4_DTI36_LTV75_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="FM4_DTI36_LTV75_out_reason"><text>"Meets the matrix: DTI ≤ 36%, LTV ≤ 75%, score ≥ 640, no reserves required"</text></outputEntry>
+      </rule>
+      <rule id="FM5_DTI36_LTV95">
+        <description>DTI up to 36%, LTV above 75%, score 680+</description>
+        <inputEntry id="FM5_DTI36_LTV95_in_ltv_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM5_DTI36_LTV95_in_dti_pct"><text>&lt;= 36</text></inputEntry>
+        <inputEntry id="FM5_DTI36_LTV95_in_credit_score"><text>&gt;= 680</text></inputEntry>
+        <outputEntry id="FM5_DTI36_LTV95_out_status"><text>"GRANTED"</text></outputEntry>
+        <outputEntry id="FM5_DTI36_LTV95_out_category"><text>"ELIGIBLE"</text></outputEntry>
+        <outputEntry id="FM5_DTI36_LTV95_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="FM5_DTI36_LTV95_out_reason"><text>"Meets the matrix: DTI ≤ 36%, LTV &gt; 75%, score ≥ 680, no reserves required"</text></outputEntry>
+      </rule>
+      <rule id="FM6_DTI45_LTV75">
+        <description>DTI up to 45%, LTV up to 75%, score 680+</description>
+        <inputEntry id="FM6_DTI45_LTV75_in_ltv_pct"><text>&lt;= 75</text></inputEntry>
+        <inputEntry id="FM6_DTI45_LTV75_in_dti_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM6_DTI45_LTV75_in_credit_score"><text>&gt;= 680</text></inputEntry>
+        <outputEntry id="FM6_DTI45_LTV75_out_status"><text>"GRANTED"</text></outputEntry>
+        <outputEntry id="FM6_DTI45_LTV75_out_category"><text>"ELIGIBLE"</text></outputEntry>
+        <outputEntry id="FM6_DTI45_LTV75_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="FM6_DTI45_LTV75_out_reason"><text>"Meets the matrix: DTI ≤ 45%, LTV ≤ 75%, score ≥ 680, no reserves required"</text></outputEntry>
+      </rule>
+      <rule id="FM7_DTI45_LTV95">
+        <description>DTI up to 45%, LTV above 75%, score 720+</description>
+        <inputEntry id="FM7_DTI45_LTV95_in_ltv_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM7_DTI45_LTV95_in_dti_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM7_DTI45_LTV95_in_credit_score"><text>&gt;= 720</text></inputEntry>
+        <outputEntry id="FM7_DTI45_LTV95_out_status"><text>"GRANTED"</text></outputEntry>
+        <outputEntry id="FM7_DTI45_LTV95_out_category"><text>"ELIGIBLE"</text></outputEntry>
+        <outputEntry id="FM7_DTI45_LTV95_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="FM7_DTI45_LTV95_out_reason"><text>"Meets the matrix: DTI ≤ 45%, LTV &gt; 75%, score ≥ 720, no reserves required"</text></outputEntry>
+      </rule>
+      <rule id="FM8_Uncovered">
+        <description>Zero-reserve tier not met</description>
+        <inputEntry id="FM8_Uncovered_in_ltv_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM8_Uncovered_in_dti_pct"><text>-</text></inputEntry>
+        <inputEntry id="FM8_Uncovered_in_credit_score"><text>-</text></inputEntry>
+        <outputEntry id="FM8_Uncovered_out_status"><text>"ABSTAIN"</text></outputEntry>
+        <outputEntry id="FM8_Uncovered_out_category"><text>"REFER_UNCOVERED_CASE"</text></outputEntry>
+        <outputEntry id="FM8_Uncovered_out_apr"><text>null</text></outputEntry>
+        <outputEntry id="FM8_Uncovered_out_reason"><text>"Does not meet the zero-reserve tier; may qualify with reserves, which this table does not encode"</text></outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
