@@ -1,7 +1,8 @@
 """
 Deterministic extractor: reads the declared policy inputs out of application text.
 Every value comes with the exact snippet it was read from. A value the document
-itself marks as pending or unverified is treated as missing, never used.
+itself marks as pending or unverified is treated as missing, never used. A figure the
+documents state with two different values is a conflict and is not used either.
 """
 import re
 from typing import Any, Dict, Optional
@@ -21,6 +22,8 @@ AMOUNT_LABELS = {
     "equity_eur": r"(?:Net\s+Equity|Shareholders'?\s+Equity|Total\s+Equity|Net\s+Worth|Patrimonio\s+Netto)",
 }
 ALL_FIELDS = list(AMOUNT_LABELS) + ["years_in_business", "tax_returns_verified", "days_past_due"]
+# Revenue is not used by any rule, so a second revenue figure (a prior year, a forecast) is not a conflict.
+CONFLICT_FIELDS = [f for f in AMOUNT_LABELS if f != "annual_revenue_eur"]
 
 
 def parse_amount(text: Optional[str]) -> Optional[float]:
@@ -59,21 +62,48 @@ def _field(value=None, quote=None, note=None) -> Dict[str, Any]:
     return {"value": value, "quote": quote, "note": note}
 
 
+CONFLICT_NOTE = "the documents give different values for this figure, so none of them is used"
+
+
+def _distinct(found):
+    """Statements of one figure that differ by more than 0.5% from every earlier one."""
+    out = []
+    for f in found:
+        if not any(abs(f["value"] - o["value"]) <= 0.005 * max(abs(o["value"]), 1) for o in out):
+            out.append(f)
+    return out
+
+
+def _conflict_field(distinct) -> Dict[str, Any]:
+    return {"value": None, "quote": distinct[0]["quote"], "note": CONFLICT_NOTE, "conflict": distinct}
+
+
+def find_conflicts(raw_text: str) -> Dict[str, Dict[str, Any]]:
+    """Fields the documents state with two or more different values. Used by both readers."""
+    return {n: f for n, f in extract_with_rules(raw_text)["fields"].items() if f.get("conflict")}
+
+
 def extract_with_rules(raw_text: str) -> Dict[str, Any]:
     fields: Dict[str, Dict[str, Any]] = {}
 
     for name, label in AMOUNT_LABELS.items():
         pattern = rf"{label}[^\n\r:=0-9]{{0,35}}?[:=]?[ \t]*(?P<amt>{AMOUNT})"
-        result = _field()
+        result, found = _field(), []
         for m in re.finditer(pattern, raw_text, re.I):
             snippet = " ".join(m.group(0).split())
             if HEDGE.search(snippet):
-                result = _field(None, snippet, "the document marks this figure as pending or unverified, so it is not used")
+                if not found:
+                    result = _field(None, snippet, "the document marks this figure as pending or unverified, so it is not used")
                 continue
             val = parse_amount(m.group("amt"))
             if val is not None:
-                result = _field(val, snippet)
-                break
+                found.append({"value": val, "quote": snippet})
+        if found:
+            result = _field(found[0]["value"], found[0]["quote"])
+            if name in CONFLICT_FIELDS:
+                distinct = _distinct(found)
+                if len(distinct) > 1:
+                    result = _conflict_field(distinct)
         fields[name] = result
 
     m = (re.search(r"(?:Years\s+in\s+Business|Operating\s+History)[ \t]*[:=][ \t]*([0-9]+)", raw_text, re.I)

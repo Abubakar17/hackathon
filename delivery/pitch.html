@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pitch · Credit Decision Console</title>
+<title>Pitch · loan4every1 · Credit Decision Console</title>
 <style>
 :root{--ink:#18181B;--accent:#2563EB;--sec:#64748B;--muted:#A1A1AA;--surface:#F4F4F5;--paper:#FFFFFF}
 *{box-sizing:border-box}
@@ -24,7 +24,7 @@ pre{font-family:ui-monospace,"DejaVu Sans Mono",monospace;font-size:12px;backgro
 a{color:var(--accent)}
 </style></head>
 <body><main>
-<h1>Credit Decision Console</h1>
+<h1>loan4every1 · Credit Decision Console</h1>
 <p class="meta">Team Abubakar &amp; Martínez · Track 4 · Decision models in an AI brain for industry · 14 November 2026<br>
 Repo: <a href="https://github.com/Abubakar17/hackathon">github.com/Abubakar17/hackathon</a> (public) · Demo runs locally: <code>python app.py</code> · Facts marked [verified] · [declared] · [unverified]</p>
 
@@ -59,13 +59,15 @@ Repo: <a href="https://github.com/Abubakar17/hackathon">github.com/Abubakar17/ha
 </table></div>
 <p class="m">Thresholds and rates are set by the team for the demo [declared]; they are not a real bank's policy.</p>
 
-<h2>Demo path (five clicks)</h2>
+<h2>Demo path</h2>
 <ol>
 <li><strong>Weak application</strong> → declined by <code>R2_LowDSCR</code> (DSCR 1.05). Each input shows its quoted evidence; the explanation and the "what would change the result" line come from the record.</li>
 <li><strong>Incomplete application</strong> → no decision. Debt service is missing and the collateral figure is marked "pending – unverified" in the document, so it is not used.</li>
 <li><strong>Clean application</strong> → granted at 5.5% under <code>R5_Prime</code>, policy v1.</li>
 <li>Edit the DSCR test of <code>R5_Prime</code> to <code>&gt;= 2.0</code> in the table → policy becomes v2 with a new hash; the same case now lands on <code>R6_Standard</code>.</li>
 <li><strong>Replay the earlier record</strong> → identical under v1, different under v2. The record says which version decided.</li>
+<li><strong>Conflicting application</strong>, or upload the two sample PDFs together → no decision. The memo says EBITDA €520,000, the revised financials say €410,000; neither is chosen and both quotes are shown.</li>
+<li><strong>Final human review</strong> → the credit officer presses Accept or Reject. Overriding the engine, or deciding a case it abstained on, needs a note. The review is stored beside the record with the rule and policy version it signs off.</li>
 </ol>
 
 <h2>A decision record (excerpt)</h2>
@@ -86,8 +88,8 @@ Repo: <a href="https://github.com/Abubakar17/hackathon">github.com/Abubakar17/ha
 <h2>Verification</h2>
 <div class="tbl"><table>
 <tr><th>Check</th><th>Result</th></tr>
-<tr><td>Check set, offline (<code>python check_set.py</code>)</td><td class="v">19/19 cases · 6/6 properties pass [verified: run 14 Nov, 16:08]</td></tr>
-<tr><td>Properties tested</td><td>.dmn is well-formed and parses back to the same rules · same input + policy → same decision and record id · replay reproduces a stored record exactly · editing a rule changes the version and an affected outcome · the old version still gives the old outcome · every denial carries a counterfactual the engine confirms</td></tr>
+<tr><td>Check set, offline (<code>python check_set.py</code>)</td><td class="v">28/28 cases · 15/15 properties pass [verified: run 14 Nov, after adding the conflict, PDF and review checks]</td></tr>
+<tr><td>Properties tested</td><td>.dmn is well-formed and parses back to the same rules · same input + policy → same decision and record id · replay reproduces a stored record exactly · editing a rule changes the version and an affected outcome · the old version still gives the old outcome · every denial carries a counterfactual the engine confirms · two different values for one figure abstain and replay identically · a PDF gives the same record as its text · an unreadable file is refused · a review is tied to its record, and an override without a note is refused</td></tr>
 <tr><td>Rules from a public source</td><td>Second table encoded from the <strong>Fannie Mae Eligibility Matrix</strong> (manual underwriting, principal residence, purchase, 1 unit, zero-reserve tier; DTI max 45% per B3-6-02). 6/6 test applications hit the expected outcome and rule: 2 granted, 2 denied, 1 abstain on a missing credit score, 1 routed as uncovered (needs reserves the table does not encode) [verified: <code>real_test/results.json</code>]. The six applicants are written by the team [declared].</td></tr>
 <tr><td>Kill criterion (written before the build)</td><td>The pipeline returns a ruling on a missing mandatory metric instead of ABSTAIN in more than 0 cases. <span class="v">Observed: 0 in both check sets.</span></td></tr>
 </table></div>
@@ -108,7 +110,8 @@ Repo: <a href="https://github.com/Abubakar17/hackathon">github.com/Abubakar17/ha
 
 <h2>Limits (said out loud)</h2>
 <ul>
-<li>Text input only: no PDF parsing or OCR yet.</li>
+<li>Text PDFs, TXT and pasted text only: no OCR, so scanned documents are refused.</li>
+<li>A conflict is detected when the same labelled figure appears with two values; it does not reconcile differently worded figures. The human review has no login: the reviewer name is typed in.</li>
 <li>The <code>.dmn</code> runs on our own small engine (comparisons, true/false, "-"); not yet run in Camunda or another DMN engine.</li>
 <li>DSCR uses existing debt service only; the new loan's repayments are not added.</li>
 <li>Sample applicants, commercial thresholds and rates are invented for the demo.</li>

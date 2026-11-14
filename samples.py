@@ -129,5 +129,44 @@ Independent RICS Real Estate Appraisal: €1,000,000 EUR.
 COMPLIANCE & TAX RECORDS:
 Tax Filings: verified and audited. All fiscal declarations compliant through Q3 2026.
         """
-    }
+    },
+
+    "epsilon_foods": {
+        "title": "Epsilon Foods Srl (Conflicting - Two EBITDA Figures)",
+        "expected_ruling": "ABSTAIN",
+        "expected_category": "ABSTAIN_CONFLICTING_EVIDENCE",
+        "raw_text": """
+=== 01-credit-memo.pdf · page 1 ===
+COMMERCIAL CREDIT APPLICATION & UNDERWRITING MEMORANDUM
+Date: November 10, 2026
+Applicant Entity: Epsilon Foods Srl
+Headquarters: Via Nizza 262, Turin, Italy
+Facility Request: €400,000 Senior Secured Term Loan
+Purpose: Second production line for fresh pasta.
+
+COMPANY OVERVIEW:
+Operating History: 9 years in business (incorporated 2017).
+
+FINANCIAL SUMMARY (FY 2025, management accounts):
+- Gross Revenue: €3,100,000 EUR
+- Operating Profit / EBITDA: €520,000 EUR
+- Existing Annual Debt Service (P&I): €300,000 EUR
+- Total Existing Liabilities: €900,000 EUR
+- Shareholders' Equity: €1,050,000 EUR
+Payment record: 0 days past due on all existing facilities.
+
+COLLATERAL & SECURITY:
+Independent Real Estate Appraisal: €700,000 EUR.
+
+COMPLIANCE & TAX RECORDS:
+Tax Filings: verified by the company's statutory auditor.
+
+=== 02-revised-financials.pdf · page 1 ===
+REVISED FINANCIAL MEMO - Epsilon Foods Srl
+Date: November 13, 2026
+Following the auditor's adjustments to inventory, the FY 2025 result was restated.
+- Operating Profit / EBITDA: €410,000 EUR
+The relationship between this figure and the earlier memorandum has not been resolved.
+        """
+    },
 }

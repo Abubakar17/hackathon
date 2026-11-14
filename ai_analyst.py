@@ -12,7 +12,7 @@ import re
 import urllib.request
 from typing import Any, Dict, Optional
 
-from extractor import ALL_FIELDS, HEDGE, extract_with_rules, numbers_in
+from extractor import ALL_FIELDS, HEDGE, extract_with_rules, find_conflicts, numbers_in
 
 GATEWAY_URL = "https://ai-gateway.vercel.sh/v1/chat/completions"
 MODEL = "anthropic/claude-haiku-5.5"
@@ -116,7 +116,8 @@ def extract(raw_text: str, use_ai: bool = True) -> Dict[str, Any]:
         if data and isinstance(data.get("fields"), dict):
             src = _norm(raw_text)
             fields = {name: ground(name, data["fields"].get(name), src) for name in ALL_FIELDS}
+            fields.update(find_conflicts(raw_text))  # the model returns one value; code checks for a second one
             return {"company_name": str(data.get("company_name") or "Unknown applicant"), "fields": fields,
                     "engine": ENGINE_LABEL,
-                    "dropped": [f"{n}: {f['note']}" for n, f in fields.items() if f["note"] and f["value"] is None]}
+                    "dropped": [f"{n}: {f['note']}" for n, f in fields.items() if f["note"] and f["value"] is None and not f.get("conflict")]}
     return extract_with_rules(raw_text)

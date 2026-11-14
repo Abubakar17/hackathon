@@ -3,10 +3,12 @@ Check set: decision cases plus the properties the pitch claims
 (abstain on missing data, same input gives the same decision, the DMN file is what runs).
 Runs offline: python check_set.py
 """
+import os
 import sys
 import xml.etree.ElementTree as ET
 
-from pipeline import process_credit_application, replay
+from pdf_reader import UploadError, combine, read_upload
+from pipeline import process_credit_application, replay, review
 from policy import BASE_RULES, STORE, dmn_to_rules, rules_to_dmn
 from samples import SAMPLE_APPLICATIONS
 
@@ -58,6 +60,11 @@ CHECK_SET_CASES = [
      "text": PRIME + " Total Existing Debt: €3,000,000."},
     {"id": "CASE-21", "name": "90 days past due exactly is not default", "expected_status": "GRANTED", "expected_category": "APPROVED_PRIME",
      "text": PRIME + " Days Past Due: 90."},
+    # Conflicting evidence
+    {"id": "CASE-22", "name": "Two different EBITDA figures: abstain", "expected_status": "ABSTAIN", "expected_category": "ABSTAIN_CONFLICTING_EVIDENCE",
+     "text": PRIME + " Revised memo. EBITDA: €410,000."},
+    {"id": "CASE-23", "name": "Same EBITDA stated twice is not a conflict", "expected_status": "GRANTED", "expected_category": "APPROVED_PRIME",
+     "text": PRIME + " Summary page. EBITDA: €720,000.00."},
 ] + [
     {"id": f"DEMO-{i + 1}", "name": f"Demo preset: {s['title']}", "expected_status": s["expected_ruling"],
      "expected_category": s["expected_category"], "text": s["raw_text"]}
@@ -119,6 +126,47 @@ def run_properties():
     v = store2.edit("C3_DSCRBelowOne", "dscr", "< 1.05")
     props.append(("Editing a cited rule removes its citation",
                   next(r for r in v["rules"] if r["id"] == "C3_DSCRBelowOne")["citation"] is None))
+
+    conflict = process_credit_application(PRIME + " Revised memo. EBITDA: €410,000.", use_ai=False)
+    rp = replay(conflict["record_id"])
+    props.append(("A conflict abstains, names both values, and its replay is identical",
+                  conflict["rule"]["id"] == "GATE_EVIDENCE_CONFLICT" and "€720,000 vs €410,000" in conflict["explanation"]
+                  and rp["same_policy"]["identical"] and rp["same_policy"]["record_id"] == conflict["record_id"]))
+
+    def pdf(name):
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "samples_pdf", name), "rb") as f:
+            return read_upload(name, f.read())
+    try:
+        from_pdf = process_credit_application(combine([pdf("alpha-logistics-application.pdf")]), use_ai=False, persist=False)
+        from_text = process_credit_application(SAMPLE_APPLICATIONS["alpha_logistics"]["raw_text"], use_ai=False, persist=False)
+        two = process_credit_application(combine([pdf("epsilon-foods-01-credit-memo.pdf"), pdf("epsilon-foods-02-revised-financials.pdf")]),
+                                         use_ai=False, persist=False)
+        pdf_ok = (from_pdf["record_id"] == from_text["record_id"] and from_pdf["outcome"]["status"] == "GRANTED"
+                  and two["outcome"]["category"] == "ABSTAIN_CONFLICTING_EVIDENCE")
+    except UploadError as e:
+        print(f"       PDF check could not run: {e}")
+        pdf_ok = False
+    props.append(("A PDF gives the same record as its text, and a conflict across two PDFs abstains", pdf_ok))
+    try:
+        read_upload("scan.pdf", b"not a pdf")
+        bad_refused = False
+    except UploadError:
+        bad_refused = True
+    props.append(("A file that is not a readable PDF is refused, not guessed at", bad_refused))
+
+    def refused(*args):
+        try:
+            review(*args, persist=False)
+            return False
+        except ValueError:
+            return True
+    ok_review = review(a["record_id"], "accept", "Check set", persist=False)
+    props.append(("A human review is tied to the record, rule and policy version it signs off",
+                  ok_review["record_id"] == a["record_id"] and ok_review["relation"] == "confirms"
+                  and ok_review["policy_sha"] == a["policy"]["sha256"] and ok_review["engine_rule"] == a["rule"]["id"]))
+    props.append(("Overriding the engine, or deciding an abstained case, is refused without a note",
+                  refused(a["record_id"], "reject", "Check set") and refused(conflict["record_id"], "accept", "Check set")
+                  and review(a["record_id"], "reject", "Check set", "fraud flag", persist=False)["relation"] == "overrides"))
     return [{"name": n, "pass": bool(ok)} for n, ok in props]
 
 

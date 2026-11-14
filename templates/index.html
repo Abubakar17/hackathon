@@ -3,95 +3,184 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Credit Decision Console</title>
+  <title>loan4every1 · Credit Decision Console</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%230f6b4f'/%3E%3Cpath d='M29.6 12.4A12.2 12.2 0 1 0 32.2 20' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='16.4' r='3.7' fill='%23e0752d'/%3E%3Cpath d='M13.4 27.2c1-4.1 3.7-6 6.6-6s5.6 1.9 6.6 6' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
-    :root { --bg:#0f172a; --card:#1e293b; --well:#0b1220; --border:#334155; --text:#f1f5f9; --muted:#94a3b8;
-            --primary:#3b82f6; --ok:#34d399; --bad:#f87171; --warn:#fbbf24; }
+    :root { --bg:#f5f2ea; --card:#fffdf8; --well:#f3efe5; --border:#ddd6c6; --text:#16231d; --muted:#5f6d65;
+            --brand:#0f6b4f; --on-brand:#ffffff; --accent:#d9691f; --primary:#0f6b4f;
+            --ok:#0e7a52; --bad:#b5382d; --warn:#9a5c05;
+            --ok-bg:#e3f3ea; --bad-bg:#fbe9e6; --warn-bg:#fbf0d9; --info-bg:#e6efff; --info:#2456b8;
+            --shadow:0 1px 2px rgba(22,35,29,.06), 0 6px 20px rgba(22,35,29,.05); }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#0e1512; --card:#161f1b; --well:#0f1714; --border:#2b3932; --text:#e8efe9; --muted:#96a59c;
+              --brand:#2f9f78; --on-brand:#08130f; --accent:#f2954f; --primary:#2f9f78;
+              --ok:#55d3a2; --bad:#f08a7e; --warn:#e9b454;
+              --ok-bg:#12281f; --bad-bg:#2c1714; --warn-bg:#2a2110; --info-bg:#14213a; --info:#8fb4ff;
+              --shadow:none; }
+    }
     * { box-sizing:border-box; margin:0; padding:0; }
-    body { background:var(--bg); color:var(--text); padding:20px; font:14px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif; }
-    header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:14px; margin-bottom:18px; }
-    h1 { font-size:1.4rem; }
+    body { background:var(--bg); color:var(--text); font:14px/1.5 "Inter","Segoe UI",-apple-system,Roboto,sans-serif; }
+    .wrap { max-width:1440px; margin:0 auto; padding:18px 20px 40px; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .logo { width:44px; height:44px; flex:none; }
+    .wordmark { font-size:1.55rem; font-weight:800; letter-spacing:-.03em; line-height:1.1; }
+    .wordmark b { color:var(--accent); font-weight:800; }
     .sub { color:var(--muted); font-size:.85rem; }
-    .grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.5fr); gap:18px; }
+    .grid { display:grid; grid-template-columns:minmax(0,400px) minmax(0,1fr); gap:18px; align-items:start; }
     @media (max-width:1000px) { .grid { grid-template-columns:1fr; } }
-    .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
-    h2 { font-size:.95rem; margin:18px 0 6px; }
-    h2:first-child { margin-top:0; }
-    h2 small { color:var(--muted); font-weight:400; margin-left:6px; }
-    button { cursor:pointer; padding:7px 12px; border-radius:6px; font-size:.82rem; border:1px solid var(--border); background:#334155; color:var(--text); }
-    button:hover { background:#475569; }
-    button.primary { background:var(--primary); border-color:var(--primary); font-weight:600; width:100%; padding:11px; font-size:.95rem; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:var(--shadow); }
+    .grid > *, #out > * { min-width:0; }
+    .banner { flex-wrap:wrap; } .banner > div { min-width:0; overflow-wrap:anywhere; }
+    #out { display:flex; flex-direction:column; gap:14px; background:none; border:0; padding:0; box-shadow:none; }
+    h2 { font-size:.95rem; margin:0 0 8px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+    h2 small { color:var(--muted); font-weight:400; }
+    h2 .n { color:var(--brand); font-variant-numeric:tabular-nums; }
+    button, .btn { cursor:pointer; padding:7px 12px; border-radius:8px; font:inherit; font-size:.82rem; border:1px solid var(--border); background:var(--card); color:var(--text); text-decoration:none; display:inline-block; }
+    button:hover, .btn:hover { border-color:var(--brand); }
+    button:disabled { opacity:.55; cursor:default; }
+    button.primary { background:var(--brand); border-color:var(--brand); color:var(--on-brand); font-weight:700; width:100%; padding:11px; font-size:.95rem; }
+    button.sample.sel { border-color:var(--brand); background:var(--ok-bg); font-weight:600; }
     .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
-    textarea { width:100%; height:340px; background:var(--well); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:12px; font:12.5px/1.45 ui-monospace,Consolas,monospace; resize:vertical; margin-bottom:10px; }
+    textarea, input[type=text] { width:100%; background:var(--well); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:9px 11px; font:inherit; }
+    textarea#appText { height:300px; font:12.5px/1.45 ui-monospace,Consolas,monospace; resize:vertical; margin-bottom:10px; }
+    textarea::selection { background:var(--accent); color:#fff; }
     .chip { display:inline-block; padding:2px 9px; border-radius:99px; font-size:.75rem; border:1px solid var(--border); color:var(--muted); white-space:nowrap; }
-    .chip.on { color:var(--ok); border-color:var(--ok); } .chip.off { color:var(--warn); border-color:var(--warn); }
-    .banner { border-radius:8px; padding:14px 16px; border:1px solid; display:flex; justify-content:space-between; gap:16px; }
-    .banner.GRANTED { background:rgba(52,211,153,.12); border-color:var(--ok); }
-    .banner.DENIED { background:rgba(248,113,113,.12); border-color:var(--bad); }
-    .banner.ABSTAIN { background:rgba(251,191,36,.12); border-color:var(--warn); }
-    .banner .big { font-size:1.3rem; font-weight:800; }
+    .chip.on, .chip.cited { color:var(--ok); border-color:var(--ok); } .chip.off, .chip.uncited { color:var(--warn); border-color:var(--warn); }
+    a { color:var(--info); }
+
+    .steps { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; margin-bottom:16px; }
+    .step { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px 10px; border-top:3px solid var(--border); min-width:0; }
+    .step .k { font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+    .step .v { font-weight:600; font-size:.82rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .step.done { border-top-color:var(--ok); } .step.stop { border-top-color:var(--warn); } .step.no { border-top-color:var(--bad); }
+    @media (max-width:700px) { .steps { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+
+    .drop { border:1.5px dashed var(--border); border-radius:10px; padding:14px; text-align:center; cursor:pointer; margin-bottom:10px; background:var(--well); }
+    .drop:hover, .drop.over { border-color:var(--brand); background:var(--ok-bg); }
+    .drop b { display:block; }
+    .files { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+    .file { background:var(--info-bg); color:var(--info); border-radius:6px; padding:2px 8px; font-size:.76rem; }
+
+    .banner { border-radius:14px; padding:16px 18px; border:1px solid; display:flex; justify-content:space-between; gap:16px; box-shadow:var(--shadow); }
+    .banner.GRANTED { background:var(--ok-bg); border-color:var(--ok); }
+    .banner.DENIED { background:var(--bad-bg); border-color:var(--bad); }
+    .banner.ABSTAIN { background:var(--warn-bg); border-color:var(--warn); }
+    .banner .big { font-size:1.45rem; font-weight:800; letter-spacing:-.02em; }
     .GRANTED .big { color:var(--ok); } .DENIED .big { color:var(--bad); } .ABSTAIN .big { color:var(--warn); }
-    .box { background:var(--well); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-top:8px; }
-    .box.cf { border-color:var(--primary); }
+
+    .ratios { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    @media (max-width:800px) { .ratios { grid-template-columns:1fr; } }
+    .ratio { background:var(--well); border:1px solid var(--border); border-radius:10px; padding:11px 12px; }
+    .ratio .k { font-size:.74rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+    .ratio .num { font-size:1.6rem; font-weight:800; letter-spacing:-.02em; font-variant-numeric:tabular-nums; line-height:1.2; }
+    .ratio .f { font-size:.76rem; color:var(--muted); }
+    .bar { position:relative; height:8px; border-radius:99px; background:var(--border); margin:12px 0 10px; }
+    .bar i { position:absolute; top:-3px; width:2px; height:14px; border-radius:2px; }
+    .bar i.DENIED { background:var(--bad); } .bar i.GRANTED { background:var(--ok); } .bar i.ABSTAIN { background:var(--warn); }
+    .bar span { position:absolute; top:-5px; width:18px; height:18px; margin-left:-9px; border-radius:50%; background:var(--text); border:3px solid var(--card); }
+    .th { display:flex; justify-content:space-between; gap:8px; font-size:.76rem; padding:1px 0; }
+    .th code { font:inherit; font-variant-numeric:tabular-nums; }
+    .th .yes { font-weight:700; } .th.DENIED .yes { color:var(--bad); } .th.GRANTED .yes { color:var(--ok); } .th.ABSTAIN .yes { color:var(--warn); }
+    .th .nope { color:var(--muted); }
+
+    .why { list-style:none; counter-reset:w; }
+    .why li { counter-increment:w; display:grid; grid-template-columns:24px minmax(0,1fr) auto; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:.84rem; align-items:start; }
+    .why li:last-child { border-bottom:0; }
+    .why li::before { content:counter(w); color:var(--muted); font-variant-numeric:tabular-nums; }
+    .why li.fired { background:var(--info-bg); border-radius:8px; padding:8px; border-bottom:0; font-weight:600; }
+    .why .tag { font-size:.74rem; white-space:nowrap; color:var(--muted); }
+    .why li.fired .tag { color:var(--info); }
+
+    .review { border-left:4px solid var(--brand); }
+    .review.need { border-left-color:var(--warn); }
+    .review .acts { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    button.accept { background:var(--ok); border-color:var(--ok); color:#fff; font-weight:700; padding:9px 22px; }
+    button.reject { background:var(--bad); border-color:var(--bad); color:#fff; font-weight:700; padding:9px 22px; }
+    @media (prefers-color-scheme: dark) { button.accept, button.reject { color:#08130f; } }
+    .signed { border-radius:10px; padding:10px 12px; margin-top:4px; }
+    .signed.accept { background:var(--ok-bg); } .signed.reject { background:var(--bad-bg); }
+    label.f { display:block; font-size:.76rem; color:var(--muted); margin:8px 0 3px; }
+
+    .box { background:var(--well); border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-top:8px; }
+    .box.cf { border-color:var(--info); background:var(--info-bg); }
     .box.cited { border-color:var(--ok); } .box.uncited { border-color:var(--warn); }
     .box blockquote { border-left:3px solid var(--border); padding-left:10px; margin:6px 0; font-style:italic; }
-    a { color:#7dd3fc; }
-    .chip.cited { color:var(--ok); border-color:var(--ok); } .chip.uncited { color:var(--warn); border-color:var(--warn); }
     .tblwrap { overflow-x:auto; }
     table { width:100%; border-collapse:collapse; font-size:.8rem; }
-    th, td { border:1px solid var(--border); padding:6px 8px; text-align:left; vertical-align:top; }
-    th { background:var(--well); color:var(--muted); font-weight:600; }
-    tr.fired td { background:rgba(59,130,246,.22); font-weight:600; }
+    th, td { border-bottom:1px solid var(--border); padding:7px 8px; text-align:left; vertical-align:top; }
+    th { color:var(--muted); font-weight:600; font-size:.74rem; text-transform:uppercase; letter-spacing:.04em; }
+    tr.fired td { background:var(--info-bg); font-weight:600; }
     tr.skipped td { color:var(--muted); }
+    tr.ev { cursor:pointer; } tr.ev:hover td { background:var(--well); }
+    tr.conflict td { background:var(--warn-bg); }
     td.miss { color:var(--bad); } td.hit { color:var(--ok); }
     td[contenteditable] { outline:none; cursor:text; border-bottom:1px dashed var(--muted); }
-    td[contenteditable]:focus { background:#1d4ed8; color:#fff; }
+    td[contenteditable]:focus { background:var(--brand); color:var(--on-brand); }
     .q { color:var(--muted); font-style:italic; }
     .missing { color:var(--warn); font-weight:600; }
     .ok { color:var(--ok); font-weight:600; } .bad { color:var(--bad); font-weight:600; }
-    pre { background:var(--well); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:.74rem; overflow:auto; max-height:320px; color:#7dd3fc; }
-    details summary { cursor:pointer; color:var(--muted); margin-top:14px; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; background:var(--well); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:.74rem; overflow:auto; max-height:320px; }
+    details summary { cursor:pointer; color:var(--muted); }
     .msg { margin-top:8px; font-size:.82rem; }
-    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:10; align-items:center; justify-content:center; }
-    .modal > div { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; max-width:860px; width:94%; max-height:86vh; overflow:auto; }
+    .empty { padding:48px 20px; text-align:center; color:var(--muted); }
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:10; align-items:center; justify-content:center; }
+    .modal > div { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; max-width:900px; width:94%; max-height:86vh; overflow:auto; }
   </style>
 </head>
 <body>
+<div class="wrap">
   <header>
-    <div>
-      <h1>Credit Decision Console</h1>
-      <div class="sub">The agent reads the document. A DMN decision table decides. Every decision cites its rule, its policy version, and the public source of the rule where there is one.</div>
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40" role="img" aria-label="loan4every1 logo"><rect width="40" height="40" rx="11" fill="var(--brand)"/><path d="M29.6 12.4A12.2 12.2 0 1 0 32.2 20" stroke="var(--on-brand)" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="20" cy="16.4" r="3.7" fill="var(--accent)"/><path d="M13.4 27.2c1-4.1 3.7-6 6.6-6s5.6 1.9 6.6 6" stroke="var(--on-brand)" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+      <div>
+        <div class="wordmark">loan<b>4</b>every<b>1</b></div>
+        <div class="sub">Credit decision console · the agent reads, the rules decide, a person signs off</div>
+      </div>
     </div>
     <div class="row" style="margin:0">
-      {% if has_gateway_key %}<span class="chip on">AI gateway key found · {{ model }}</span>
-      {% else %}<span class="chip off">No AI gateway key · offline extractor only</span>{% endif %}
+      {% if has_gateway_key %}<span class="chip on">AI reader on · {{ model }}</span>
+      {% else %}<span class="chip off">No AI gateway key · offline reader</span>{% endif %}
       <span class="chip" id="policyChip">policy</span>
       <button onclick="runCheckSet()">Run check set</button>
     </div>
   </header>
 
+  <div class="steps" id="steps"></div>
+
   <div class="grid">
     <div class="card">
-      <h2>1 · Application document <small>as it arrives</small></h2>
-      <div class="row">
-        <button onclick="loadSample('alpha_logistics')">Clean application</button>
-        <button onclick="loadSample('beta_precision')">Weak application</button>
-        <button onclick="loadSample('gamma_biotech')">Incomplete application</button>
-        <button onclick="loadSample('delta_packaging')">Leveraged application</button>
+      <h2><span class="n">1</span> Application <small>as it arrives</small></h2>
+      <div class="row" id="samples">
+        <button class="sample" data-k="alpha_logistics">Clean</button>
+        <button class="sample" data-k="beta_precision">Weak</button>
+        <button class="sample" data-k="gamma_biotech">Incomplete</button>
+        <button class="sample" data-k="delta_packaging">Leveraged</button>
+        <button class="sample" data-k="epsilon_foods">Conflicting</button>
       </div>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload application files">
+        <b>Drop PDF files here, or click to choose</b>
+        <span class="sub">Text PDFs, TXT or MD · up to 5 files, 4 MB each · scans are not read</span>
+        <input type="file" id="fileInput" accept=".pdf,.txt,.md" multiple hidden>
+      </div>
+      <div class="files" id="files"></div>
+      <div id="uploadMsg"></div>
+      <textarea id="appText" placeholder="…or paste a loan application, credit memo or email here"></textarea>
       <div class="row">
         <label><input type="checkbox" id="useAi" {% if has_gateway_key %}checked{% else %}disabled{% endif %}>
-          Read the document with the AI agent <span class="sub">(off: rule-based extractor, works offline)</span></label>
+          Read with the AI agent <span class="sub">(off: rule-based reader, works offline)</span></label>
       </div>
-      <textarea id="appText" placeholder="Paste a loan application, credit memo or email here"></textarea>
       <button class="primary" id="runBtn" onclick="runPipeline()">Decide</button>
-      <div class="msg sub">The AI agent only fills the table's inputs and must quote the document for each one. It never sees the rules.</div>
+      <div class="msg sub">The reader only fills the table's inputs and must quote the document for each one. It never sees the rules.</div>
+      <div class="msg sub">Sample PDFs to try:
+        <a href="/samples/alpha-logistics-application.pdf">clean application</a> ·
+        conflicting packet (<a href="/samples/epsilon-foods-01-credit-memo.pdf">memo</a> +
+        <a href="/samples/epsilon-foods-02-revised-financials.pdf">revised financials</a>, upload both)</div>
     </div>
 
-    <div class="card" id="out">
-      <div class="sub" style="padding:40px;text-align:center">Pick a sample or paste a document, then press Decide.</div>
-    </div>
+    <div id="out"><div class="card empty">Pick a sample, upload a PDF or paste a document, then press Decide.</div></div>
   </div>
+</div>
 
   <div id="modal" class="modal" onclick="if(event.target===this)this.style.display='none'">
     <div>
@@ -103,15 +192,18 @@
 <script>
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const eur = v => '€' + Number(v).toLocaleString('en-US', {maximumFractionDigits: 0});
+  const eur = v => (v < 0 ? '-€' : '€') + Math.abs(Number(v)).toLocaleString('en-US', {maximumFractionDigits: 0});
   const FIELDS = [
     ['requested_amount_eur','Requested amount',''], ['ebitda_eur','EBITDA',''],
     ['annual_debt_service_eur','Annual debt service',''], ['collateral_value_eur','Collateral value',''],
     ['years_in_business','Years in business',''], ['tax_returns_verified','Tax returns verified',''],
     ['total_existing_debt_eur','Total existing debt','optional'], ['equity_eur','Net equity','optional'],
     ['days_past_due','Days past due','optional'], ['annual_revenue_eur','Annual revenue','not used by the rules']];
+  const SHORT = {dscr:'DSCR', ltv:'Loan-to-value', years_in_business:'Years in business', tax_returns_verified:'Tax returns verified',
+                 equity_eur:'Net equity', days_past_due:'Days past due', leverage:'Leverage'};
+  const STATUS_WORD = {GRANTED:'Granted', DENIED:'Declined', ABSTAIN:'To a person'};
   const NO_CITATION = "No external citation · the bank's own credit policy";
-  let record = null, policy = null, replayHtml = '', changeHtml = '', notice = '';
+  let record = null, policy = null, review = null, replayHtml = '', changeHtml = '', notice = '', reviewMsg = '';
 
   async function api(url, body) {
     const res = await fetch(url, body === undefined ? {} : {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
@@ -125,25 +217,60 @@
     $('policyChip').textContent = `${p.name} · v${p.version} · ${p.sha}`;
   }
 
+  function markSample(key) {
+    document.querySelectorAll('button.sample').forEach(b => b.classList.toggle('sel', b.dataset.k === key));
+  }
+
   async function loadSample(key) {
     const data = await api('/api/sample/' + key);
     if (data.error) return;
     $('appText').value = data.raw_text.trim();
+    $('files').innerHTML = ''; $('uploadMsg').innerHTML = '';
+    markSample(key);
     runPipeline();
   }
+  document.querySelectorAll('button.sample').forEach(b => b.addEventListener('click', () => loadSample(b.dataset.k)));
+
+  // ---- upload: PDF / TXT / MD -> text in the document box
+  async function uploadFiles(list) {
+    const files = [...list];
+    if (!files.length) return;
+    const fd = new FormData();
+    files.forEach(f => fd.append('files', f));
+    $('uploadMsg').innerHTML = '<div class="msg sub">Reading ' + files.length + ' file' + (files.length > 1 ? 's' : '') + '…</div>';
+    let data;
+    try {
+      const res = await fetch('/api/upload', {method:'POST', body: fd});
+      data = await res.json().catch(() => ({error: 'The upload could not be read (' + res.status + ')'}));
+    } catch (e) { data = {error: 'Could not reach the server: ' + e.message}; }
+    $('fileInput').value = '';
+    if (data.error) { $('uploadMsg').innerHTML = `<div class="msg bad">${esc(data.error)}</div>`; return; }
+    $('uploadMsg').innerHTML = '';
+    $('files').innerHTML = data.files.map(f => `<span class="file">${esc(f.name)} · ${f.kind === 'pdf' ? f.pages + (f.pages > 1 ? ' pages' : ' page') : 'text'}</span>`).join('');
+    $('appText').value = data.text;
+    markSample(null);
+    runPipeline();
+  }
+  const drop = $('drop');
+  drop.addEventListener('click', () => $('fileInput').click());
+  drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('fileInput').click(); } });
+  $('fileInput').addEventListener('change', e => uploadFiles(e.target.files));
+  ['dragenter','dragover'].forEach(n => drop.addEventListener(n, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(n => drop.addEventListener(n, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => uploadFiles(e.dataTransfer.files));
 
   async function runPipeline(keepReplay) {
     const text = $('appText').value;
-    if (!text.trim()) { $('out').innerHTML = '<div class="msg missing">Paste a document first.</div>'; return; }
+    if (!text.trim()) { $('out').innerHTML = '<div class="card msg missing">Paste a document or upload a file first.</div>'; return; }
     $('runBtn').disabled = true; $('runBtn').textContent = 'Reading the document…';
     try {
       const data = await api('/api/decide', {raw_text: text, use_ai: $('useAi').checked});
-      if (data.error) { $('out').innerHTML = `<div class="msg bad">${esc(data.error)}</div>`; return; }
-      record = data.record; setPolicy(data.policy);
+      if (data.error) { $('out').innerHTML = `<div class="card msg bad">${esc(data.error)}</div>`; return; }
+      record = data.record; review = data.review || null; reviewMsg = ''; setPolicy(data.policy);
       if (!keepReplay) { replayHtml = ''; changeHtml = ''; }
       render();
     } catch (e) {
-      $('out').innerHTML = `<div class="msg bad">Could not reach the server: ${esc(e.message)}</div>`;
+      $('out').innerHTML = `<div class="card msg bad">Could not reach the server: ${esc(e.message)}</div>`;
     } finally { $('runBtn').disabled = false; $('runBtn').textContent = 'Decide'; }
   }
 
@@ -160,7 +287,14 @@
     if (input === 'dscr') return Number(v).toFixed(2);
     if (input === 'leverage') return Number(v).toFixed(2) + 'x';
     if (input === 'equity_eur') return eur(v);
+    if (input === 'tax_returns_verified') return v ? 'yes' : 'no';
     return String(v);
+  }
+  function fmtTest(input, test) {
+    const m = /^(>=|<=|<|>)\s*(-?[\d.]+)$/.exec(test.trim());
+    if (!m) return input === 'tax_returns_verified' ? (test.trim() === 'true' ? 'yes' : 'no') : test;
+    const word = {'>=':'at least', '<=':'at most', '<':'below', '>':'above'}[m[1]];
+    return word + ' ' + fmtActual(input, Number(m[2]));
   }
 
   // Only http(s) links are rendered; the citation comes from the policy file.
@@ -183,16 +317,153 @@
     return `<span class="chip cited">cited</span><div class="sub">${url ? `<a href="${url}" target="_blank" rel="noopener noreferrer" title="${esc(c.quote)}">${label}</a>` : label}</div>`;
   }
 
+  // ---- explainability blocks
+  function compare(op, a, b) { return op === '>=' ? a >= b : op === '<=' ? a <= b : op === '<' ? a < b : a > b; }
+
+  function ratioCard(id, title, value, formula, max) {
+    const seen = new Set(), ths = [];
+    policy.rules.forEach(rule => {
+      const m = /^(>=|<=|<|>)\s*(-?[\d.]+)$/.exec((rule.tests[id] || '-').trim());
+      if (!m) return;
+      const key = m[1] + m[2] + rule.out.status;
+      if (seen.has(key)) return;
+      seen.add(key);
+      ths.push({op: m[1], v: Number(m[2]), status: rule.out.status, rule: rule.id});
+    });
+    const pos = v => Math.max(0, Math.min(100, v / max * 100));
+    const has = value !== null && value !== undefined;
+    return `<div class="ratio"><div class="k">${title}</div>
+      <div class="num">${has ? fmtActual(id, value) : '—'}</div>
+      <div class="f">${formula}</div>
+      <div class="bar">${ths.map(t => `<i class="${t.status}" style="left:${pos(t.v)}%"></i>`).join('')}${has ? `<span style="left:${pos(value)}%"></span>` : ''}</div>
+      ${ths.map(t => {
+        const hit = has && compare(t.op, value, t.v);
+        return `<div class="th ${t.status}"><code>${esc(fmtTest(id, t.op + ' ' + t.v))}</code>
+          <span class="${hit ? 'yes' : 'nope'}">${hit ? '● ' : ''}${STATUS_WORD[t.status]} · ${esc(t.rule.split('_')[0])}</span></div>`;
+      }).join('')}</div>`;
+  }
+
+  function ratiosHtml(r) {
+    const v = k => (r.inputs[k] || {}).value, d = r.derived;
+    const f = (a, b) => (a == null || b == null) ? 'figures missing' : `${eur(a)} ÷ ${eur(b)}`;
+    const lev = (v('total_existing_debt_eur') == null || v('requested_amount_eur') == null || v('ebitda_eur') == null)
+      ? 'needs total existing debt' : `(${eur(v('total_existing_debt_eur'))} + ${eur(v('requested_amount_eur'))}) ÷ ${eur(v('ebitda_eur'))}`;
+    return `<div class="ratios">
+      ${ratioCard('dscr', 'Debt service coverage', d.dscr, 'EBITDA ÷ annual debt service<br>' + f(v('ebitda_eur'), v('annual_debt_service_eur')), 2.5)}
+      ${ratioCard('ltv', 'Loan-to-value', d.ltv, 'requested ÷ collateral<br>' + f(v('requested_amount_eur'), v('collateral_value_eur')), 1.2)}
+      ${ratioCard('leverage', 'Leverage after the loan', d.leverage, '(existing debt + requested) ÷ EBITDA<br>' + lev, 8)}</div>
+      <div class="sub" style="margin-top:6px">Ticks are the thresholds of the current policy. A dot marks a threshold this application meets. Rules are tried in order; the first one that matches in full decides.</div>`;
+  }
+
+  function whyHtml(r) {
+    if (r.rule.id === 'GATE_EVIDENCE_CONFLICT') {
+      return `<ol class="why">
+        <li class="fired"><div>Evidence check: the documents give different values for the same figure
+          <div class="sub" style="font-weight:400">${esc(r.outcome.reason)}</div></div><span class="tag">stopped here</span></li>
+        <li><div class="sub">Completeness check</div><span class="tag">not run</span></li>
+        <li><div class="sub">Decision table (${policy.rules.length} rules)</div><span class="tag">not run</span></li></ol>`;
+    }
+    if (r.rule.id === 'GATE_INPUT_COMPLETENESS') {
+      return `<ol class="why">
+        <li><div>Evidence check: no figure is stated with two different values</div><span class="tag">passed</span></li>
+        <li class="fired"><div>Completeness check: a required input is missing
+          <div class="sub" style="font-weight:400">${esc(r.outcome.reason)}</div></div><span class="tag">stopped here</span></li>
+        <li><div class="sub">Decision table (${policy.rules.length} rules)</div><span class="tag">not run</span></li></ol>`;
+    }
+    const byId = Object.fromEntries(policy.rules.map(x => [x.id, x]));
+    const rows = r.trace.map(t => {
+      const rule = byId[t.rule_id] || {label: t.rule_id, out: {}};
+      const tested = t.checks.filter(c => c.test.trim() !== '-');
+      if (t.rule_id === r.rule.id) {
+        const met = tested.map(c => `${SHORT[c.input] || c.input} ${fmtActual(c.input, c.actual)} is ${fmtTest(c.input, c.test)}`).join(' · ');
+        return `<li class="fired"><div>${esc(t.rule_id)} · ${esc(rule.label)}
+          <div class="sub" style="font-weight:400">${met ? esc(met) : 'no earlier rule matched, so this catch-all row applies'}</div></div>
+          <span class="tag">matched → ${STATUS_WORD[r.outcome.status]}</span></li>`;
+      }
+      const fail = tested.find(c => !c.ok);
+      const why = fail ? (fail.actual === null || fail.actual === undefined
+        ? `${SHORT[fail.input] || fail.input} is not given in the document`
+        : `${SHORT[fail.input] || fail.input} is ${fmtActual(fail.input, fail.actual)}, the rule needs ${fmtTest(fail.input, fail.test)}`) : '';
+      return `<li><div>${esc(t.rule_id)} · ${esc(rule.label)}<div class="sub">${esc(why)}</div></div><span class="tag">not matched</span></li>`;
+    }).join('');
+    const after = policy.rules.length - r.trace.length;
+    return `<ol class="why">
+      <li><div>Evidence and completeness checks: every required input is present and stated once</div><span class="tag">passed</span></li>
+      ${rows}</ol>
+      ${after > 0 ? `<div class="sub" style="margin-top:6px">${after} later rule${after > 1 ? 's were' : ' was'} not reached: the first matching row decides.</div>` : ''}`;
+  }
+
+  function reviewHtml(r) {
+    const s = r.outcome.status;
+    if (review) {
+      const rel = {confirms:'Confirms the engine’s result', overrides:'Overrides the engine’s result', decides:'Decision taken by the officer; the engine had abstained'}[review.relation];
+      return `<div class="card review"><h2><span class="n">5</span> Final human review <small>stored with the record, which is not rewritten</small></h2>
+        <div class="signed ${esc(review.action)}"><b>${review.action === 'accept' ? 'Accepted' : 'Rejected'}</b> by ${esc(review.reviewer)} · ${esc(review.reviewed_at.replace('T', ' '))}
+          <div>${rel} (${esc(STATUS_WORD[review.engine_status])} via ${esc(review.engine_rule)}, policy [${esc(review.policy_sha)}]).</div>
+          ${review.note ? `<div class="sub">Note: ${esc(review.note)}</div>` : ''}</div>
+        <div class="acts"><button onclick="review=null;render()">Change the review</button></div></div>`;
+    }
+    const hint = s === 'GRANTED' ? 'The engine granted this loan. Accept confirms it. Reject overrides it and needs a note.'
+      : s === 'DENIED' ? 'The engine declined this loan. Reject confirms it. Accept overrides it and needs a note.'
+      : 'The engine took no decision, so yours is the decision. A note saying what it rests on is required.';
+    return `<div class="card review ${s === 'ABSTAIN' ? 'need' : ''}"><h2><span class="n">5</span> Final human review <small>a credit officer signs off every case</small></h2>
+      <div class="sub">${hint}</div>
+      <label class="f" for="rvName">Reviewer</label><input type="text" id="rvName" maxlength="80" placeholder="Name of the credit officer" value="${esc(localStorage.getItem('l4e1_reviewer') || '')}">
+      <label class="f" for="rvNote">Note ${s === 'ABSTAIN' ? '(required)' : '(required for an override)'}</label><input type="text" id="rvNote" maxlength="500" placeholder="Reason, in one line">
+      <div class="acts"><button class="accept" onclick="sendReview('accept')">Accept</button><button class="reject" onclick="sendReview('reject')">Reject</button></div>
+      ${reviewMsg ? `<div class="msg bad">${esc(reviewMsg)}</div>` : ''}</div>`;
+  }
+
+  async function sendReview(action) {
+    const reviewer = $('rvName').value.trim(), note = $('rvNote').value.trim();
+    try { localStorage.setItem('l4e1_reviewer', reviewer); } catch (e) {}
+    const data = await api('/api/review', {record_id: record.record_id, action, reviewer, note});
+    if (data.error) { reviewMsg = data.error; render(); $('rvNote').value = note; return; }
+    review = data.review; reviewMsg = '';
+    render();
+  }
+
+  function stepsHtml(r) {
+    const gate = r.rule.id.startsWith('GATE_'), s = r.outcome.status;
+    const n = FIELDS.filter(([k]) => (r.inputs[k] || {}).value != null).length;
+    const steps = [
+      ['Document', 'read', 'done'],
+      ['Evidence', r.rule.id === 'GATE_EVIDENCE_CONFLICT' ? 'conflict found' : r.rule.id === 'GATE_INPUT_COMPLETENESS' ? 'inputs missing' : n + ' inputs quoted', gate ? 'stop' : 'done'],
+      ['Rules', gate ? 'table not run' : r.rule.id + ' fired', gate ? '' : 'done'],
+      ['Decision', {GRANTED:'granted', DENIED:'declined', ABSTAIN:'none · to a person'}[s], {GRANTED:'done', DENIED:'no', ABSTAIN:'stop'}[s]],
+      ['Human review', review ? (review.action === 'accept' ? 'accepted' : 'rejected') : 'waiting', review ? (review.action === 'accept' ? 'done' : 'no') : (s === 'ABSTAIN' ? 'stop' : '')]];
+    return steps.map(([k, v, c]) => `<div class="step ${c}"><div class="k">${k}</div><div class="v" title="${esc(v)}">${esc(v)}</div></div>`).join('');
+  }
+
+  // Select the quoted evidence in the document box.
+  function locate(quote) {
+    if (!quote) return;
+    const ta = $('appText');
+    const re = new RegExp(quote.trim().split(/\s+/).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s+'), 'i');
+    const m = re.exec(ta.value);
+    if (!m) return;
+    ta.focus();
+    ta.setSelectionRange(m.index, m.index + m[0].length);
+    const line = ta.value.slice(0, m.index).split('\n').length;
+    ta.scrollTop = Math.max(0, (line - 4) * 18);
+  }
+
   function render() {
-    const r = record, o = r.outcome, d = r.derived;
+    const r = record, o = r.outcome;
     const title = {GRANTED:'Granted', DENIED:'Declined', ABSTAIN:'No automated decision · sent to a credit officer'}[o.status];
     const traceBy = Object.fromEntries(r.trace.map(t => [t.rule_id, t]));
-    const gate = r.rule.id === 'GATE_INPUT_COMPLETENESS';
+    const gate = r.rule.id.startsWith('GATE_');
 
     const inputs = FIELDS.map(([k, label, tag]) => {
       const f = r.inputs[k] || {};
+      const lab = `${label}${tag ? ` <span class="sub">(${tag})</span>` : ''}`;
+      if (f.conflict) {
+        return `<tr class="conflict"><td>${lab}</td><td><span class="missing">conflict</span></td>
+          <td>${f.conflict.map(c => `<div class="ev" data-q="${esc(c.quote)}" style="cursor:pointer"><b>${fmtValue(k, c.value)}</b> <span class="q">“${esc(c.quote)}”</span></div>`).join('')}
+          <div class="missing" style="font-weight:400">${esc(f.note)}</div></td></tr>`;
+      }
       const val = tag && (f.value === null || f.value === undefined) ? '<span class="sub">not given</span>' : fmtValue(k, f.value);
-      return `<tr><td>${label}${tag ? ` <span class="sub">(${tag})</span>` : ''}</td><td>${val}</td>
+      return `<tr class="${f.quote ? 'ev' : ''}" data-q="${esc(f.quote || '')}"><td>${lab}</td><td>${val}</td>
         <td>${f.quote ? '<span class="q">“' + esc(f.quote) + '”</span>' : '<span class="sub">not found in the document</span>'}
         ${f.note ? '<div class="missing" style="font-weight:400">' + esc(f.note) + '</div>' : ''}</td></tr>`;
     }).join('');
@@ -214,6 +485,7 @@
     const skippedHtml = skipped.length ? `<div class="msg missing" style="font-weight:400">Not checked, because the document does not give the input: ${
       skipped.map(s => `${esc(s.rule_id)} (${esc(s.missing_input)}${s.cited ? ', cited rule' : ''})`).join('; ')}.</div>` : '';
 
+    $('steps').innerHTML = stepsHtml(r);
     $('out').innerHTML = `
       <div class="banner ${esc(o.status)}">
         <div><div class="big">${title}</div><div>${esc(o.reason)}</div>
@@ -224,40 +496,46 @@
         ${o.apr != null ? `<div style="text-align:right"><div class="big">${o.apr}%</div><div class="sub">APR</div></div>` : ''}
       </div>
 
-      <h2>2 · What the applicant is told <small>written from the record, no AI</small></h2>
-      <div class="box">${esc(r.explanation)}</div>
-      ${r.counterfactual ? `<div class="box cf"><b>What would change the result:</b> ${esc(r.counterfactual.text)}
-        <span class="sub">${r.counterfactual.confirmed_by_rerun ? '(confirmed by re-running the table on the changed figures)' : ''}</span></div>` : ''}
+      <div class="card"><h2><span class="n">2</span> The three ratios <small>calculated by code from the quoted figures</small></h2>
+        ${ratiosHtml(r)}</div>
 
-      <h2>3 · Where the rule comes from <small>${esc(r.rule.id)}</small></h2>
-      ${basisBox(r.rule.citation)}
+      <div class="card"><h2><span class="n">3</span> Why this result <small>the checks in the order they ran</small></h2>
+        ${whyHtml(r)}
+        ${skippedHtml}
+        ${r.counterfactual ? `<div class="box cf"><b>What would change the result:</b> ${esc(r.counterfactual.text)}
+          <span class="sub">${r.counterfactual.confirmed_by_rerun ? '(confirmed by re-running the table on the changed figures)' : ''}</span></div>` : ''}</div>
 
-      <h2>4 · Inputs read from the document <small>${esc(r.extraction.engine)}</small></h2>
-      <div class="tblwrap"><table><thead><tr><th>Input</th><th>Value</th><th>Evidence in the document</th></tr></thead><tbody>${inputs}</tbody></table></div>
-      <div class="sub" style="margin-top:6px">Derived: DSCR ${fmtActual('dscr', d.dscr)} · LTV ${fmtActual('ltv', d.ltv)} · leverage after the new loan ${fmtActual('leverage', d.leverage)}</div>
+      <div class="card"><h2><span class="n">4</span> What the applicant is told <small>written from the record, no AI</small></h2>
+        <div class="box" style="margin-top:0">${esc(r.explanation)}</div>
+        <h2 style="margin-top:14px">Where the rule comes from <small>${esc(r.rule.id)}</small></h2>
+        ${basisBox(r.rule.citation)}</div>
 
-      <h2>5 · Decision table <small>DMN 1.3, first matching row wins · click a test to change it</small></h2>
-      ${gate ? '<div class="msg missing">The table was not run: required inputs are missing, so the completeness gate stopped the case first.</div>' : ''}
-      <div class="sub" style="margin-bottom:6px">${citedCount} of ${policy.rules.length} rules cite a public source. The other ${policy.rules.length - citedCount} are the bank's own policy and are marked “no citation”.</div>
-      <div class="tblwrap"><table><thead><tr><th>Rule</th>${policy.inputs.map(i => `<th>${esc(i.label)}</th>`).join('')}<th>Outcome</th><th>Basis</th></tr></thead><tbody>${rules}</tbody></table></div>
-      ${skippedHtml}
-      <div class="row" style="margin-top:10px">
-        <button onclick="doReplay()">Replay this record</button>
-        <button onclick="location.href='/api/dmn'">Download policy as .dmn</button>
-        <button onclick="resetPolicy()">Reset policy to v1 rules</button>
-        <span class="sub">${esc(policy.note)}</span>
-      </div>
-      ${notice ? `<div class="msg bad">${esc(notice)}</div>` : ''}
-      ${changeHtml}
-      ${replayHtml}
+      ${reviewHtml(r)}
 
-      <details><summary>Decision record (JSON)</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>`;
+      <div class="card"><h2><span class="n">6</span> Evidence <small>${esc(r.extraction.engine)} · click a row to find its quote in the document</small></h2>
+        <div class="tblwrap"><table><thead><tr><th>Input</th><th>Value</th><th>Quote from the document</th></tr></thead><tbody>${inputs}</tbody></table></div></div>
+
+      <div class="card"><h2><span class="n">7</span> Decision table <small>DMN 1.3, first matching row wins · click a test to change it</small></h2>
+        ${gate ? '<div class="msg missing" style="margin:0 0 8px">The table was not run: a check before it stopped the case.</div>' : ''}
+        <div class="sub" style="margin-bottom:6px">${citedCount} of ${policy.rules.length} rules cite a public source. The other ${policy.rules.length - citedCount} are the bank's own policy and are marked “no citation”.</div>
+        <div class="tblwrap"><table><thead><tr><th>Rule</th>${policy.inputs.map(i => `<th>${esc(i.label)}</th>`).join('')}<th>Outcome</th><th>Basis</th></tr></thead><tbody>${rules}</tbody></table></div>
+        <div class="row" style="margin:10px 0 0">
+          <button onclick="doReplay()">Replay this record</button>
+          <button onclick="location.href='/api/dmn'">Download policy as .dmn</button>
+          <button onclick="resetPolicy()">Reset policy to v1 rules</button>
+          <span class="sub">${esc(policy.note)}</span>
+        </div>
+        ${notice ? `<div class="msg bad">${esc(notice)}</div>` : ''}
+        ${changeHtml}
+        ${replayHtml}
+        <details style="margin-top:12px"><summary>Decision record (JSON)</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details></div>`;
     notice = '';
 
     document.querySelectorAll('td[contenteditable]').forEach(td => {
       td.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); td.blur(); } if (e.key === 'Escape') { td.textContent = td.dataset.old; td.blur(); } });
       td.addEventListener('blur', () => editRule(td));
     });
+    document.querySelectorAll('.ev[data-q]').forEach(el => el.addEventListener('click', e => { e.stopPropagation(); locate(el.dataset.q); }));
   }
 
   async function editRule(td) {

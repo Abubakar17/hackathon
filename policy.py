@@ -377,11 +377,27 @@ def _counterfactual(values, rules, fired) -> Optional[Dict[str, Any]]:
             "resulting_rule": rerun["id"], "resulting_status": rerun["out"]["status"], "confirmed_by_rerun": ok}
 
 
-def decide(values: Dict[str, Any], policy: Dict[str, Any]) -> Dict[str, Any]:
-    """Pure function of (inputs, policy version): the same pair always returns the same result."""
+def decide(values: Dict[str, Any], policy: Dict[str, Any], conflicts: Optional[Dict[str, List[Any]]] = None) -> Dict[str, Any]:
+    """Pure function of (inputs, conflicts, policy version): the same triple always returns the same result."""
     rules = dmn_to_rules(policy["xml"])  # the engine executes the DMN file itself
     d = derive(values)
     pol = {"name": POLICY_NAME, "version": policy["version"], "sha256": policy["sha"]}
+
+    if conflicts:
+        def show(name, v):
+            return str(v) if name in ("years_in_business", "days_past_due") else eur(v)
+        parts = [f"{FIELD_LABELS.get(n, n)} ({' vs '.join(show(n, v) for v in vals)})" for n, vals in conflicts.items()]
+        names = "; ".join(parts)
+        return {
+            "outcome": {"status": "ABSTAIN", "category": "ABSTAIN_CONFLICTING_EVIDENCE", "apr": None,
+                        "reason": f"The documents disagree on: {names}"},
+            "rule": {"id": "GATE_EVIDENCE_CONFLICT", "label": "Evidence conflict gate (runs before the decision table)",
+                     "tests": {}, "citation": None},
+            "policy": pol, "derived": d, "missing": list(conflicts), "trace": [], "not_checked": [],
+            "explanation": (f"No automated decision was taken. The documents give different values for the same figure: {names}. "
+                            f"Neither value was chosen; the case goes to a credit officer to settle which one is right. {NO_CITATION_TEXT}"),
+            "counterfactual": None,
+        }
 
     missing = [f for f in REQUIRED_FIELDS if values.get(f) is None]
     if not missing and d["dscr"] is None:
