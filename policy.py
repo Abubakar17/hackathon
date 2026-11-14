@@ -78,8 +78,7 @@ _TEST_RE = re.compile(r"(>=|<=|<|>)\s*(-?\d+(?:\.\d+)?)")
 
 # ---------------------------------------------------------------- DMN XML
 
-def rules_to_dmn(rules: List[Dict[str, Any]], inputs=None, name: str = POLICY_NAME) -> str:
-    inputs = inputs or INPUTS
+def rules_to_dmn(rules: List[Dict[str, Any]]) -> str:
     def lit(v):
         if v is None:
             return "null"
@@ -88,11 +87,11 @@ def rules_to_dmn(rules: List[Dict[str, Any]], inputs=None, name: str = POLICY_NA
         return '"' + str(v).replace('"', "'") + '"'
 
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
-           f'<definitions xmlns="{DMN_NS}" id="Definitions_CreditPolicy" name="{escape(name)}"',
+           f'<definitions xmlns="{DMN_NS}" id="Definitions_CreditPolicy" name="{escape(POLICY_NAME)}"',
            '             namespace="https://example.org/dmn/credit-policy">',
            '  <decision id="Decision_CreditRuling" name="Credit ruling">',
            '    <decisionTable id="DecisionTable_CreditPolicy" hitPolicy="FIRST">']
-    for var, label, typ in inputs:
+    for var, label, typ in INPUTS:
         out += [f'      <input id="Input_{var}" label="{escape(label)}">',
                 f'        <inputExpression id="InputExpr_{var}" typeRef="{typ}"><text>{var}</text></inputExpression>',
                 '      </input>']
@@ -101,7 +100,7 @@ def rules_to_dmn(rules: List[Dict[str, Any]], inputs=None, name: str = POLICY_NA
     for r in rules:
         out.append(f'      <rule id="{escape(r["id"])}">')
         out.append(f'        <description>{escape(r["label"])}</description>')
-        for var, _, _ in inputs:
+        for var in INPUT_IDS:
             out.append(f'        <inputEntry id="{r["id"]}_in_{var}"><text>{escape(r["tests"][var])}</text></inputEntry>')
         for name, _ in OUTPUTS:
             out.append(f'        <outputEntry id="{r["id"]}_out_{name}"><text>{escape(lit(r["out"][name]))}</text></outputEntry>')
@@ -167,8 +166,8 @@ def evaluate_table(rules: List[Dict[str, Any]], values: Dict[str, Any]) -> Tuple
     """Hit policy FIRST. Returns the rule that fired and the trace of every row checked before it."""
     trace = []
     for r in rules:
-        checks = [{"input": v, "test": t, "actual": values.get(v), "ok": eval_test(t, values.get(v))}
-                  for v, t in r["tests"].items()]
+        checks = [{"input": v, "test": r["tests"][v], "actual": values.get(v), "ok": eval_test(r["tests"][v], values.get(v))}
+                  for v in INPUT_IDS]
         matched = all(c["ok"] for c in checks)
         trace.append({"rule_id": r["id"], "matched": matched, "checks": checks})
         if matched:
