@@ -154,11 +154,13 @@ def eval_test(test: str, value: Any) -> bool:
     if value is None:
         return False
     if test in ("true", "false"):
-        return value is (test == "true")
+        return bool(value) == (test == "true")
     m = _TEST_RE.fullmatch(test)
     if not m:
         raise ValueError(f"Unsupported unary test: {test}")
     op, num = m.group(1), float(m.group(2))
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
     return {">=": value >= num, "<=": value <= num, "<": value < num, ">": value > num}[op]
 
 

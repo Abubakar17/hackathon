@@ -1,21 +1,21 @@
 {
-  "record_id": "DEC-1A359ED7E7",
-  "decided_at": "2026-11-14T15:16:06",
-  "applicant": "Beta Precision Tooling Srl",
+  "record_id": "DEC-8F159F58D1",
+  "decided_at": "2026-11-14T16:22:49",
+  "applicant": "Alpha Logistics SpA",
   "outcome": {
-    "status": "DENIED",
-    "category": "DENIED_CREDIT_POLICY",
-    "apr": null,
-    "reason": "Debt service coverage ratio is below the minimum of 1.15"
+    "status": "GRANTED",
+    "category": "APPROVED_PRIME",
+    "apr": 5.5,
+    "reason": "Prime tier: strong debt coverage and conservative loan-to-value"
   },
   "rule": {
-    "id": "R2_LowDSCR",
-    "label": "Debt service coverage below floor",
+    "id": "R5_Prime",
+    "label": "Prime tier",
     "tests": {
-      "dscr": "< 1.15",
-      "ltv": "-",
-      "years_in_business": "-",
-      "tax_returns_verified": "-"
+      "dscr": ">= 1.35",
+      "ltv": "<= 0.70",
+      "years_in_business": ">= 3",
+      "tax_returns_verified": "true"
     }
   },
   "policy": {
@@ -24,9 +24,9 @@
     "sha256": "16ca416ba2f1"
   },
   "derived": {
-    "dscr": 1.05,
-    "ltv": 0.9444,
-    "debt_to_ebitda": 7.8571
+    "dscr": 1.8947,
+    "ltv": 0.5263,
+    "debt_to_ebitda": 1.5278
   },
   "missing": [],
   "trace": [
@@ -37,19 +37,19 @@
         {
           "input": "dscr",
           "test": "-",
-          "actual": 1.05,
+          "actual": 1.8947,
           "ok": true
         },
         {
           "input": "ltv",
           "test": "-",
-          "actual": 0.9444,
+          "actual": 0.5263,
           "ok": true
         },
         {
           "input": "years_in_business",
           "test": "-",
-          "actual": 4,
+          "actual": 6,
           "ok": true
         },
         {
@@ -62,24 +62,24 @@
     },
     {
       "rule_id": "R2_LowDSCR",
-      "matched": true,
+      "matched": false,
       "checks": [
         {
           "input": "dscr",
           "test": "< 1.15",
-          "actual": 1.05,
-          "ok": true
+          "actual": 1.8947,
+          "ok": false
         },
         {
           "input": "ltv",
           "test": "-",
-          "actual": 0.9444,
+          "actual": 0.5263,
           "ok": true
         },
         {
           "input": "years_in_business",
           "test": "-",
-          "actual": 4,
+          "actual": 6,
           "ok": true
         },
         {
@@ -89,64 +89,145 @@
           "ok": true
         }
       ]
+    },
+    {
+      "rule_id": "R3_HighLTV",
+      "matched": false,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "-",
+          "actual": 1.8947,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "> 0.85",
+          "actual": 0.5263,
+          "ok": false
+        },
+        {
+          "input": "years_in_business",
+          "test": "-",
+          "actual": 6,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "-",
+          "actual": true,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "rule_id": "R4_ShortHistory",
+      "matched": false,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "-",
+          "actual": 1.8947,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "-",
+          "actual": 0.5263,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": "< 2",
+          "actual": 6,
+          "ok": false
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "-",
+          "actual": true,
+          "ok": true
+        }
+      ]
+    },
+    {
+      "rule_id": "R5_Prime",
+      "matched": true,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": ">= 1.35",
+          "actual": 1.8947,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "<= 0.70",
+          "actual": 0.5263,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": ">= 3",
+          "actual": 6,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "true",
+          "actual": true,
+          "ok": true
+        }
+      ]
     }
   ],
-  "explanation": "Declined. Rule applied: R2_LowDSCR (Debt service coverage below floor), policy version 1 [16ca416ba2f1]. This rule applies when debt service coverage (DSCR) is below 1.15. Figures used: DSCR 1.05 (EBITDA €210,000 ÷ annual debt service €200,000); loan-to-value 94.4% (requested €850,000 ÷ collateral €900,000); 4 years in business; tax returns verified.",
-  "counterfactual": {
-    "text": "If EBITDA were at least €240,000 instead of €210,000 (DSCR ≥ 1.2), and the requested amount were at most €720,000 instead of €850,000 (loan-to-value ≤ 80%), the application would be granted at 7.2% APR under rule R6_Standard.",
-    "changed_inputs": {
-      "requested_amount_eur": 720000,
-      "ebitda_eur": 240000
-    },
-    "resulting_rule": "R6_Standard",
-    "resulting_status": "GRANTED",
-    "confirmed_by_rerun": true
-  },
+  "explanation": "Granted at 5.5% APR. Rule applied: R5_Prime (Prime tier), policy version 1 [16ca416ba2f1]. This rule applies when debt service coverage (DSCR) is at least 1.35 and loan-to-value is at most 70% and years in business is at least 3 and tax returns are verified. Figures used: DSCR 1.89 (EBITDA €720,000 ÷ annual debt service €380,000); loan-to-value 52.6% (requested €500,000 ÷ collateral €950,000); 6 years in business; tax returns verified.",
+  "counterfactual": null,
   "inputs": {
     "requested_amount_eur": {
-      "value": 850000.0,
-      "quote": "Loan Request: €850,000",
+      "value": 500000.0,
+      "quote": "Facility Request: €500,000",
       "note": null
     },
     "annual_revenue_eur": {
-      "value": 2100000.0,
-      "quote": "Annual Revenue: €2,100,000",
+      "value": 4250000.0,
+      "quote": "Gross Revenue: €4,250,000",
       "note": null
     },
     "ebitda_eur": {
-      "value": 210000.0,
-      "quote": "EBITDA: €210,000",
+      "value": 720000.0,
+      "quote": "Operating Profit / EBITDA: €720,000",
       "note": null
     },
     "annual_debt_service_eur": {
-      "value": 200000.0,
-      "quote": "Annual Debt Service: €200,000",
+      "value": 380000.0,
+      "quote": "Annual Debt Service (P&I): €380,000",
       "note": null
     },
     "total_existing_debt_eur": {
-      "value": 1650000.0,
-      "quote": "Total Liabilities: €1,650,000",
+      "value": 1100000.0,
+      "quote": "Total Existing Liabilities: €1,100,000",
       "note": null
     },
     "collateral_value_eur": {
-      "value": 900000.0,
-      "quote": "Collateral Value: €900,000",
+      "value": 950000.0,
+      "quote": "Real Estate Appraisal: €950,000",
       "note": null
     },
     "years_in_business": {
-      "value": 4,
-      "quote": "Years in Business: 4",
+      "value": 6,
+      "quote": "Operating History: 6",
       "note": null
     },
     "tax_returns_verified": {
       "value": true,
-      "quote": "Tax Returns: verified and current",
+      "quote": "Tax Filings: verified and audited by PwC Italy",
       "note": null
     }
   },
   "extraction": {
     "engine": "Rule-based extractor (offline)",
     "dropped": [],
-    "document_sha256": "0326dc65b23a"
+    "document_sha256": "5bdfd8a148b8"
   }
 }

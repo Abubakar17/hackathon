@@ -15,6 +15,7 @@ from policy import RUNS_DIR, STORE, decide
 
 _RECORDS: Dict[str, Dict[str, Any]] = {}
 _LOG = os.path.join(RUNS_DIR, "decisions.jsonl")
+DELIVERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "delivery")
 
 
 def _record_id(values: Dict[str, Any], policy_sha: str) -> str:
@@ -43,6 +44,11 @@ def process_credit_application(raw_text: str, use_ai: bool = True, persist: bool
             os.makedirs(RUNS_DIR, exist_ok=True)
             with open(_LOG, "a", encoding="utf-8") as f:
                 f.write(json.dumps(record, ensure_ascii=False) + "\n")
+            os.makedirs(DELIVERY_DIR, exist_ok=True)
+            with open(os.path.join(DELIVERY_DIR, "decision_object.json"), "w", encoding="utf-8") as f:
+                json.dump(record, f, indent=2, ensure_ascii=False)
+            with open(os.path.join(DELIVERY_DIR, "ruling.dmn"), "w", encoding="utf-8") as f:
+                f.write(policy["xml"])
         except OSError:
             pass
     return record
