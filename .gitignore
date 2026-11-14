@@ -3,3 +3,8 @@
 node_modules/
 __pycache__/
 .venv/
+
+# Credit Console local documents, records and runtime files
+credit-console/data/
+credit-console/test-results/
+!credit-console/.env.example

@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checked": [
+    "complete assessment",
+    "source evidence modal",
+    "three ISTAT charts",
+    "year mismatch guard",
+    "rulebook tab",
+    "missing-evidence abstention",
+    "PDF upload with explicit reviewer acceptance",
+    "frozen-input replay",
+    "20-case benchmark",
+    "activity console command",
+    "390px responsive layout"
+  ],
+  "pageErrors": []
+}

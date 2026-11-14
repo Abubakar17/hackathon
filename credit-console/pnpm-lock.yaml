@@ -1,0 +1,126 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@smarthorizon-labs/dmn':
+        specifier: 0.1.0
+        version: 0.1.0
+
+packages:
+
+  '@lezer/common@1.5.5':
+    resolution: {integrity: sha512-Pw7PVCndruF1pb3ebCxpSVpkMHSDjwRCLcTRw+RizUKco5QbWylwq2g4lnG/RYN7yTTQDXE9F77MwtkAyphrjg==}
+
+  '@lezer/highlight@1.2.5':
+    resolution: {integrity: sha512-O1GMVKgtf5YspFaRzpmqkVgMtIk2HG9uMAbH6wdAIdNh3TVzCsch/+cRi+6l2//UGDKe6NB9BW3cvuR5ezMQ0w==}
+
+  '@lezer/lr@1.4.12':
+    resolution: {integrity: sha512-On9HU4oMMiHPMkQDgoTnGahjgG5n/MkN38CgG77sMraKLL+3JBbeQNi1FcCXV9QRqwF9/BUXP3caHyJC1fBOTQ==}
+
+  '@smarthorizon-labs/dmn-feel@0.1.0':
+    resolution: {integrity: sha512-PkUg075Jj4SzfxEz75g67zuD1zywDv8C7DgLMUrDdA2RJ0XeesJ9PM6DuqGI1Fz44CcfBxC0n+kY0D5XLGjsIw==}
+    engines: {node: '>=22.12.0'}
+
+  '@smarthorizon-labs/dmn-model@0.1.0':
+    resolution: {integrity: sha512-jkrdViQh6DDHiSQW5Z4alLhLrlvb5+lS8cVK+Wp87ug/IwMHipgMiPITizSfwn4bfGZDqFrZtjHheyOG5Nb6LQ==}
+    engines: {node: '>=22.12.0'}
+
+  '@smarthorizon-labs/dmn-runtime@0.1.0':
+    resolution: {integrity: sha512-qfRXIR5wG/fYh6YFFJGd2g8Udv2/WPh4M6wQ00hxWvLDlRVTNhmhz/wHLViNBONA1RzyPo+xKRNc2TcSkrh/MA==}
+    engines: {node: '>=22.12.0'}
+
+  '@smarthorizon-labs/dmn-xml@0.1.0':
+    resolution: {integrity: sha512-lrdCuomqeNH2yaojEttqNHtzRWvU3K8z7xh2ZEm9IuERnduVCqUhnWh3FoEoWGO/dUtyhIGkUByYWpac6t0yww==}
+    engines: {node: '>=22.12.0'}
+
+  '@smarthorizon-labs/dmn@0.1.0':
+    resolution: {integrity: sha512-0cd4ttzhgeRObIx2OY9bHlagQbfsnVFe64pbWIYOv0ImJST0FforEjqpiLXNHYVaD4DQBDXPZyKa3UKFDu3ZBQ==}
+    engines: {node: '>=22.12.0'}
+
+  decimal.js@10.6.0:
+    resolution: {integrity: sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==}
+
+  lezer-feel@1.9.0:
+    resolution: {integrity: sha512-x8z6pCih3I3BOq3kBbhw6VUOU9Sg61PBJ1nigTgDl1yM5f0OPzEjK7GRJXutrSJDiUK8zwgqBvUJFlSfGLNZUg==}
+
+  min-dash@4.2.3:
+    resolution: {integrity: sha512-VLMYQI5+FcD9Ad24VcB08uA83B07OhueAlZ88jBK6PyupTvEJwllTMUqMy0wPGYs7pZUEtEEMWdHB63m3LtEcg==}
+
+  saxes@6.0.0:
+    resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
+    engines: {node: '>=v12.22.7'}
+
+  temporal-polyfill@0.3.2:
+    resolution: {integrity: sha512-TzHthD/heRK947GNiSu3Y5gSPpeUDH34+LESnfsq8bqpFhsB79HFBX8+Z834IVX68P3EUyRPZK5bL/1fh437Eg==}
+
+  temporal-spec@0.3.1:
+    resolution: {integrity: sha512-B4TUhezh9knfSIMwt7RVggApDRJZo73uZdj8AacL2mZ8RP5KtLianh2MXxL06GN9ESYiIsiuoLQhgVfwe55Yhw==}
+
+  xmlchars@2.2.0:
+    resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
+
+snapshots:
+
+  '@lezer/common@1.5.5': {}
+
+  '@lezer/highlight@1.2.5':
+    dependencies:
+      '@lezer/common': 1.5.5
+
+  '@lezer/lr@1.4.12':
+    dependencies:
+      '@lezer/common': 1.5.5
+
+  '@smarthorizon-labs/dmn-feel@0.1.0':
+    dependencies:
+      '@lezer/common': 1.5.5
+      decimal.js: 10.6.0
+      lezer-feel: 1.9.0
+      temporal-polyfill: 0.3.2
+
+  '@smarthorizon-labs/dmn-model@0.1.0': {}
+
+  '@smarthorizon-labs/dmn-runtime@0.1.0':
+    dependencies:
+      '@smarthorizon-labs/dmn-feel': 0.1.0
+      '@smarthorizon-labs/dmn-model': 0.1.0
+
+  '@smarthorizon-labs/dmn-xml@0.1.0':
+    dependencies:
+      '@smarthorizon-labs/dmn-model': 0.1.0
+      saxes: 6.0.0
+
+  '@smarthorizon-labs/dmn@0.1.0':
+    dependencies:
+      '@smarthorizon-labs/dmn-feel': 0.1.0
+      '@smarthorizon-labs/dmn-model': 0.1.0
+      '@smarthorizon-labs/dmn-runtime': 0.1.0
+      '@smarthorizon-labs/dmn-xml': 0.1.0
+
+  decimal.js@10.6.0: {}
+
+  lezer-feel@1.9.0:
+    dependencies:
+      '@lezer/highlight': 1.2.5
+      '@lezer/lr': 1.4.12
+      min-dash: 4.2.3
+
+  min-dash@4.2.3: {}
+
+  saxes@6.0.0:
+    dependencies:
+      xmlchars: 2.2.0
+
+  temporal-polyfill@0.3.2:
+    dependencies:
+      temporal-spec: 0.3.1
+
+  temporal-spec@0.3.1: {}
+
+  xmlchars@2.2.0: {}

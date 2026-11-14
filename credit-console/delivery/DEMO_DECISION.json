@@ -1,0 +1,698 @@
+{
+  "schemaVersion": "1.0",
+  "id": "cddd6cdd-d865-4f37-86bd-ec04a175d222",
+  "createdAt": "2026-11-14T15:10:55.738Z",
+  "parentId": null,
+  "scenario": "complete",
+  "dataLabel": "SYNTHETIC DEMONSTRATION",
+  "review": {
+    "accepted": true,
+    "by": "Pre-labelled demonstration fixture"
+  },
+  "documents": [
+    {
+      "id": "doc-1",
+      "name": "01-credit-memo.txt",
+      "sha256": "192455d28d023294e59af076fb550024367edca429814a4430cb86c26674f6ee",
+      "pages": [
+        {
+          "number": 1,
+          "text": "CREDIT MEMO / CASH-FLOW AND REPAYMENT SCHEDULE\nSYNTHETIC DEMONSTRATION — not a real borrower or bank policy.\nApplicant: Officina Aurora S.r.l.\nEntity ID: DEMO-001\nScope: IT_SMALL_COMPANY_SECURED_TERM_EUR\nPrepared: 2026-11-14\nCurrency: EUR; unit: individual euros\n\nThe business requests a secured term loan for production equipment. This demonstration uses a 2027 forecast and includes existing and proposed debt service.\n\nCash flow available for debt service [2027]: EUR 140,000.00\nExisting principal due [2027]: EUR 40,000.00\nExisting interest due [2027]: EUR 10,000.00\nProposed principal due [2027]: EUR 40,000.00\nProposed interest due [2027]: EUR 10,000.00\n\nCash available is the prepared forecast after operating costs, tax, maintenance investment and working-capital changes, before debt service. The assumption has not been independently verified.\n"
+        }
+      ],
+      "error": null,
+      "base64": "Q1JFRElUIE1FTU8gLyBDQVNILUZMT1cgQU5EIFJFUEFZTUVOVCBTQ0hFRFVMRQpTWU5USEVUSUMgREVNT05TVFJBVElPTiDigJQgbm90IGEgcmVhbCBib3Jyb3dlciBvciBiYW5rIHBvbGljeS4KQXBwbGljYW50OiBPZmZpY2luYSBBdXJvcmEgUy5yLmwuCkVudGl0eSBJRDogREVNTy0wMDEKU2NvcGU6IElUX1NNQUxMX0NPTVBBTllfU0VDVVJFRF9URVJNX0VVUgpQcmVwYXJlZDogMjAyNi0xMS0xNApDdXJyZW5jeTogRVVSOyB1bml0OiBpbmRpdmlkdWFsIGV1cm9zCgpUaGUgYnVzaW5lc3MgcmVxdWVzdHMgYSBzZWN1cmVkIHRlcm0gbG9hbiBmb3IgcHJvZHVjdGlvbiBlcXVpcG1lbnQuIFRoaXMgZGVtb25zdHJhdGlvbiB1c2VzIGEgMjAyNyBmb3JlY2FzdCBhbmQgaW5jbHVkZXMgZXhpc3RpbmcgYW5kIHByb3Bvc2VkIGRlYnQgc2VydmljZS4KCkNhc2ggZmxvdyBhdmFpbGFibGUgZm9yIGRlYnQgc2VydmljZSBbMjAyN106IEVVUiAxNDAsMDAwLjAwCkV4aXN0aW5nIHByaW5jaXBhbCBkdWUgWzIwMjddOiBFVVIgNDAsMDAwLjAwCkV4aXN0aW5nIGludGVyZXN0IGR1ZSBbMjAyN106IEVVUiAxMCwwMDAuMDAKUHJvcG9zZWQgcHJpbmNpcGFsIGR1ZSBbMjAyN106IEVVUiA0MCwwMDAuMDAKUHJvcG9zZWQgaW50ZXJlc3QgZHVlIFsyMDI3XTogRVVSIDEwLDAwMC4wMAoKQ2FzaCBhdmFpbGFibGUgaXMgdGhlIHByZXBhcmVkIGZvcmVjYXN0IGFmdGVyIG9wZXJhdGluZyBjb3N0cywgdGF4LCBtYWludGVuYW5jZSBpbnZlc3RtZW50IGFuZCB3b3JraW5nLWNhcGl0YWwgY2hhbmdlcywgYmVmb3JlIGRlYnQgc2VydmljZS4gVGhlIGFzc3VtcHRpb24gaGFzIG5vdCBiZWVuIGluZGVwZW5kZW50bHkgdmVyaWZpZWQuCg=="
+    },
+    {
+      "id": "doc-2",
+      "name": "02-financial-statements.txt",
+      "sha256": "6e75db5871a5ca9107609b64c1fbef53dbcf938ec1fb0fa6e9157c442d4e2d89",
+      "pages": [
+        {
+          "number": 1,
+          "text": "FINANCIAL STATEMENTS / MANAGEMENT SUMMARY\nSYNTHETIC DEMONSTRATION — not a real borrower or bank policy.\nApplicant: Officina Aurora S.r.l.\nEntity ID: DEMO-001\nScope: IT_SMALL_COMPANY_SECURED_TERM_EUR\nPrepared: 2026-11-14\nCurrency: EUR; unit: individual euros\n\nThe following figures describe the specified entity on a standalone basis. The debt balance includes the proposed financing.\n\nEBITDA [2026]: EUR 150,000.00\nPost-loan interest-bearing debt [2026-12-31]: EUR 450,000.00\n\nHistorical context for comparison with ISTAT 2024, separate from the loan assessment:\nTurnover [2024]: EUR 1,800,000.00\nValue added [2024]: EUR 650,000.00\nLabour cost [2024]: EUR 400,000.00\nPersons employed [2024]: N 12\nEmployee count [2024]: N 10\n\nThese are synthetic management figures for demonstrating policy execution.\n"
+        }
+      ],
+      "error": null,
+      "base64": "RklOQU5DSUFMIFNUQVRFTUVOVFMgLyBNQU5BR0VNRU5UIFNVTU1BUlkKU1lOVEhFVElDIERFTU9OU1RSQVRJT04g4oCUIG5vdCBhIHJlYWwgYm9ycm93ZXIgb3IgYmFuayBwb2xpY3kuCkFwcGxpY2FudDogT2ZmaWNpbmEgQXVyb3JhIFMuci5sLgpFbnRpdHkgSUQ6IERFTU8tMDAxClNjb3BlOiBJVF9TTUFMTF9DT01QQU5ZX1NFQ1VSRURfVEVSTV9FVVIKUHJlcGFyZWQ6IDIwMjYtMTEtMTQKQ3VycmVuY3k6IEVVUjsgdW5pdDogaW5kaXZpZHVhbCBldXJvcwoKVGhlIGZvbGxvd2luZyBmaWd1cmVzIGRlc2NyaWJlIHRoZSBzcGVjaWZpZWQgZW50aXR5IG9uIGEgc3RhbmRhbG9uZSBiYXNpcy4gVGhlIGRlYnQgYmFsYW5jZSBpbmNsdWRlcyB0aGUgcHJvcG9zZWQgZmluYW5jaW5nLgoKRUJJVERBIFsyMDI2XTogRVVSIDE1MCwwMDAuMDAKUG9zdC1sb2FuIGludGVyZXN0LWJlYXJpbmcgZGVidCBbMjAyNi0xMi0zMV06IEVVUiA0NTAsMDAwLjAwCgpIaXN0b3JpY2FsIGNvbnRleHQgZm9yIGNvbXBhcmlzb24gd2l0aCBJU1RBVCAyMDI0LCBzZXBhcmF0ZSBmcm9tIHRoZSBsb2FuIGFzc2Vzc21lbnQ6ClR1cm5vdmVyIFsyMDI0XTogRVVSIDEsODAwLDAwMC4wMApWYWx1ZSBhZGRlZCBbMjAyNF06IEVVUiA2NTAsMDAwLjAwCkxhYm91ciBjb3N0IFsyMDI0XTogRVVSIDQwMCwwMDAuMDAKUGVyc29ucyBlbXBsb3llZCBbMjAyNF06IE4gMTIKRW1wbG95ZWUgY291bnQgWzIwMjRdOiBOIDEwCgpUaGVzZSBhcmUgc3ludGhldGljIG1hbmFnZW1lbnQgZmlndXJlcyBmb3IgZGVtb25zdHJhdGluZyBwb2xpY3kgZXhlY3V0aW9uLgo="
+    },
+    {
+      "id": "doc-3",
+      "name": "03-collateral-schedule.txt",
+      "sha256": "36405c9866899555c56d39b5a91f169df289f67b88e2b675da71e30272db3c29",
+      "pages": [
+        {
+          "number": 1,
+          "text": "SECURITY / ACCEPTED COLLATERAL SCHEDULE\nSYNTHETIC DEMONSTRATION — not a real borrower or bank policy.\nApplicant: Officina Aurora S.r.l.\nEntity ID: DEMO-001\nScope: IT_SMALL_COMPANY_SECURED_TERM_EUR\nPrepared: 2026-11-14\nCurrency: EUR; unit: individual euros\n\nFor this fictional case, the assumed eligible collateral value is supplied after the illustrative valuation adjustments and prior claims. The software does not establish legal enforceability.\n\nSecured exposure [2026-12-31]: EUR 200,000.00\nAccepted eligible collateral value [2026-12-31]: EUR 300,000.00\n\nOwnership, valuation, ranking and insurance require a bank reviewer.\n"
+        }
+      ],
+      "error": null,
+      "base64": "U0VDVVJJVFkgLyBBQ0NFUFRFRCBDT0xMQVRFUkFMIFNDSEVEVUxFClNZTlRIRVRJQyBERU1PTlNUUkFUSU9OIOKAlCBub3QgYSByZWFsIGJvcnJvd2VyIG9yIGJhbmsgcG9saWN5LgpBcHBsaWNhbnQ6IE9mZmljaW5hIEF1cm9yYSBTLnIubC4KRW50aXR5IElEOiBERU1PLTAwMQpTY29wZTogSVRfU01BTExfQ09NUEFOWV9TRUNVUkVEX1RFUk1fRVVSClByZXBhcmVkOiAyMDI2LTExLTE0CkN1cnJlbmN5OiBFVVI7IHVuaXQ6IGluZGl2aWR1YWwgZXVyb3MKCkZvciB0aGlzIGZpY3Rpb25hbCBjYXNlLCB0aGUgYXNzdW1lZCBlbGlnaWJsZSBjb2xsYXRlcmFsIHZhbHVlIGlzIHN1cHBsaWVkIGFmdGVyIHRoZSBpbGx1c3RyYXRpdmUgdmFsdWF0aW9uIGFkanVzdG1lbnRzIGFuZCBwcmlvciBjbGFpbXMuIFRoZSBzb2Z0d2FyZSBkb2VzIG5vdCBlc3RhYmxpc2ggbGVnYWwgZW5mb3JjZWFiaWxpdHkuCgpTZWN1cmVkIGV4cG9zdXJlIFsyMDI2LTEyLTMxXTogRVVSIDIwMCwwMDAuMDAKQWNjZXB0ZWQgZWxpZ2libGUgY29sbGF0ZXJhbCB2YWx1ZSBbMjAyNi0xMi0zMV06IEVVUiAzMDAsMDAwLjAwCgpPd25lcnNoaXAsIHZhbHVhdGlvbiwgcmFua2luZyBhbmQgaW5zdXJhbmNlIHJlcXVpcmUgYSBiYW5rIHJldmlld2VyLgo="
+    }
+  ],
+  "extraction": {
+    "candidates": [
+      {
+        "field": "cash_available",
+        "value": "140000",
+        "rawValue": "140,000.00",
+        "period": "2027",
+        "currency": "EUR",
+        "documentId": "doc-1",
+        "page": 1,
+        "quote": "Cash flow available for debt service [2027]: EUR 140,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      },
+      {
+        "field": "existing_principal",
+        "value": "40000",
+        "rawValue": "40,000.00",
+        "period": "2027",
+        "currency": "EUR",
+        "documentId": "doc-1",
+        "page": 1,
+        "quote": "Existing principal due [2027]: EUR 40,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      },
+      {
+        "field": "existing_interest",
+        "value": "10000",
+        "rawValue": "10,000.00",
+        "period": "2027",
+        "currency": "EUR",
+        "documentId": "doc-1",
+        "page": 1,
+        "quote": "Existing interest due [2027]: EUR 10,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      },
+      {
+        "field": "new_principal",
+        "value": "40000",
+        "rawValue": "40,000.00",
+        "period": "2027",
+        "currency": "EUR",
+        "documentId": "doc-1",
+        "page": 1,
+        "quote": "Proposed principal due [2027]: EUR 40,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      },
+      {
+        "field": "new_interest",
+        "value": "10000",
+        "rawValue": "10,000.00",
+        "period": "2027",
+        "currency": "EUR",
+        "documentId": "doc-1",
+        "page": 1,
+        "quote": "Proposed interest due [2027]: EUR 10,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      },
+      {
+        "field": "debt_after_loan",
+        "value": "450000",
+        "rawValue": "450,000.00",
+        "period": "2026-12-31",
+        "currency": "EUR",
+        "documentId": "doc-2",
+        "page": 1,
+        "quote": "Post-loan interest-bearing debt [2026-12-31]: EUR 450,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      },
+      {
+        "field": "ebitda",
+        "value": "150000",
+        "rawValue": "150,000.00",
+        "period": "2026",
+        "currency": "EUR",
+        "documentId": "doc-2",
+        "page": 1,
+        "quote": "EBITDA [2026]: EUR 150,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      },
+      {
+        "field": "secured_exposure",
+        "value": "200000",
+        "rawValue": "200,000.00",
+        "period": "2026-12-31",
+        "currency": "EUR",
+        "documentId": "doc-3",
+        "page": 1,
+        "quote": "Secured exposure [2026-12-31]: EUR 200,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      },
+      {
+        "field": "collateral_value",
+        "value": "300000",
+        "rawValue": "300,000.00",
+        "period": "2026-12-31",
+        "currency": "EUR",
+        "documentId": "doc-3",
+        "page": 1,
+        "quote": "Accepted eligible collateral value [2026-12-31]: EUR 300,000.00",
+        "extractor": "labelled-text",
+        "invalid": null
+      }
+    ],
+    "engine": "labelled-text · offline",
+    "usage": null
+  },
+  "assessment": {
+    "applicant": "Officina Aurora S.r.l.",
+    "entityId": "DEMO-001",
+    "facts": {
+      "cash_available": {
+        "id": "cash_available",
+        "label": "Cash available for debt service",
+        "period": "2027",
+        "anchor": "Cash flow available for debt service",
+        "currency": "EUR",
+        "status": "present",
+        "value": "140000",
+        "observations": [
+          {
+            "field": "cash_available",
+            "value": "140000",
+            "rawValue": "140,000.00",
+            "period": "2027",
+            "currency": "EUR",
+            "documentId": "doc-1",
+            "page": 1,
+            "quote": "Cash flow available for debt service [2027]: EUR 140,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      },
+      "existing_principal": {
+        "id": "existing_principal",
+        "label": "Existing principal due",
+        "period": "2027",
+        "anchor": "Existing principal due",
+        "currency": "EUR",
+        "status": "present",
+        "value": "40000",
+        "observations": [
+          {
+            "field": "existing_principal",
+            "value": "40000",
+            "rawValue": "40,000.00",
+            "period": "2027",
+            "currency": "EUR",
+            "documentId": "doc-1",
+            "page": 1,
+            "quote": "Existing principal due [2027]: EUR 40,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      },
+      "existing_interest": {
+        "id": "existing_interest",
+        "label": "Existing interest due",
+        "period": "2027",
+        "anchor": "Existing interest due",
+        "currency": "EUR",
+        "status": "present",
+        "value": "10000",
+        "observations": [
+          {
+            "field": "existing_interest",
+            "value": "10000",
+            "rawValue": "10,000.00",
+            "period": "2027",
+            "currency": "EUR",
+            "documentId": "doc-1",
+            "page": 1,
+            "quote": "Existing interest due [2027]: EUR 10,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      },
+      "new_principal": {
+        "id": "new_principal",
+        "label": "Proposed principal due",
+        "period": "2027",
+        "anchor": "Proposed principal due",
+        "currency": "EUR",
+        "status": "present",
+        "value": "40000",
+        "observations": [
+          {
+            "field": "new_principal",
+            "value": "40000",
+            "rawValue": "40,000.00",
+            "period": "2027",
+            "currency": "EUR",
+            "documentId": "doc-1",
+            "page": 1,
+            "quote": "Proposed principal due [2027]: EUR 40,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      },
+      "new_interest": {
+        "id": "new_interest",
+        "label": "Proposed interest due",
+        "period": "2027",
+        "anchor": "Proposed interest due",
+        "currency": "EUR",
+        "status": "present",
+        "value": "10000",
+        "observations": [
+          {
+            "field": "new_interest",
+            "value": "10000",
+            "rawValue": "10,000.00",
+            "period": "2027",
+            "currency": "EUR",
+            "documentId": "doc-1",
+            "page": 1,
+            "quote": "Proposed interest due [2027]: EUR 10,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      },
+      "debt_after_loan": {
+        "id": "debt_after_loan",
+        "label": "Post-loan interest-bearing debt",
+        "period": "2026-12-31",
+        "anchor": "Post-loan interest-bearing debt",
+        "currency": "EUR",
+        "status": "present",
+        "value": "450000",
+        "observations": [
+          {
+            "field": "debt_after_loan",
+            "value": "450000",
+            "rawValue": "450,000.00",
+            "period": "2026-12-31",
+            "currency": "EUR",
+            "documentId": "doc-2",
+            "page": 1,
+            "quote": "Post-loan interest-bearing debt [2026-12-31]: EUR 450,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      },
+      "ebitda": {
+        "id": "ebitda",
+        "label": "EBITDA",
+        "period": "2026",
+        "anchor": "EBITDA",
+        "currency": "EUR",
+        "status": "present",
+        "value": "150000",
+        "observations": [
+          {
+            "field": "ebitda",
+            "value": "150000",
+            "rawValue": "150,000.00",
+            "period": "2026",
+            "currency": "EUR",
+            "documentId": "doc-2",
+            "page": 1,
+            "quote": "EBITDA [2026]: EUR 150,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      },
+      "secured_exposure": {
+        "id": "secured_exposure",
+        "label": "Secured exposure",
+        "period": "2026-12-31",
+        "anchor": "Secured exposure",
+        "currency": "EUR",
+        "status": "present",
+        "value": "200000",
+        "observations": [
+          {
+            "field": "secured_exposure",
+            "value": "200000",
+            "rawValue": "200,000.00",
+            "period": "2026-12-31",
+            "currency": "EUR",
+            "documentId": "doc-3",
+            "page": 1,
+            "quote": "Secured exposure [2026-12-31]: EUR 200,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      },
+      "collateral_value": {
+        "id": "collateral_value",
+        "label": "Accepted eligible collateral value",
+        "period": "2026-12-31",
+        "anchor": "Accepted eligible collateral value",
+        "currency": "EUR",
+        "status": "present",
+        "value": "300000",
+        "observations": [
+          {
+            "field": "collateral_value",
+            "value": "300000",
+            "rawValue": "300,000.00",
+            "period": "2026-12-31",
+            "currency": "EUR",
+            "documentId": "doc-3",
+            "page": 1,
+            "quote": "Accepted eligible collateral value [2026-12-31]: EUR 300,000.00",
+            "extractor": "labelled-text",
+            "invalid": null
+          }
+        ]
+      }
+    },
+    "issues": [],
+    "inputs": {
+      "ready": true,
+      "cash_available": "140000",
+      "existing_principal": "40000",
+      "existing_interest": "10000",
+      "new_principal": "40000",
+      "new_interest": "10000",
+      "debt_after_loan": "450000",
+      "ebitda": "150000",
+      "secured_exposure": "200000",
+      "collateral_value": "300000"
+    },
+    "asOf": "2026-11-14"
+  },
+  "policy": {
+    "kind": "DEMO_POLICY",
+    "owner": "Demonstration policy — no lender approval",
+    "scope": "IT_SMALL_COMPANY_SECURED_TERM_EUR",
+    "assessmentPeriod": "2027",
+    "effectiveFrom": "2026-11-14",
+    "effectiveTo": "2027-12-31",
+    "warning": "Illustrative thresholds selected for this demonstration. They are not EBA or Italian legal cutoffs. Passing these checks is not credit approval.",
+    "definitions": {
+      "dscr": "Cash available / (existing principal + existing interest + proposed principal + proposed interest), all for 2027.",
+      "leverage": "Post-loan gross interest-bearing debt / 2026 EBITDA.",
+      "ltv": "Secured exposure / bank-accepted eligible collateral value. Ownership, prior claims and valuation treatment require human review."
+    },
+    "id": "demo-v1",
+    "version": "1.0",
+    "name": "Demo policy · baseline",
+    "thresholds": {
+      "minDscr": "1.25",
+      "maxLeverage": "3.50",
+      "maxLtv": "0.80"
+    }
+  },
+  "policyHash": "5181cb23dca482967eedb8bb7059b9ee2df4311ebbd717847b395dd4694aaa43",
+  "dmn": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<definitions xmlns=\"https://www.omg.org/spec/DMN/20230324/MODEL/\" id=\"credit_demo-v1\" name=\"Credit evidence checks 1.0\" namespace=\"https://credit-console.local/policies/demo-v1\"><description>Illustrative thresholds selected for this demonstration. They are not EBA or Italian legal cutoffs. Passing these checks is not credit approval.</description><inputData id=\"input_ready\" name=\"ready\"><variable name=\"ready\" typeRef=\"boolean\"/></inputData><inputData id=\"input_cash_available\" name=\"cash_available\"><variable name=\"cash_available\" typeRef=\"number\"/></inputData><inputData id=\"input_existing_principal\" name=\"existing_principal\"><variable name=\"existing_principal\" typeRef=\"number\"/></inputData><inputData id=\"input_existing_interest\" name=\"existing_interest\"><variable name=\"existing_interest\" typeRef=\"number\"/></inputData><inputData id=\"input_new_principal\" name=\"new_principal\"><variable name=\"new_principal\" typeRef=\"number\"/></inputData><inputData id=\"input_new_interest\" name=\"new_interest\"><variable name=\"new_interest\" typeRef=\"number\"/></inputData><inputData id=\"input_debt_after_loan\" name=\"debt_after_loan\"><variable name=\"debt_after_loan\" typeRef=\"number\"/></inputData><inputData id=\"input_ebitda\" name=\"ebitda\"><variable name=\"ebitda\" typeRef=\"number\"/></inputData><inputData id=\"input_secured_exposure\" name=\"secured_exposure\"><variable name=\"secured_exposure\" typeRef=\"number\"/></inputData><inputData id=\"input_collateral_value\" name=\"collateral_value\"><variable name=\"collateral_value\" typeRef=\"number\"/></inputData><decision id=\"service\" name=\"annual_debt_service\"><variable name=\"annual_debt_service\" typeRef=\"number\"/><informationRequirement id=\"ir_service_input_ready\"><requiredInput href=\"#input_ready\"/></informationRequirement><informationRequirement id=\"ir_service_input_existing_principal\"><requiredInput href=\"#input_existing_principal\"/></informationRequirement><informationRequirement id=\"ir_service_input_existing_interest\"><requiredInput href=\"#input_existing_interest\"/></informationRequirement><informationRequirement id=\"ir_service_input_new_principal\"><requiredInput href=\"#input_new_principal\"/></informationRequirement><informationRequirement id=\"ir_service_input_new_interest\"><requiredInput href=\"#input_new_interest\"/></informationRequirement><literalExpression id=\"expr_service\"><text>if ready then existing_principal + existing_interest + new_principal + new_interest else null</text></literalExpression></decision><decision id=\"coverage\" name=\"dscr\"><variable name=\"dscr\" typeRef=\"number\"/><informationRequirement id=\"ir_coverage_input_ready\"><requiredInput href=\"#input_ready\"/></informationRequirement><informationRequirement id=\"ir_coverage_input_cash_available\"><requiredInput href=\"#input_cash_available\"/></informationRequirement><informationRequirement id=\"ir_coverage_service\"><requiredDecision href=\"#service\"/></informationRequirement><literalExpression id=\"expr_coverage\"><text>if ready then cash_available / annual_debt_service else null</text></literalExpression></decision><decision id=\"leverage_metric\" name=\"leverage\"><variable name=\"leverage\" typeRef=\"number\"/><informationRequirement id=\"ir_leverage_metric_input_ready\"><requiredInput href=\"#input_ready\"/></informationRequirement><informationRequirement id=\"ir_leverage_metric_input_debt_after_loan\"><requiredInput href=\"#input_debt_after_loan\"/></informationRequirement><informationRequirement id=\"ir_leverage_metric_input_ebitda\"><requiredInput href=\"#input_ebitda\"/></informationRequirement><literalExpression id=\"expr_leverage_metric\"><text>if ready then debt_after_loan / ebitda else null</text></literalExpression></decision><decision id=\"ltv_metric\" name=\"ltv\"><variable name=\"ltv\" typeRef=\"number\"/><informationRequirement id=\"ir_ltv_metric_input_ready\"><requiredInput href=\"#input_ready\"/></informationRequirement><informationRequirement id=\"ir_ltv_metric_input_secured_exposure\"><requiredInput href=\"#input_secured_exposure\"/></informationRequirement><informationRequirement id=\"ir_ltv_metric_input_collateral_value\"><requiredInput href=\"#input_collateral_value\"/></informationRequirement><literalExpression id=\"expr_ltv_metric\"><text>if ready then secured_exposure / collateral_value else null</text></literalExpression></decision><decision id=\"dscr_test\" name=\"dscr_ok\"><variable name=\"dscr_ok\" typeRef=\"boolean\"/><informationRequirement id=\"ir_dscr_test_input_ready\"><requiredInput href=\"#input_ready\"/></informationRequirement><informationRequirement id=\"ir_dscr_test_coverage\"><requiredDecision href=\"#coverage\"/></informationRequirement><literalExpression id=\"expr_dscr_test\"><text>if ready then dscr &gt;= 1.25 else false</text></literalExpression></decision><decision id=\"leverage_test\" name=\"leverage_ok\"><variable name=\"leverage_ok\" typeRef=\"boolean\"/><informationRequirement id=\"ir_leverage_test_input_ready\"><requiredInput href=\"#input_ready\"/></informationRequirement><informationRequirement id=\"ir_leverage_test_leverage_metric\"><requiredDecision href=\"#leverage_metric\"/></informationRequirement><literalExpression id=\"expr_leverage_test\"><text>if ready then leverage &lt;= 3.50 else false</text></literalExpression></decision><decision id=\"ltv_test\" name=\"ltv_ok\"><variable name=\"ltv_ok\" typeRef=\"boolean\"/><informationRequirement id=\"ir_ltv_test_input_ready\"><requiredInput href=\"#input_ready\"/></informationRequirement><informationRequirement id=\"ir_ltv_test_ltv_metric\"><requiredDecision href=\"#ltv_metric\"/></informationRequirement><literalExpression id=\"expr_ltv_test\"><text>if ready then ltv &lt;= 0.80 else false</text></literalExpression></decision><decision id=\"final\" name=\"outcome\"><variable name=\"outcome\" typeRef=\"string\"/><informationRequirement id=\"final_ready\"><requiredInput href=\"#input_ready\"/></informationRequirement><informationRequirement id=\"final_dscr_test\"><requiredDecision href=\"#dscr_test\"/></informationRequirement><informationRequirement id=\"final_leverage_test\"><requiredDecision href=\"#leverage_test\"/></informationRequirement><informationRequirement id=\"final_ltv_test\"><requiredDecision href=\"#ltv_test\"/></informationRequirement><decisionTable id=\"credit_decision\" hitPolicy=\"UNIQUE\"><input id=\"col_0\" label=\"ready\"><inputExpression typeRef=\"boolean\"><text>ready</text></inputExpression></input><input id=\"col_1\" label=\"dscr_ok\"><inputExpression typeRef=\"boolean\"><text>dscr_ok</text></inputExpression></input><input id=\"col_2\" label=\"leverage_ok\"><inputExpression typeRef=\"boolean\"><text>leverage_ok</text></inputExpression></input><input id=\"col_3\" label=\"ltv_ok\"><inputExpression typeRef=\"boolean\"><text>ltv_ok</text></inputExpression></input><output id=\"outcome_col\" typeRef=\"string\"/><rule id=\"EVIDENCE_GATE\"><description>Missing, conflicting, unreviewed or invalid evidence prevents a financial recommendation.</description><inputEntry><text>false</text></inputEntry><inputEntry><text>-</text></inputEntry><inputEntry><text>-</text></inputEntry><inputEntry><text>-</text></inputEntry><outputEntry><text>\"ABSTAIN\"</text></outputEntry></rule><rule id=\"DSCR_FAIL\"><description>Compare defined debt-service coverage with the selected demo minimum.</description><inputEntry><text>true</text></inputEntry><inputEntry><text>false</text></inputEntry><inputEntry><text>-</text></inputEntry><inputEntry><text>-</text></inputEntry><outputEntry><text>\"FAIL_POLICY_CHECKS\"</text></outputEntry></rule><rule id=\"LEVERAGE_FAIL\"><description>Compare defined leverage with the selected demo maximum.</description><inputEntry><text>true</text></inputEntry><inputEntry><text>true</text></inputEntry><inputEntry><text>false</text></inputEntry><inputEntry><text>-</text></inputEntry><outputEntry><text>\"FAIL_POLICY_CHECKS\"</text></outputEntry></rule><rule id=\"LTV_FAIL\"><description>Compare secured exposure with accepted eligible collateral value. Collateral cannot override a failed cash-flow check.</description><inputEntry><text>true</text></inputEntry><inputEntry><text>true</text></inputEntry><inputEntry><text>true</text></inputEntry><inputEntry><text>false</text></inputEntry><outputEntry><text>\"FAIL_POLICY_CHECKS\"</text></outputEntry></rule><rule id=\"PASS_CHECKS\"><description>All implemented financial checks pass; bank review and approval authority remain required.</description><inputEntry><text>true</text></inputEntry><inputEntry><text>true</text></inputEntry><inputEntry><text>true</text></inputEntry><inputEntry><text>true</text></inputEntry><outputEntry><text>\"PASS_POLICY_CHECKS\"</text></outputEntry></rule></decisionTable></decision></definitions>",
+  "dmnHash": "e09586e1302718e0ea96fd42c1823c7e5cf6affbc6e7dcdb9489645114f05301",
+  "engine": "@smarthorizon-labs/dmn@0.1.0",
+  "evaluation": {
+    "outcome": "PASS_POLICY_CHECKS",
+    "decisions": {
+      "annual_debt_service": "100000",
+      "dscr": "1.4",
+      "leverage": "3",
+      "ltv": "0.6666666666666666666666666666666667",
+      "dscr_ok": "true",
+      "leverage_ok": "true",
+      "ltv_ok": "true",
+      "outcome": "\"PASS_POLICY_CHECKS\""
+    },
+    "matchedRules": [
+      "PASS_CHECKS"
+    ],
+    "trace": [
+      {
+        "sequence": 1,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "evaluation-started",
+        "detail": "Credit evidence checks 1.0"
+      },
+      {
+        "sequence": 2,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-started",
+        "decision": "annual_debt_service",
+        "decisionId": "service"
+      },
+      {
+        "sequence": 3,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-completed",
+        "decision": "annual_debt_service",
+        "decisionId": "service"
+      },
+      {
+        "sequence": 4,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-started",
+        "decision": "dscr",
+        "decisionId": "coverage"
+      },
+      {
+        "sequence": 5,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-completed",
+        "decision": "dscr",
+        "decisionId": "coverage"
+      },
+      {
+        "sequence": 6,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-started",
+        "decision": "leverage",
+        "decisionId": "leverage_metric"
+      },
+      {
+        "sequence": 7,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-completed",
+        "decision": "leverage",
+        "decisionId": "leverage_metric"
+      },
+      {
+        "sequence": 8,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-started",
+        "decision": "ltv",
+        "decisionId": "ltv_metric"
+      },
+      {
+        "sequence": 9,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-completed",
+        "decision": "ltv",
+        "decisionId": "ltv_metric"
+      },
+      {
+        "sequence": 10,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-started",
+        "decision": "dscr_ok",
+        "decisionId": "dscr_test"
+      },
+      {
+        "sequence": 11,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-completed",
+        "decision": "dscr_ok",
+        "decisionId": "dscr_test"
+      },
+      {
+        "sequence": 12,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-started",
+        "decision": "leverage_ok",
+        "decisionId": "leverage_test"
+      },
+      {
+        "sequence": 13,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-completed",
+        "decision": "leverage_ok",
+        "decisionId": "leverage_test"
+      },
+      {
+        "sequence": 14,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-started",
+        "decision": "ltv_ok",
+        "decisionId": "ltv_test"
+      },
+      {
+        "sequence": 15,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-completed",
+        "decision": "ltv_ok",
+        "decisionId": "ltv_test"
+      },
+      {
+        "sequence": 16,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-started",
+        "decision": "outcome",
+        "decisionId": "final"
+      },
+      {
+        "sequence": 17,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "table-evaluated",
+        "decision": "outcome",
+        "decisionId": "final",
+        "hitPolicy": "UNIQUE",
+        "ruleIds": [
+          "PASS_CHECKS"
+        ],
+        "detail": "1 of 5 rules matched"
+      },
+      {
+        "sequence": 18,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "rule-matched",
+        "decision": "outcome",
+        "decisionId": "final",
+        "ruleIds": [
+          "PASS_CHECKS"
+        ],
+        "detail": "rule 5"
+      },
+      {
+        "sequence": 19,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "hit-policy-applied",
+        "decision": "outcome",
+        "decisionId": "final",
+        "hitPolicy": "UNIQUE",
+        "detail": "UNIQUE applied to 1 match(es)"
+      },
+      {
+        "sequence": 20,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "decision-completed",
+        "decision": "outcome",
+        "decisionId": "final"
+      },
+      {
+        "sequence": 21,
+        "at": "2026-11-14T15:10:55.738Z",
+        "type": "evaluation-completed",
+        "detail": "SUCCEEDED"
+      }
+    ]
+  },
+  "outcome": "PASS_POLICY_CHECKS",
+  "reasons": [],
+  "explanation": "All three implemented financial checks pass the selected demo policy. This is not loan approval; bank underwriting and approval authority remain required.",
+  "sources": [
+    {
+      "id": "EBA",
+      "title": "EBA Guidelines on loan origination and monitoring",
+      "version": "EBA/GL/2020/06",
+      "sections": "§5.1; §5.2.5 (118–136); §4.3; §5.3; Annex 2.B",
+      "file": "/sources/eba.pdf",
+      "url": "https://www.eba.europa.eu/sites/default/files/document_library/Publications/Guidelines/2020/Guidelines%20on%20loan%20origination%20and%20monitoring/884283/EBA%20GL%202020%2006%20Final%20Report%20on%20GL%20on%20loan%20origination%20and%20monitoring.pdf"
+    },
+    {
+      "id": "BDI",
+      "title": "Bank of Italy — Supervisory provisions for banks",
+      "version": "Circular 285 · update 52 · July 2026",
+      "sections": "Part I, Title IV, Chapter 3, Annex A.2 · PDF pp. 412–413",
+      "file": "/sources/bdi.pdf",
+      "url": "https://www.bancaditalia.it/compiti/vigilanza/normativa/archivio-norme/circolari/c285/index.html"
+    }
+  ],
+  "logs": [
+    {
+      "stage": "ingest",
+      "message": "3 documents registered and hashed.",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "extract",
+      "message": "9 candidate observations from labelled-text · offline.",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "validate",
+      "message": "9/9 fields present; 0 blocking issues.",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "decide",
+      "message": "PASS_POLICY_CHECKS · DMN rule PASS_CHECKS.",
+      "elapsedMs": 2
+    },
+    {
+      "stage": "record",
+      "message": "Evidence, policy, model and engine trace captured.",
+      "elapsedMs": 2
+    }
+  ],
+  "marketProfile": {
+    "year": 2024,
+    "values": {
+      "turnover": "1800000",
+      "valueAdded": "650000",
+      "labourCost": "400000",
+      "persons": "12",
+      "employees": "10"
+    },
+    "evidence": {
+      "turnover": [
+        {
+          "value": "1800000",
+          "documentId": "doc-2",
+          "page": 1,
+          "quote": "Turnover [2024]: EUR 1,800,000.00"
+        }
+      ],
+      "valueAdded": [
+        {
+          "value": "650000",
+          "documentId": "doc-2",
+          "page": 1,
+          "quote": "Value added [2024]: EUR 650,000.00"
+        }
+      ],
+      "labourCost": [
+        {
+          "value": "400000",
+          "documentId": "doc-2",
+          "page": 1,
+          "quote": "Labour cost [2024]: EUR 400,000.00"
+        }
+      ],
+      "persons": [
+        {
+          "value": "12",
+          "documentId": "doc-2",
+          "page": 1,
+          "quote": "Persons employed [2024]: N 12"
+        }
+      ],
+      "employees": [
+        {
+          "value": "10",
+          "documentId": "doc-2",
+          "page": 1,
+          "quote": "Employee count [2024]: N 10"
+        }
+      ]
+    },
+    "label": "Extracted historical context; does not affect DMN"
+  },
+  "marketDatasetId": "istat-enterprises-2024-table-p2",
+  "semanticHash": "126e92c4a1148e4dcc9a374f21499bfcd0458b77ba661611f624c46ee42d6c34",
+  "integrityHash": "f220cc466d29c4e7ee8bfafee6be5135474f78107e6f897915eaa3ec061a47f4"
+}

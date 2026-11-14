@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "checks": [
+    "CSRF token rejection",
+    "cross-origin rejection",
+    "unreviewed upload abstention",
+    "policy version cannot bypass evidence review",
+    "explicit evidence acceptance",
+    "versioned result and original replay",
+    "unconfigured policy abstention",
+    "PDF fixture and official dataset available"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "integrationTests": 12,
+  "failures": 0,
+  "includesBenchmark": true,
+  "benchmarkCases": 20,
+  "abstentionCases": 10,
+  "abstentionPassed": 10,
+  "unsafePasses": 0,
+  "aiValidation": "Mocked response only; live AI provider not tested",
+  "scope": "Defined synthetic fixtures, offline PDF/text extraction, market comparability and evidence controls",
+  "verifiedOn": "2026-11-14"
+}

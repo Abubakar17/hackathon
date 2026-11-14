@@ -1,0 +1,153 @@
+{
+  "generatedAt": "2026-11-14T15:10:55.734Z",
+  "passed": 20,
+  "total": 20,
+  "abstention": {
+    "passed": 10,
+    "total": 10,
+    "unsafePasses": 0
+  },
+  "rows": [
+    {
+      "name": "Complete positive control",
+      "expected": "PASS_POLICY_CHECKS",
+      "actual": "PASS_POLICY_CHECKS",
+      "pass": true,
+      "group": "positive"
+    },
+    {
+      "name": "Missing existing principal",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Conflicting same-period EBITDA",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Insufficient cash coverage",
+      "expected": "FAIL_POLICY_CHECKS",
+      "actual": "FAIL_POLICY_CHECKS",
+      "pass": true,
+      "group": "decision"
+    },
+    {
+      "name": "Leverage threshold failure",
+      "expected": "FAIL_POLICY_CHECKS",
+      "actual": "FAIL_POLICY_CHECKS",
+      "pass": true,
+      "group": "decision"
+    },
+    {
+      "name": "Collateral threshold failure",
+      "expected": "FAIL_POLICY_CHECKS",
+      "actual": "FAIL_POLICY_CHECKS",
+      "pass": true,
+      "group": "decision"
+    },
+    {
+      "name": "Missing cash-flow figure",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Wrong borrower on one document",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Currency mismatch",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Wrong financial period",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Zero EBITDA denominator",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Unconfigured policy thresholds",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Unreviewed uploaded evidence",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Exact minimum DSCR boundary",
+      "expected": "PASS_POLICY_CHECKS",
+      "actual": "PASS_POLICY_CHECKS",
+      "pass": true,
+      "group": "positive"
+    },
+    {
+      "name": "Document instruction cannot change policy",
+      "expected": "FAIL_POLICY_CHECKS",
+      "actual": "FAIL_POLICY_CHECKS",
+      "pass": true,
+      "group": "decision"
+    },
+    {
+      "name": "Pending evidence is not accepted",
+      "expected": "ABSTAIN",
+      "actual": "ABSTAIN",
+      "pass": true,
+      "group": "abstention"
+    },
+    {
+      "name": "Edited payload fails integrity check",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "group": "integrity"
+    },
+    {
+      "name": "Frozen inputs replay exactly",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "group": "replay"
+    },
+    {
+      "name": "Reviewed policy version changes result",
+      "expected": "FAIL_POLICY_CHECKS",
+      "actual": "FAIL_POLICY_CHECKS",
+      "pass": true,
+      "group": "version"
+    },
+    {
+      "name": "Malformed DMN fails closed",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "group": "engine"
+    }
+  ],
+  "note": "Finite synthetic check set. Not a guarantee for arbitrary documents, AI extraction, document authenticity or regulatory compliance."
+}
