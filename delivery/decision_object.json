@@ -1,0 +1,64 @@
+{
+  "decision_id": "DEC-20261114-087749",
+  "timestamp": "2026-11-14T14:09:05.134201",
+  "applicant_name": "Alpha Logistics SpA",
+  "status": "GRANTED",
+  "ruling_category": "APPROVED_PRIME",
+  "interest_rate_apr": 5.5,
+  "financial_ratios": {
+    "dscr": 1.89,
+    "ltv": 0.53,
+    "debt_to_ebitda": 1.53
+  },
+  "constraints_evaluated": [
+    {
+      "rule": "DSCR_COVENANT",
+      "condition": "DSCR >= 1.20 (Standard) or >= 1.35 (Prime)",
+      "actual": "1.89",
+      "result": "PASS"
+    },
+    {
+      "rule": "LTV_CEILING",
+      "condition": "LTV <= 0.80 (Standard) or <= 0.70 (Prime)",
+      "actual": "52.6%",
+      "result": "PASS"
+    },
+    {
+      "rule": "OPERATING_TRACK_RECORD",
+      "condition": "Years in business >= 2",
+      "actual": "6 years",
+      "result": "PASS"
+    },
+    {
+      "rule": "TAX_FILING_AUDIT",
+      "condition": "Tax returns verified == true",
+      "actual": "Verified",
+      "result": "PASS"
+    }
+  ],
+  "rule_id_triggered": "Rule_1_Prime",
+  "tripwires_and_bounds": {
+    "max_draw_period_months": 36,
+    "annual_financial_reporting_covenant": "Audited balance sheet due within 90 days of fiscal year end",
+    "minimum_ongoing_dscr": 1.25,
+    "revocation_trigger": "DSCR falls below 1.15 in any trailing two quarters"
+  },
+  "alternatives_rejected": [
+    {
+      "action": "STANDARD_TIER",
+      "reason": "Applicant qualifies for prime pricing based on exemplary liquidity and low leverage"
+    },
+    {
+      "action": "REJECTION",
+      "reason": "No policy covenants breached"
+    }
+  ],
+  "missing_evidence": [],
+  "audit_narrative": "Prime commercial credit grant: DSCR of 1.89 (exceeds 1.35 benchmark) and LTV of 52.6% (under 70% threshold).",
+  "provenance": [
+    "OMG_DMN_1.3_SPEC_20191111",
+    "EXTRACTION_ENGINE: Deterministic Rule Engine (Offline)",
+    "CREDIT_UNDERWRITING_POLICY_V4.2",
+    "DATA_INTEGRITY: 100%_VALID"
+  ]
+}

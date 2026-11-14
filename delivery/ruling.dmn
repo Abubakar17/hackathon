@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
+             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
+             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+             id="Definitions_CreditRuling"
+             name="DMN_Ruling_Alpha_Logistics_SpA"
+             namespace="http://kakashi.ventures/hackathon/dmn/credit">
+
+  <decision id="Decision_LoanGrant" name="Commercial Loan Approval Decision">
+    <decisionTable id="DecisionTable_CreditPolicy" hitPolicy="FIRST">
+      
+      <!-- Inputs -->
+      <input id="Input_DSCR" label="Debt Service Coverage Ratio (DSCR)">
+        <inputExpression id="InputExpr_DSCR" typeRef="number">
+          <text>dscr</text>
+        </inputExpression>
+      </input>
+      <input id="Input_LTV" label="Loan-to-Value (LTV)">
+        <inputExpression id="InputExpr_LTV" typeRef="number">
+          <text>ltv</text>
+        </inputExpression>
+      </input>
+      <input id="Input_Years" label="Years in Business">
+        <inputExpression id="InputExpr_Years" typeRef="integer">
+          <text>years_in_business</text>
+        </inputExpression>
+      </input>
+      <input id="Input_TaxVerified" label="Tax Returns Verified">
+        <inputExpression id="InputExpr_TaxVerified" typeRef="boolean">
+          <text>tax_returns_verified</text>
+        </inputExpression>
+      </input>
+
+      <!-- Outputs -->
+      <output id="Output_Ruling" label="Ruling" name="ruling" typeRef="string" />
+      <output id="Output_APR" label="Offered APR (%)" name="interest_rate_apr" typeRef="number" />
+      <output id="Output_Rationale" label="Ruling Rationale" name="rationale" typeRef="string" />
+
+      <!-- Rule 1: Prime Approval -->
+      <rule id="Rule_1_Prime">
+        <inputEntry id="IE_1_1"><text>&gt;= 1.35</text></inputEntry>
+        <inputEntry id="IE_1_2"><text>&lt;= 0.70</text></inputEntry>
+        <inputEntry id="IE_1_3"><text>&gt;= 3</text></inputEntry>
+        <inputEntry id="IE_1_4"><text>true</text></inputEntry>
+        <outputEntry id="OE_1_1"><text>"GRANTED_PRIME"</text></outputEntry>
+        <outputEntry id="OE_1_2"><text>5.5</text></outputEntry>
+        <outputEntry id="OE_1_3"><text>"Prime commercial tier: robust debt coverage and conservative leverage"</text></outputEntry>
+      </rule>
+
+      <!-- Rule 2: Standard Approval -->
+      <rule id="Rule_2_Standard">
+        <inputEntry id="IE_2_1"><text>&gt;= 1.20</text></inputEntry>
+        <inputEntry id="IE_2_2"><text>&lt;= 0.80</text></inputEntry>
+        <inputEntry id="IE_2_3"><text>&gt;= 2</text></inputEntry>
+        <inputEntry id="IE_2_4"><text>true</text></inputEntry>
+        <outputEntry id="OE_2_1"><text>"GRANTED_STANDARD"</text></outputEntry>
+        <outputEntry id="OE_2_2"><text>7.2</text></outputEntry>
+        <outputEntry id="OE_2_3"><text>"Standard commercial tier: acceptable cashflow coverage within underwriting limits"</text></outputEntry>
+      </rule>
+
+      <!-- Rule 3: Insufficient DSCR Denial -->
+      <rule id="Rule_3_LowDSCR">
+        <inputEntry id="IE_3_1"><text>&lt; 1.15</text></inputEntry>
+        <inputEntry id="IE_3_2"><text>-</text></inputEntry>
+        <inputEntry id="IE_3_3"><text>-</text></inputEntry>
+        <inputEntry id="IE_3_4"><text>-</text></inputEntry>
+        <outputEntry id="OE_3_1"><text>"DENIED_CREDIT_POLICY"</text></outputEntry>
+        <outputEntry id="OE_3_2"><text>null</text></outputEntry>
+        <outputEntry id="OE_3_3"><text>"Breach of minimum debt service coverage covenant (DSCR &lt; 1.15)"</text></outputEntry>
+      </rule>
+
+      <!-- Rule 4: Excessive LTV Denial -->
+      <rule id="Rule_4_HighLTV">
+        <inputEntry id="IE_4_1"><text>-</text></inputEntry>
+        <inputEntry id="IE_4_2"><text>&gt; 0.85</text></inputEntry>
+        <inputEntry id="IE_4_3"><text>-</text></inputEntry>
+        <inputEntry id="IE_4_4"><text>-</text></inputEntry>
+        <outputEntry id="OE_4_1"><text>"DENIED_CREDIT_POLICY"</text></outputEntry>
+        <outputEntry id="OE_4_2"><text>null</text></outputEntry>
+        <outputEntry id="OE_4_3"><text>"Breach of maximum loan-to-value ceiling (LTV &gt; 85%)"</text></outputEntry>
+      </rule>
+
+      <!-- Rule 5: Missing or Unverified Tax Filings (Abstain) -->
+      <rule id="Rule_5_Abstain_Tax">
+        <inputEntry id="IE_5_1"><text>-</text></inputEntry>
+        <inputEntry id="IE_5_2"><text>-</text></inputEntry>
+        <inputEntry id="IE_5_3"><text>-</text></inputEntry>
+        <inputEntry id="IE_5_4"><text>false</text></inputEntry>
+        <outputEntry id="OE_5_1"><text>"ABSTAIN_DATA_INCOMPLETE"</text></outputEntry>
+        <outputEntry id="OE_5_2"><text>null</text></outputEntry>
+        <outputEntry id="OE_5_3"><text>"Mandatory audited tax filings absent or unverified; system refuses to guess"</text></outputEntry>
+      </rule>
+
+      <!-- Rule 6: Fallback Default Policy Rejection -->
+      <rule id="Rule_6_DefaultReject">
+        <inputEntry id="IE_6_1"><text>-</text></inputEntry>
+        <inputEntry id="IE_6_2"><text>-</text></inputEntry>
+        <inputEntry id="IE_6_3"><text>-</text></inputEntry>
+        <inputEntry id="IE_6_4"><text>-</text></inputEntry>
+        <outputEntry id="OE_6_1"><text>"DENIED_CREDIT_POLICY"</text></outputEntry>
+        <outputEntry id="OE_6_2"><text>null</text></outputEntry>
+        <outputEntry id="OE_6_3"><text>"Credit application falls outside prime and standard risk tolerances"</text></outputEntry>
+      </rule>
+
+    </decisionTable>
+  </decision>
+</definitions>
