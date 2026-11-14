@@ -1,32 +1,32 @@
 {
-  "decision_id": "DEC-20261114-087749",
-  "timestamp": "2026-11-14T14:09:05.134201",
-  "applicant_name": "Alpha Logistics SpA",
-  "status": "GRANTED",
-  "ruling_category": "APPROVED_PRIME",
-  "interest_rate_apr": 5.5,
+  "decision_id": "DEC-20261114-B3ABB8",
+  "timestamp": "2026-11-14T15:20:00.404112",
+  "applicant_name": "Beta Precision Tooling Srl",
+  "status": "DENIED",
+  "ruling_category": "DENIED_CREDIT_POLICY",
+  "interest_rate_apr": null,
   "financial_ratios": {
-    "dscr": 1.89,
-    "ltv": 0.53,
-    "debt_to_ebitda": 1.53
+    "dscr": 1.05,
+    "ltv": 0.94,
+    "debt_to_ebitda": null
   },
   "constraints_evaluated": [
     {
       "rule": "DSCR_COVENANT",
       "condition": "DSCR >= 1.20 (Standard) or >= 1.35 (Prime)",
-      "actual": "1.89",
-      "result": "PASS"
+      "actual": "1.05",
+      "result": "FAIL"
     },
     {
       "rule": "LTV_CEILING",
       "condition": "LTV <= 0.80 (Standard) or <= 0.70 (Prime)",
-      "actual": "52.6%",
-      "result": "PASS"
+      "actual": "94.4%",
+      "result": "FAIL"
     },
     {
       "rule": "OPERATING_TRACK_RECORD",
       "condition": "Years in business >= 2",
-      "actual": "6 years",
+      "actual": "4 years",
       "result": "PASS"
     },
     {
@@ -36,28 +36,23 @@
       "result": "PASS"
     }
   ],
-  "rule_id_triggered": "Rule_1_Prime",
-  "tripwires_and_bounds": {
-    "max_draw_period_months": 36,
-    "annual_financial_reporting_covenant": "Audited balance sheet due within 90 days of fiscal year end",
-    "minimum_ongoing_dscr": 1.25,
-    "revocation_trigger": "DSCR falls below 1.15 in any trailing two quarters"
-  },
+  "rule_id_triggered": "Rule_3_LowDSCR",
+  "tripwires_and_bounds": {},
   "alternatives_rejected": [
     {
-      "action": "STANDARD_TIER",
-      "reason": "Applicant qualifies for prime pricing based on exemplary liquidity and low leverage"
+      "action": "APPROVAL_WITH_SURCHARGE",
+      "reason": "Regulated lending policy forbids granting credit with sub-1.15 DSCR"
     },
     {
-      "action": "REJECTION",
-      "reason": "No policy covenants breached"
+      "action": "SUBORDINATED_DEBT",
+      "reason": "Senior debt coverage insufficient"
     }
   ],
   "missing_evidence": [],
-  "audit_narrative": "Prime commercial credit grant: DSCR of 1.89 (exceeds 1.35 benchmark) and LTV of 52.6% (under 70% threshold).",
+  "audit_narrative": "Application denied under Rule 3: DSCR of 1.05 is below the non-negotiable floor of 1.15. Cashflow cannot absorb interest rate shocks. [Underwriting Memo: The borrower is highly leveraged with total liabilities of EUR 1,650,000 and EBITDA down 18 percent year over year, leaving existing debt service of EUR 200,000 covered only about 1.05 times by EBITDA before the requested EUR 850,000 facility is added. The offered collateral is depreciating used milling machinery whose EUR 900,000 estimate is subject to high depreciation, so the proposed loan should be declined or restructured with a lower advance rate, independent collateral appraisal, and verified existing debt balances.]",
   "provenance": [
     "OMG_DMN_1.3_SPEC_20191111",
-    "EXTRACTION_ENGINE: Deterministic Rule Engine (Offline)",
+    "EXTRACTION_ENGINE: AI Agent (Claude 3.5 Haiku via Vercel Gateway)",
     "CREDIT_UNDERWRITING_POLICY_V4.2",
     "DATA_INTEGRITY: 100%_VALID"
   ]

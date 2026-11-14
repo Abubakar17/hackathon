@@ -2,14 +2,14 @@
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
              xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
              xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-             id="Definitions_CreditRuling"
-             name="DMN_Ruling_Alpha_Logistics_SpA"
+             id="Definitions_CommercialCreditPolicy"
+             name="Commercial_Credit_Underwriting_Policy_2026"
              namespace="http://kakashi.ventures/hackathon/dmn/credit">
 
   <decision id="Decision_LoanGrant" name="Commercial Loan Approval Decision">
     <decisionTable id="DecisionTable_CreditPolicy" hitPolicy="FIRST">
       
-      <!-- Inputs -->
+      <!-- Input Clauses -->
       <input id="Input_DSCR" label="Debt Service Coverage Ratio (DSCR)">
         <inputExpression id="InputExpr_DSCR" typeRef="number">
           <text>dscr</text>
@@ -31,13 +31,14 @@
         </inputExpression>
       </input>
 
-      <!-- Outputs -->
+      <!-- Output Clauses -->
       <output id="Output_Ruling" label="Ruling" name="ruling" typeRef="string" />
       <output id="Output_APR" label="Offered APR (%)" name="interest_rate_apr" typeRef="number" />
       <output id="Output_Rationale" label="Ruling Rationale" name="rationale" typeRef="string" />
 
-      <!-- Rule 1: Prime Approval -->
+      <!-- Rule 1: Prime Commercial Approval -->
       <rule id="Rule_1_Prime">
+        <description>Prime commercial tier: robust debt coverage and conservative leverage</description>
         <inputEntry id="IE_1_1"><text>&gt;= 1.35</text></inputEntry>
         <inputEntry id="IE_1_2"><text>&lt;= 0.70</text></inputEntry>
         <inputEntry id="IE_1_3"><text>&gt;= 3</text></inputEntry>
@@ -47,8 +48,9 @@
         <outputEntry id="OE_1_3"><text>"Prime commercial tier: robust debt coverage and conservative leverage"</text></outputEntry>
       </rule>
 
-      <!-- Rule 2: Standard Approval -->
+      <!-- Rule 2: Standard Commercial Approval -->
       <rule id="Rule_2_Standard">
+        <description>Standard commercial tier: acceptable cashflow coverage within underwriting limits</description>
         <inputEntry id="IE_2_1"><text>&gt;= 1.20</text></inputEntry>
         <inputEntry id="IE_2_2"><text>&lt;= 0.80</text></inputEntry>
         <inputEntry id="IE_2_3"><text>&gt;= 2</text></inputEntry>
@@ -60,6 +62,7 @@
 
       <!-- Rule 3: Insufficient DSCR Denial -->
       <rule id="Rule_3_LowDSCR">
+        <description>Breach of minimum debt service coverage covenant (DSCR &lt; 1.15)</description>
         <inputEntry id="IE_3_1"><text>&lt; 1.15</text></inputEntry>
         <inputEntry id="IE_3_2"><text>-</text></inputEntry>
         <inputEntry id="IE_3_3"><text>-</text></inputEntry>
@@ -71,6 +74,7 @@
 
       <!-- Rule 4: Excessive LTV Denial -->
       <rule id="Rule_4_HighLTV">
+        <description>Breach of maximum loan-to-value ceiling (LTV &gt; 85%)</description>
         <inputEntry id="IE_4_1"><text>-</text></inputEntry>
         <inputEntry id="IE_4_2"><text>&gt; 0.85</text></inputEntry>
         <inputEntry id="IE_4_3"><text>-</text></inputEntry>
@@ -80,8 +84,9 @@
         <outputEntry id="OE_4_3"><text>"Breach of maximum loan-to-value ceiling (LTV &gt; 85%)"</text></outputEntry>
       </rule>
 
-      <!-- Rule 5: Missing or Unverified Tax Filings (Abstain) -->
+      <!-- Rule 5: Missing or Unverified Tax Filings (Deterministic Abstain) -->
       <rule id="Rule_5_Abstain_Tax">
+        <description>Mandatory audited tax filings absent or unverified; system refuses to guess</description>
         <inputEntry id="IE_5_1"><text>-</text></inputEntry>
         <inputEntry id="IE_5_2"><text>-</text></inputEntry>
         <inputEntry id="IE_5_3"><text>-</text></inputEntry>
@@ -93,6 +98,7 @@
 
       <!-- Rule 6: Fallback Default Policy Rejection -->
       <rule id="Rule_6_DefaultReject">
+        <description>Credit application falls outside prime and standard risk tolerances</description>
         <inputEntry id="IE_6_1"><text>-</text></inputEntry>
         <inputEntry id="IE_6_2"><text>-</text></inputEntry>
         <inputEntry id="IE_6_3"><text>-</text></inputEntry>
