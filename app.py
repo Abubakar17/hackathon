@@ -1,22 +1,24 @@
 """
-Flask Web Application: Interactive Underwriting Decision Console.
-Demonstrates end-to-end processing of messy credit applications into OMG DMN 1.3 models and Decision Objects.
-Supports AI Agent (Claude Haiku via Vercel AI Gateway) with offline deterministic fallback.
+Flask console for the credit decision pipeline.
+Run: python app.py  ->  http://localhost:5000
 """
-from flask import Flask, render_template, request, jsonify, send_file
 import os
 
-from pipeline import process_credit_application
+from flask import Flask, Response, jsonify, render_template, request
+
+from ai_analyst import MODEL, load_gateway_key
+from check_set import run_cases, run_properties
+from pipeline import process_credit_application, replay
+from policy import STORE
 from samples import SAMPLE_APPLICATIONS
-from check_set import CHECK_SET_CASES
-from ai_analyst import load_gateway_key
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def index():
-    has_key = bool(load_gateway_key())
-    return render_template("index.html", has_gateway_key=has_key)
+    return render_template("index.html", has_gateway_key=bool(load_gateway_key()), model=MODEL)
+
 
 @app.route("/api/sample/<sample_key>")
 def get_sample(sample_key):
@@ -25,56 +27,62 @@ def get_sample(sample_key):
         return jsonify({"error": "Sample not found"}), 404
     return jsonify(sample)
 
+
 @app.route("/api/decide", methods=["POST"])
-def decide():
-    data = request.get_json() or {}
-    raw_text = data.get("raw_text", "")
-    use_ai = bool(data.get("use_ai", True))
+def decide_route():
+    data = request.get_json(silent=True) or {}
+    raw_text = data.get("raw_text") or ""
     if not raw_text.strip():
         return jsonify({"error": "No application text provided"}), 400
+    record = process_credit_application(raw_text, use_ai=bool(data.get("use_ai", True)))
+    return jsonify({"record": record, "policy": STORE.public()})
 
-    decision, dmn_xml = process_credit_application(raw_text, output_dir="delivery", use_ai=use_ai)
-    return jsonify({
-        "decision": decision.to_dict(),
-        "dmn_xml": dmn_xml
-    })
+
+@app.route("/api/policy")
+def policy_route():
+    return jsonify(STORE.public())
+
+
+@app.route("/api/policy/edit", methods=["POST"])
+def policy_edit():
+    data = request.get_json(silent=True) or {}
+    try:
+        STORE.edit(str(data.get("rule_id")), str(data.get("input")), str(data.get("test", "")))
+    except ValueError as e:
+        return jsonify({"error": str(e), "policy": STORE.public()}), 400
+    return jsonify({"policy": STORE.public()})
+
+
+@app.route("/api/policy/reset", methods=["POST"])
+def policy_reset():
+    STORE.reset()
+    return jsonify({"policy": STORE.public()})
+
+
+@app.route("/api/replay", methods=["POST"])
+def replay_route():
+    data = request.get_json(silent=True) or {}
+    try:
+        return jsonify(replay(str(data.get("record_id"))))
+    except KeyError as e:
+        return jsonify({"error": f"Cannot replay: {e}"}), 404
+
 
 @app.route("/api/check_set")
 def api_check_set():
-    results = []
-    passed = 0
-    total = len(CHECK_SET_CASES)
+    cases, props = run_cases(), run_properties()
+    return jsonify({"cases": cases, "properties": props, "policy_version": STORE.current()["version"],
+                    "passed": sum(c["pass"] for c in cases), "total": len(cases)})
 
-    for case in CHECK_SET_CASES:
-        # Check set runs deterministically for speed and test reproducibility
-        dec, _ = process_credit_application(case["text"], use_ai=False)
-        ok = (dec.status == case["expected_status"] and dec.ruling_category == case["expected_category"])
-        if ok:
-            passed += 1
-        results.append({
-            "id": case["id"],
-            "name": case["name"],
-            "expected_status": case["expected_status"],
-            "expected_category": case["expected_category"],
-            "got_status": dec.status,
-            "got_category": dec.ruling_category,
-            "pass": ok
-        })
 
-    return jsonify({
-        "passed": passed,
-        "total": total,
-        "results": results
-    })
-
-@app.route("/api/download_dmn")
+@app.route("/api/dmn")
 def download_dmn():
-    dmn_path = os.path.join("delivery", "ruling.dmn")
-    if os.path.exists(dmn_path):
-        return send_file(dmn_path, as_attachment=True, download_name="ruling.dmn", mimetype="application/xml")
-    return jsonify({"error": "No DMN generated yet"}), 404
+    cur = STORE.current()
+    return Response(cur["xml"], mimetype="application/xml",
+                    headers={"Content-Disposition": f'attachment; filename="credit-policy-v{cur["version"]}-{cur["sha"]}.dmn"'})
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    print(f"Credit DMN Ruling Engine running at http://localhost:{port}")
-    app.run(host="0.0.0.0", port=port, debug=False)
+    print(f"Credit decision console: http://localhost:{port}")
+    app.run(host="127.0.0.1", port=port, debug=False)

@@ -1,64 +1,152 @@
 {
-  "decision_id": "DEC-20261114-087749",
-  "timestamp": "2026-11-14T14:09:05.134201",
-  "applicant_name": "Alpha Logistics SpA",
-  "status": "GRANTED",
-  "ruling_category": "APPROVED_PRIME",
-  "interest_rate_apr": 5.5,
-  "financial_ratios": {
-    "dscr": 1.89,
-    "ltv": 0.53,
-    "debt_to_ebitda": 1.53
+  "record_id": "DEC-1A359ED7E7",
+  "decided_at": "2026-11-14T15:16:06",
+  "applicant": "Beta Precision Tooling Srl",
+  "outcome": {
+    "status": "DENIED",
+    "category": "DENIED_CREDIT_POLICY",
+    "apr": null,
+    "reason": "Debt service coverage ratio is below the minimum of 1.15"
   },
-  "constraints_evaluated": [
+  "rule": {
+    "id": "R2_LowDSCR",
+    "label": "Debt service coverage below floor",
+    "tests": {
+      "dscr": "< 1.15",
+      "ltv": "-",
+      "years_in_business": "-",
+      "tax_returns_verified": "-"
+    }
+  },
+  "policy": {
+    "name": "Commercial Credit Policy",
+    "version": 1,
+    "sha256": "16ca416ba2f1"
+  },
+  "derived": {
+    "dscr": 1.05,
+    "ltv": 0.9444,
+    "debt_to_ebitda": 7.8571
+  },
+  "missing": [],
+  "trace": [
     {
-      "rule": "DSCR_COVENANT",
-      "condition": "DSCR >= 1.20 (Standard) or >= 1.35 (Prime)",
-      "actual": "1.89",
-      "result": "PASS"
+      "rule_id": "R1_TaxUnverified",
+      "matched": false,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "-",
+          "actual": 1.05,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "-",
+          "actual": 0.9444,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": "-",
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "false",
+          "actual": true,
+          "ok": false
+        }
+      ]
     },
     {
-      "rule": "LTV_CEILING",
-      "condition": "LTV <= 0.80 (Standard) or <= 0.70 (Prime)",
-      "actual": "52.6%",
-      "result": "PASS"
-    },
-    {
-      "rule": "OPERATING_TRACK_RECORD",
-      "condition": "Years in business >= 2",
-      "actual": "6 years",
-      "result": "PASS"
-    },
-    {
-      "rule": "TAX_FILING_AUDIT",
-      "condition": "Tax returns verified == true",
-      "actual": "Verified",
-      "result": "PASS"
+      "rule_id": "R2_LowDSCR",
+      "matched": true,
+      "checks": [
+        {
+          "input": "dscr",
+          "test": "< 1.15",
+          "actual": 1.05,
+          "ok": true
+        },
+        {
+          "input": "ltv",
+          "test": "-",
+          "actual": 0.9444,
+          "ok": true
+        },
+        {
+          "input": "years_in_business",
+          "test": "-",
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "input": "tax_returns_verified",
+          "test": "-",
+          "actual": true,
+          "ok": true
+        }
+      ]
     }
   ],
-  "rule_id_triggered": "Rule_1_Prime",
-  "tripwires_and_bounds": {
-    "max_draw_period_months": 36,
-    "annual_financial_reporting_covenant": "Audited balance sheet due within 90 days of fiscal year end",
-    "minimum_ongoing_dscr": 1.25,
-    "revocation_trigger": "DSCR falls below 1.15 in any trailing two quarters"
-  },
-  "alternatives_rejected": [
-    {
-      "action": "STANDARD_TIER",
-      "reason": "Applicant qualifies for prime pricing based on exemplary liquidity and low leverage"
+  "explanation": "Declined. Rule applied: R2_LowDSCR (Debt service coverage below floor), policy version 1 [16ca416ba2f1]. This rule applies when debt service coverage (DSCR) is below 1.15. Figures used: DSCR 1.05 (EBITDA €210,000 ÷ annual debt service €200,000); loan-to-value 94.4% (requested €850,000 ÷ collateral €900,000); 4 years in business; tax returns verified.",
+  "counterfactual": {
+    "text": "If EBITDA were at least €240,000 instead of €210,000 (DSCR ≥ 1.2), and the requested amount were at most €720,000 instead of €850,000 (loan-to-value ≤ 80%), the application would be granted at 7.2% APR under rule R6_Standard.",
+    "changed_inputs": {
+      "requested_amount_eur": 720000,
+      "ebitda_eur": 240000
     },
-    {
-      "action": "REJECTION",
-      "reason": "No policy covenants breached"
+    "resulting_rule": "R6_Standard",
+    "resulting_status": "GRANTED",
+    "confirmed_by_rerun": true
+  },
+  "inputs": {
+    "requested_amount_eur": {
+      "value": 850000.0,
+      "quote": "Loan Request: €850,000",
+      "note": null
+    },
+    "annual_revenue_eur": {
+      "value": 2100000.0,
+      "quote": "Annual Revenue: €2,100,000",
+      "note": null
+    },
+    "ebitda_eur": {
+      "value": 210000.0,
+      "quote": "EBITDA: €210,000",
+      "note": null
+    },
+    "annual_debt_service_eur": {
+      "value": 200000.0,
+      "quote": "Annual Debt Service: €200,000",
+      "note": null
+    },
+    "total_existing_debt_eur": {
+      "value": 1650000.0,
+      "quote": "Total Liabilities: €1,650,000",
+      "note": null
+    },
+    "collateral_value_eur": {
+      "value": 900000.0,
+      "quote": "Collateral Value: €900,000",
+      "note": null
+    },
+    "years_in_business": {
+      "value": 4,
+      "quote": "Years in Business: 4",
+      "note": null
+    },
+    "tax_returns_verified": {
+      "value": true,
+      "quote": "Tax Returns: verified and current",
+      "note": null
     }
-  ],
-  "missing_evidence": [],
-  "audit_narrative": "Prime commercial credit grant: DSCR of 1.89 (exceeds 1.35 benchmark) and LTV of 52.6% (under 70% threshold).",
-  "provenance": [
-    "OMG_DMN_1.3_SPEC_20191111",
-    "EXTRACTION_ENGINE: Deterministic Rule Engine (Offline)",
-    "CREDIT_UNDERWRITING_POLICY_V4.2",
-    "DATA_INTEGRITY: 100%_VALID"
-  ]
+  },
+  "extraction": {
+    "engine": "Rule-based extractor (offline)",
+    "dropped": [],
+    "document_sha256": "0326dc65b23a"
+  }
 }

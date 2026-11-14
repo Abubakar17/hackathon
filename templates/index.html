@@ -3,318 +3,267 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Credit DMN Ruling Engine | AI Brain for Industry</title>
+  <title>Credit Decision Console</title>
   <style>
-    :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --border: #334155;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --primary: #3b82f6;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --ai-purple: #8b5cf6;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 24px; }
-    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; }
-    h1 { font-size: 1.6rem; font-weight: 700; color: #fff; }
-    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
-    .badge { display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-    .badge-track { background: #1e1b4b; color: #818cf8; border: 1px solid #4338ca; }
-    .badge-ai { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid #7c3aed; }
-    
-    .grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; }
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    
-    .preset-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-    button { cursor: pointer; padding: 8px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; border: none; transition: 0.15s; }
-    .btn-preset { background: #334155; color: #e2e8f0; }
-    .btn-preset:hover { background: #475569; }
-    .btn-primary { background: var(--primary); color: #fff; font-size: 1rem; padding: 12px 20px; font-weight: 600; width: 100%; border-radius: 8px; }
-    .btn-primary:hover { background: #2563eb; }
-    .btn-secondary { background: #0284c7; color: #fff; padding: 6px 12px; }
-    .btn-test { background: #059669; color: #fff; }
-    .btn-test:hover { background: #047857; }
-    
-    .toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; background: #090d16; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); }
-    .toggle-row label { font-size: 0.85rem; color: #e2e8f0; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-    
-    textarea { width: 100%; height: 320px; background: #090d16; border: 1px solid var(--border); border-radius: 8px; color: #e2e8f0; padding: 14px; font-family: monospace; font-size: 0.85rem; line-height: 1.4; resize: vertical; margin-bottom: 16px; }
-    
-    .ruling-banner { border-radius: 8px; padding: 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-    .ruling-banner.GRANTED { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: #34d399; }
-    .ruling-banner.DENIED { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #f87171; }
-    .ruling-banner.ABSTAIN { background: rgba(245, 158, 11, 0.15); border: 1px solid var(--warning); color: #fbbf24; }
-    .ruling-title { font-size: 1.4rem; font-weight: 800; }
-    .ruling-sub { font-size: 0.9rem; margin-top: 6px; line-height: 1.4; opacity: 0.95; }
-    
-    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-    .metric-box { background: #090d16; border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
-    .metric-val { font-size: 1.3rem; font-weight: 700; color: #fff; margin-top: 4px; }
-    .metric-lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 8px; }
-    th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
-    th { background: #090d16; color: var(--text-muted); }
-    .active-rule { background: rgba(59, 130, 246, 0.25) !important; border: 2px solid var(--primary); font-weight: 600; }
-    .pass { color: var(--success); font-weight: 600; }
-    .fail { color: var(--danger); font-weight: 600; }
-
-    pre { background: #090d16; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 0.78rem; overflow-x: auto; color: #38bdf8; max-height: 250px; }
-    
-    .section-gap { margin-top: 20px; }
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; }
-    .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; }
+    :root { --bg:#0f172a; --card:#1e293b; --well:#0b1220; --border:#334155; --text:#f1f5f9; --muted:#94a3b8;
+            --primary:#3b82f6; --ok:#34d399; --bad:#f87171; --warn:#fbbf24; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--text); padding:20px; font:14px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:14px; margin-bottom:18px; }
+    h1 { font-size:1.4rem; }
+    .sub { color:var(--muted); font-size:.85rem; }
+    .grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.5fr); gap:18px; }
+    @media (max-width:1000px) { .grid { grid-template-columns:1fr; } }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
+    h2 { font-size:.95rem; margin:18px 0 6px; }
+    h2:first-child { margin-top:0; }
+    h2 small { color:var(--muted); font-weight:400; margin-left:6px; }
+    button { cursor:pointer; padding:7px 12px; border-radius:6px; font-size:.82rem; border:1px solid var(--border); background:#334155; color:var(--text); }
+    button:hover { background:#475569; }
+    button.primary { background:var(--primary); border-color:var(--primary); font-weight:600; width:100%; padding:11px; font-size:.95rem; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
+    textarea { width:100%; height:340px; background:var(--well); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:12px; font:12.5px/1.45 ui-monospace,Consolas,monospace; resize:vertical; margin-bottom:10px; }
+    .chip { display:inline-block; padding:2px 9px; border-radius:99px; font-size:.75rem; border:1px solid var(--border); color:var(--muted); white-space:nowrap; }
+    .chip.on { color:var(--ok); border-color:var(--ok); } .chip.off { color:var(--warn); border-color:var(--warn); }
+    .banner { border-radius:8px; padding:14px 16px; border:1px solid; display:flex; justify-content:space-between; gap:16px; }
+    .banner.GRANTED { background:rgba(52,211,153,.12); border-color:var(--ok); }
+    .banner.DENIED { background:rgba(248,113,113,.12); border-color:var(--bad); }
+    .banner.ABSTAIN { background:rgba(251,191,36,.12); border-color:var(--warn); }
+    .banner .big { font-size:1.3rem; font-weight:800; }
+    .GRANTED .big { color:var(--ok); } .DENIED .big { color:var(--bad); } .ABSTAIN .big { color:var(--warn); }
+    .box { background:var(--well); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-top:8px; }
+    .box.cf { border-color:var(--primary); }
+    .tblwrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.8rem; }
+    th, td { border:1px solid var(--border); padding:6px 8px; text-align:left; vertical-align:top; }
+    th { background:var(--well); color:var(--muted); font-weight:600; }
+    tr.fired td { background:rgba(59,130,246,.22); font-weight:600; }
+    tr.skipped td { color:var(--muted); }
+    td.miss { color:var(--bad); } td.hit { color:var(--ok); }
+    td[contenteditable] { outline:none; cursor:text; border-bottom:1px dashed var(--muted); }
+    td[contenteditable]:focus { background:#1d4ed8; color:#fff; }
+    .q { color:var(--muted); font-style:italic; }
+    .missing { color:var(--warn); font-weight:600; }
+    .ok { color:var(--ok); font-weight:600; } .bad { color:var(--bad); font-weight:600; }
+    pre { background:var(--well); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:.74rem; overflow:auto; max-height:320px; color:#7dd3fc; }
+    details summary { cursor:pointer; color:var(--muted); margin-top:14px; }
+    .msg { margin-top:8px; font-size:.82rem; }
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:10; align-items:center; justify-content:center; }
+    .modal > div { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; max-width:860px; width:94%; max-height:86vh; overflow:auto; }
   </style>
 </head>
 <body>
-
   <header>
     <div>
-      <h1>Credit DMN Ruling Engine</h1>
-      <div class="subtitle">OMG DMN 1.3 Decision Table & Auditable Decision Object Generator · Track 4: Decision Models</div>
+      <h1>Credit Decision Console</h1>
+      <div class="sub">The agent reads the document. A DMN decision table decides. Every decision cites its rule and policy version.</div>
     </div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-      <span class="badge badge-ai">Vercel AI Gateway: Connected</span>
-      <span class="badge badge-track">AI Brain for Industry</span>
-      <button class="btn-test" onclick="runCheckSet()">Run 10-Case Check Set</button>
+    <div class="row" style="margin:0">
+      {% if has_gateway_key %}<span class="chip on">AI gateway key found · {{ model }}</span>
+      {% else %}<span class="chip off">No AI gateway key · offline extractor only</span>{% endif %}
+      <span class="chip" id="policyChip">policy</span>
+      <button onclick="runCheckSet()">Run check set</button>
     </div>
   </header>
 
   <div class="grid">
-    <!-- Left Column: Input Application -->
-    <div>
-      <div class="card">
-        <div class="card-title">
-          <span>Credit Application Packet (Messy Unstructured Text)</span>
-        </div>
-        <div class="preset-bar">
-          <button class="btn-preset" onclick="loadSample('alpha_logistics')">Preset 1: Prime Pass</button>
-          <button class="btn-preset" onclick="loadSample('beta_precision')">Preset 2: Risk Denial</button>
-          <button class="btn-preset" onclick="loadSample('gamma_biotech')">Preset 3: Abstain (Incomplete)</button>
-        </div>
-
-        <div class="toggle-row">
-          <label>
-            <input type="checkbox" id="useAiToggle" checked>
-            <span>Enable <b>AI Underwriting Agent</b> (Claude 3.5 Haiku via Gateway)</span>
-          </label>
-        </div>
-
-        <textarea id="appText" placeholder="Paste unstructured commercial loan memorandum, financials, or tax notes here..."></textarea>
-        <button class="btn-primary" onclick="runPipeline()">Run Decision Pipeline</button>
+    <div class="card">
+      <h2>1 · Application document <small>as it arrives</small></h2>
+      <div class="row">
+        <button onclick="loadSample('alpha_logistics')">Clean application</button>
+        <button onclick="loadSample('beta_precision')">Weak application</button>
+        <button onclick="loadSample('gamma_biotech')">Incomplete application</button>
       </div>
+      <div class="row">
+        <label><input type="checkbox" id="useAi" {% if has_gateway_key %}checked{% else %}disabled{% endif %}>
+          Read the document with the AI agent <span class="sub">(off: rule-based extractor, works offline)</span></label>
+      </div>
+      <textarea id="appText" placeholder="Paste a loan application, credit memo or email here"></textarea>
+      <button class="primary" id="runBtn" onclick="runPipeline()">Decide</button>
+      <div class="msg sub">The AI agent only fills the table's inputs and must quote the document for each one. It never sees the rules.</div>
     </div>
 
-    <!-- Right Column: Output Decision & DMN Model -->
-    <div>
-      <div class="card">
-        <div class="card-title">
-          <span>Underwriting Ruling & Auditable Decision Object</span>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn-secondary" onclick="downloadDMN()">Download .DMN XML</button>
-          </div>
-        </div>
-
-        <div id="rulingContainer">
-          <div style="text-align: center; padding: 40px; color: var(--text-muted);">
-            Load a preset or paste an application and click <b>Run Decision Pipeline</b>.
-          </div>
-        </div>
-      </div>
+    <div class="card" id="out">
+      <div class="sub" style="padding:40px;text-align:center">Pick a sample or paste a document, then press Decide.</div>
     </div>
   </div>
 
-  <!-- Check Set Modal -->
-  <div id="checkModal" class="modal">
-    <div class="modal-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h2 style="font-size: 1.2rem;">Automated 10-Case Verification Check Set</h2>
-        <button onclick="closeModal()" style="background: none; color: #fff; font-size: 1.2rem;">&times;</button>
-      </div>
-      <div id="checkSetResults">Running test cases...</div>
+  <div id="modal" class="modal" onclick="if(event.target===this)this.style.display='none'">
+    <div>
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Check set</h2><button onclick="document.getElementById('modal').style.display='none'">Close</button></div>
+      <div id="checkOut">Running…</div>
     </div>
   </div>
 
-  <script>
-    let currentDMNXml = "";
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const eur = v => '€' + Number(v).toLocaleString('en-US', {maximumFractionDigits: 0});
+  const FIELDS = [
+    ['requested_amount_eur','Requested amount',true], ['ebitda_eur','EBITDA',true],
+    ['annual_debt_service_eur','Annual debt service',true], ['collateral_value_eur','Collateral value',true],
+    ['years_in_business','Years in business',true], ['tax_returns_verified','Tax returns verified',true],
+    ['annual_revenue_eur','Annual revenue',false], ['total_existing_debt_eur','Total existing debt',false]];
+  let record = null, policy = null, replayHtml = '', changeHtml = '', notice = '';
 
-    async function loadSample(sampleKey) {
-      const res = await fetch(`/api/sample/${sampleKey}`);
-      const data = await res.json();
-      document.getElementById('appText').value = data.raw_text.trim();
-      runPipeline();
-    }
+  async function api(url, body) {
+    const res = await fetch(url, body === undefined ? {} : {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    const data = await res.json().catch(() => ({error: 'The server returned an unreadable response'}));
+    if (!res.ok && !data.error) data.error = 'Request failed (' + res.status + ')';
+    return data;
+  }
 
-    async function runPipeline() {
-      const text = document.getElementById('appText').value;
-      const useAi = document.getElementById('useAiToggle').checked;
-      if (!text.trim()) return alert("Please enter application text.");
+  function setPolicy(p) {
+    policy = p;
+    $('policyChip').textContent = `${p.name} · v${p.version} · ${p.sha}`;
+  }
 
-      document.getElementById('rulingContainer').innerHTML = "<div style='text-align:center; padding: 40px; color: var(--text-muted);'>Invoking Underwriting Agent & DMN Solver...</div>";
+  async function loadSample(key) {
+    const data = await api('/api/sample/' + key);
+    if (data.error) return;
+    $('appText').value = data.raw_text.trim();
+    runPipeline();
+  }
 
-      const res = await fetch('/api/decide', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ raw_text: text, use_ai: useAi })
-      });
-      const data = await res.json();
-      currentDMNXml = data.dmn_xml;
-      renderResult(data.decision);
-    }
+  async function runPipeline(keepReplay) {
+    const text = $('appText').value;
+    if (!text.trim()) { $('out').innerHTML = '<div class="msg missing">Paste a document first.</div>'; return; }
+    $('runBtn').disabled = true; $('runBtn').textContent = 'Reading the document…';
+    try {
+      const data = await api('/api/decide', {raw_text: text, use_ai: $('useAi').checked});
+      if (data.error) { $('out').innerHTML = `<div class="msg bad">${esc(data.error)}</div>`; return; }
+      record = data.record; setPolicy(data.policy);
+      if (!keepReplay) { replayHtml = ''; changeHtml = ''; }
+      render();
+    } catch (e) {
+      $('out').innerHTML = `<div class="msg bad">Could not reach the server: ${esc(e.message)}</div>`;
+    } finally { $('runBtn').disabled = false; $('runBtn').textContent = 'Decide'; }
+  }
 
-    function renderResult(d) {
-      const r = d.financial_ratios;
-      const statusClass = d.status;
-      const provenanceEngine = d.provenance.find(p => p.startsWith("EXTRACTION_ENGINE:")) || "";
-      
-      let html = `
-        <div class="ruling-banner ${statusClass}">
-          <div>
-            <div class="ruling-title">${d.status}: ${d.ruling_category}</div>
-            <div class="ruling-sub">${d.audit_narrative}</div>
-            <div style="font-size:0.75rem; margin-top:8px; opacity:0.8;"><b>Engine:</b> ${provenanceEngine.replace("EXTRACTION_ENGINE: ", "")}</div>
-          </div>
-          ${d.interest_rate_apr ? `<div style="text-align:right;"><div style="font-size:1.8rem; font-weight:800;">${d.interest_rate_apr}%</div><div style="font-size:0.75rem; text-transform:uppercase;">Offered APR</div></div>` : ''}
-        </div>
+  function fmtValue(name, v) {
+    if (v === null || v === undefined) return '<span class="missing">missing</span>';
+    if (name === 'tax_returns_verified') return v ? 'yes' : 'no';
+    if (name === 'years_in_business') return esc(v);
+    return eur(v);
+  }
 
-        <div class="metrics-row">
-          <div class="metric-box">
-            <div class="metric-lbl">DSCR Coverage</div>
-            <div class="metric-val" style="color: ${r.dscr >= 1.20 ? '#34d399' : (r.dscr ? '#f87171' : '#fbbf24')}">${r.dscr !== null ? r.dscr.toFixed(2) : 'Missing'}</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-lbl">LTV Leverage</div>
-            <div class="metric-val" style="color: ${r.ltv <= 0.80 ? '#34d399' : (r.ltv ? '#f87171' : '#fbbf24')}">${r.ltv !== null ? (r.ltv*100).toFixed(1) + '%' : 'Missing'}</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-lbl">Debt/EBITDA</div>
-            <div class="metric-val">${r.debt_to_ebitda !== null ? r.debt_to_ebitda.toFixed(2) + 'x' : 'N/A'}</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-lbl">Decision Rule</div>
-            <div class="metric-val" style="font-size: 1rem; padding-top: 4px;">${d.rule_id_triggered}</div>
-          </div>
-        </div>
+  function fmtActual(input, v) {
+    if (v === null || v === undefined) return '—';
+    if (input === 'ltv') return (v * 100).toFixed(1) + '%';
+    if (input === 'dscr') return Number(v).toFixed(2);
+    return String(v);
+  }
 
-        ${d.missing_evidence.length > 0 ? `
-          <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 12px; margin-bottom: 16px;">
-            <b style="color: #fbbf24;">Deterministic Abstention Triggered:</b>
-            <div style="font-size:0.85rem; margin-top:4px;">Missing mandatory inputs: <code>${d.missing_evidence.join(', ')}</code>. System refuses to hallucinate unverified loan approval.</div>
-          </div>
-        ` : ''}
+  function render() {
+    const r = record, o = r.outcome, d = r.derived;
+    const title = {GRANTED:'Granted', DENIED:'Declined', ABSTAIN:'No automated decision · sent to a credit officer'}[o.status];
+    const traceBy = Object.fromEntries(r.trace.map(t => [t.rule_id, t]));
+    const gate = r.rule.id === 'GATE_INPUT_COMPLETENESS';
 
-        <div class="section-gap">
-          <div style="font-weight:600; font-size:0.9rem; margin-bottom: 6px;">OMG DMN 1.3 Decision Table (Hit Policy: FIRST)</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Rule ID</th>
-                <th>DSCR Input</th>
-                <th>LTV Input</th>
-                <th>Tax Verified</th>
-                <th>Ruling Output</th>
-                <th>APR</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="${d.rule_id_triggered === 'Rule_1_Prime' ? 'active-rule' : ''}">
-                <td>Rule_1_Prime</td><td>&ge; 1.35</td><td>&le; 0.70</td><td>true</td><td>GRANTED_PRIME</td><td>5.5%</td>
-              </tr>
-              <tr class="${d.rule_id_triggered === 'Rule_2_Standard' ? 'active-rule' : ''}">
-                <td>Rule_2_Standard</td><td>&ge; 1.20</td><td>&le; 0.80</td><td>true</td><td>GRANTED_STANDARD</td><td>7.2%</td>
-              </tr>
-              <tr class="${d.rule_id_triggered === 'Rule_3_LowDSCR' ? 'active-rule' : ''}">
-                <td>Rule_3_LowDSCR</td><td>&lt; 1.15</td><td>-</td><td>-</td><td>DENIED_CREDIT_POLICY</td><td>null</td>
-              </tr>
-              <tr class="${d.rule_id_triggered === 'Rule_4_HighLTV' ? 'active-rule' : ''}">
-                <td>Rule_4_HighLTV</td><td>-</td><td>&gt; 0.85</td><td>-</td><td>DENIED_CREDIT_POLICY</td><td>null</td>
-              </tr>
-              <tr class="${d.rule_id_triggered === 'Rule_5_Abstain_Tax' ? 'active-rule' : ''}">
-                <td>Rule_5_Abstain_Tax</td><td>-</td><td>-</td><td>false / missing</td><td>ABSTAIN_DATA_INCOMPLETE</td><td>null</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    const inputs = FIELDS.map(([k, label, req]) => {
+      const f = r.inputs[k] || {};
+      return `<tr><td>${label}${req ? '' : ' <span class="sub">(not used by the rules)</span>'}</td><td>${fmtValue(k, f.value)}</td>
+        <td>${f.quote ? '<span class="q">“' + esc(f.quote) + '”</span>' : '<span class="sub">not found in the document</span>'}
+        ${f.note ? '<div class="missing" style="font-weight:400">' + esc(f.note) + '</div>' : ''}</td></tr>`;
+    }).join('');
 
-        <div class="section-gap">
-          <div style="font-weight:600; font-size:0.9rem; margin-bottom: 6px;">Formal Constraints Evaluated</div>
-          <table>
-            <thead>
-              <tr><th>Constraint</th><th>Condition</th><th>Actual Value</th><th>Result</th></tr>
-            </thead>
-            <tbody>
-              ${d.constraints_evaluated.map(c => `
-                <tr>
-                  <td><code>${c.rule}</code></td>
-                  <td>${c.condition}</td>
-                  <td>${c.actual}</td>
-                  <td class="${c.result === 'PASS' ? 'pass' : 'fail'}">${c.result}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
+    const rules = policy.rules.map(rule => {
+      const t = traceBy[rule.id], fired = rule.id === r.rule.id;
+      const cells = policy.inputs.map(inp => {
+        const c = t && t.checks.find(x => x.input === inp.id);
+        const cls = c && rule.tests[inp.id] !== '-' ? (c.ok ? 'hit' : 'miss') : '';
+        return `<td class="${cls}" contenteditable="true" data-rule="${esc(rule.id)}" data-input="${esc(inp.id)}" data-old="${esc(rule.tests[inp.id])}" title="Click to edit this test">${esc(rule.tests[inp.id])}</td>`;
+      }).join('');
+      return `<tr class="${fired ? 'fired' : (t ? '' : 'skipped')}"><td>${fired ? '▶ ' : ''}${esc(rule.id)}<div class="sub">${esc(rule.label)}</div></td>${cells}
+        <td>${esc(rule.out.status)}${rule.out.apr != null ? ' · ' + rule.out.apr + '%' : ''}</td></tr>`;
+    }).join('');
 
-        <div class="section-gap">
-          <div style="font-weight:600; font-size:0.9rem; margin-bottom: 6px;">Audit Trail & Decision Object JSON</div>
-          <pre>${JSON.stringify(d, null, 2)}</pre>
-        </div>
-      `;
+    $('out').innerHTML = `
+      <div class="banner ${esc(o.status)}">
+        <div><div class="big">${title}</div><div>${esc(o.reason)}</div>
+          <div class="sub" style="margin-top:6px">${esc(r.applicant)} · record ${esc(r.record_id)} · rule <b>${esc(r.rule.id)}</b> · policy v${esc(r.policy.version)} [${esc(r.policy.sha256)}]</div></div>
+        ${o.apr != null ? `<div style="text-align:right"><div class="big">${o.apr}%</div><div class="sub">APR</div></div>` : ''}
+      </div>
 
-      document.getElementById('rulingContainer').innerHTML = html;
-    }
+      <h2>2 · What the applicant is told <small>written from the record, no AI</small></h2>
+      <div class="box">${esc(r.explanation)}</div>
+      ${r.counterfactual ? `<div class="box cf"><b>What would change the result:</b> ${esc(r.counterfactual.text)}
+        <span class="sub">${r.counterfactual.confirmed_by_rerun ? '(confirmed by re-running the table on the changed figures)' : ''}</span></div>` : ''}
 
-    async function runCheckSet() {
-      const modal = document.getElementById('checkModal');
-      modal.style.display = 'flex';
-      document.getElementById('checkSetResults').innerHTML = "<p>Running 10 test cases against DMN engine...</p>";
+      <h2>3 · Inputs read from the document <small>${esc(r.extraction.engine)}</small></h2>
+      <div class="tblwrap"><table><thead><tr><th>Input</th><th>Value</th><th>Evidence in the document</th></tr></thead><tbody>${inputs}</tbody></table></div>
+      <div class="sub" style="margin-top:6px">Derived: DSCR ${fmtActual('dscr', d.dscr)} · LTV ${fmtActual('ltv', d.ltv)} · debt/EBITDA ${d.debt_to_ebitda != null ? Number(d.debt_to_ebitda).toFixed(2) + 'x' : '—'}</div>
 
-      const res = await fetch('/api/check_set');
-      const data = await res.json();
+      <h2>4 · Decision table <small>DMN 1.3, first matching row wins · click a test to change it</small></h2>
+      ${gate ? '<div class="msg missing">The table was not run: required inputs are missing, so the completeness gate stopped the case first.</div>' : ''}
+      <div class="tblwrap"><table><thead><tr><th>Rule</th>${policy.inputs.map(i => `<th>${esc(i.label)}</th>`).join('')}<th>Outcome</th></tr></thead><tbody>${rules}</tbody></table></div>
+      <div class="row" style="margin-top:10px">
+        <button onclick="doReplay()">Replay this record</button>
+        <button onclick="location.href='/api/dmn'">Download policy as .dmn</button>
+        <button onclick="resetPolicy()">Reset policy to v1 rules</button>
+        <span class="sub">${esc(policy.note)}</span>
+      </div>
+      ${notice ? `<div class="msg bad">${esc(notice)}</div>` : ''}
+      ${changeHtml}
+      ${replayHtml}
 
-      let rows = data.results.map(r => `
-        <tr>
-          <td><b>${r.id}</b></td>
-          <td>${r.name}</td>
-          <td>${r.expected_status} (${r.expected_category})</td>
-          <td>${r.got_status} (${r.got_category})</td>
-          <td class="${r.pass ? 'pass' : 'fail'}">${r.pass ? 'PASS' : 'FAIL'}</td>
-        </tr>
-      `).join('');
+      <details><summary>Decision record (JSON)</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>`;
+    notice = '';
 
-      document.getElementById('checkSetResults').innerHTML = `
-        <div style="margin-bottom: 12px; font-size:1.1rem; color: #34d399; font-weight:700;">
-          Result: ${data.passed}/${data.total} Passed (${(data.passed/data.total*100).toFixed(0)}%)
-        </div>
-        <table>
-          <thead>
-            <tr><th>Case</th><th>Description</th><th>Expected</th><th>Actual</th><th>Score</th></tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
-    }
+    document.querySelectorAll('td[contenteditable]').forEach(td => {
+      td.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); td.blur(); } if (e.key === 'Escape') { td.textContent = td.dataset.old; td.blur(); } });
+      td.addEventListener('blur', () => editRule(td));
+    });
+  }
 
-    function closeModal() {
-      document.getElementById('checkModal').style.display = 'none';
-    }
+  async function editRule(td) {
+    const test = td.textContent.trim();
+    if (test === td.dataset.old) return;
+    const data = await api('/api/policy/edit', {rule_id: td.dataset.rule, input: td.dataset.input, test});
+    if (data.error) { notice = data.error; setPolicy(data.policy); render(); return; }
+    setPolicy(data.policy);
+    const before = record;
+    await runPipeline(true);
+    replayHtml = '';
+    changeHtml = `<div class="box cf"><b>Policy changed to v${esc(policy.version)} [${esc(policy.sha)}]:</b> ${esc(policy.note)}.<br>
+      This case: ${esc(before.outcome.status)} via ${esc(before.rule.id)} (v${esc(before.policy.version)}) → <b>${esc(record.outcome.status)} via ${esc(record.rule.id)}</b> (v${esc(record.policy.version)}).
+      The earlier record ${esc(before.record_id)} is kept. <button onclick="doReplay('${esc(before.record_id)}')">Replay the earlier record</button></div>`;
+    render();
+  }
 
-    function downloadDMN() {
-      if (!currentDMNXml) return alert("Run a decision first.");
-      const blob = new Blob([currentDMNXml], { type: 'application/xml' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = "ruling.dmn";
-      a.click();
-    }
+  async function resetPolicy() {
+    const data = await api('/api/policy/reset', {});
+    if (data.policy) setPolicy(data.policy);
+    if (record) runPipeline();
+  }
 
-    // Auto-load preset 1 on startup
-    window.onload = () => loadSample('alpha_logistics');
-  </script>
+  async function doReplay(id) {
+    const x = await api('/api/replay', {record_id: id || record.record_id});
+    if (x.error) { replayHtml = `<div class="msg bad">${esc(x.error)}</div>`; render(); return; }
+    const s = x.same_policy, c = x.current_policy;
+    replayHtml = `<div class="box"><b>Replay of ${esc(x.record_id)}</b> from its stored inputs, without the AI agent:<br>
+      Under the policy it was decided with (v${esc(s.policy_version)} [${esc(s.policy_sha)}]): ${esc(s.status)} via ${esc(s.rule_id)} ·
+      <span class="${s.identical ? 'ok' : 'bad'}">${s.identical ? 'identical to the original' : 'DIFFERENT from the original'}</span><br>
+      Under the current policy (v${esc(c.policy_version)} [${esc(c.policy_sha)}]): ${esc(c.status)} via ${esc(c.rule_id)} ·
+      ${c.changed ? '<span class="missing">outcome differs because the policy changed</span>' : 'same outcome'}</div>`;
+    render();
+  }
+
+  async function runCheckSet() {
+    $('modal').style.display = 'flex';
+    $('checkOut').textContent = 'Running…';
+    const d = await api('/api/check_set');
+    if (d.error) { $('checkOut').textContent = d.error; return; }
+    const allOk = d.passed === d.total && d.properties.every(p => p.pass);
+    $('checkOut').innerHTML = `
+      <div class="${allOk ? 'ok' : 'bad'}" style="font-size:1.05rem;margin-bottom:8px">${d.passed}/${d.total} cases pass under policy v${esc(d.policy_version)} · ${d.properties.filter(p => p.pass).length}/${d.properties.length} properties hold</div>
+      ${d.policy_version !== 1 ? '<div class="msg missing">The expected results are written for the v1 rules. Reset the policy to compare like with like.</div>' : ''}
+      <table><thead><tr><th>Property</th><th></th></tr></thead><tbody>${d.properties.map(p => `<tr><td>${esc(p.name)}</td><td class="${p.pass ? 'ok' : 'bad'}">${p.pass ? 'holds' : 'FAILS'}</td></tr>`).join('')}</tbody></table>
+      <table style="margin-top:12px"><thead><tr><th>Case</th><th>What it tests</th><th>Expected</th><th>Got</th><th>Rule</th><th></th></tr></thead><tbody>
+      ${d.cases.map(c => `<tr><td>${esc(c.id)}</td><td>${esc(c.name)}</td><td>${esc(c.expected_status)}</td><td>${esc(c.got_status)}</td><td>${esc(c.rule_id)}</td><td class="${c.pass ? 'ok' : 'bad'}">${c.pass ? 'pass' : 'FAIL'}</td></tr>`).join('')}</tbody></table>`;
+  }
+
+  api('/api/policy').then(p => { if (!p.error) setPolicy(p); loadSample('alpha_logistics'); });
+</script>
 </body>
 </html>

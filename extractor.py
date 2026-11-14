@@ -1,104 +1,96 @@
 """
-Extractor module: parses messy credit application text and computes financial risk ratios.
+Deterministic extractor: reads the declared policy inputs out of application text.
+Every value comes with the exact snippet it was read from. A value the document
+itself marks as pending or unverified is treated as missing, never used.
 """
 import re
-from typing import Tuple, List, Optional
-from models import ExtractedFinancials, FinancialRatios
+from typing import Any, Dict, Optional
 
-def parse_currency_amount(text: Optional[str]) -> Optional[float]:
+NUM = r"[0-9](?:[0-9.,]*[0-9])?"
+SUFFIX = r"(?:\s?(?:k|m|mio|mln|million|thousand)\b)?"
+AMOUNT = rf"[-−]?[€$]?\s?[-−]?{NUM}{SUFFIX}"
+HEDGE = re.compile(r"pending|unverified|not\s+provided|not\s+yet|to\s+be\s+confirmed|\btbc\b|\btbd\b|\bdraft\b", re.I)
+
+AMOUNT_LABELS = {
+    "requested_amount_eur": r"(?:Requested(?:\s+Loan)?(?:\s+Amount)?|Facility\s+(?:Size|Request)|Loan\s+Request|Loan\s+Amount)",
+    "annual_revenue_eur": r"(?:Gross\s+Revenue|Annual\s+Revenue|Turnover|Revenue)",
+    "ebitda_eur": r"(?:Operating\s+Profit\s*/\s*EBITDA|Operating\s+Profit|EBITDA)",
+    "annual_debt_service_eur": r"(?:Annual\s+Debt\s+Service|Debt\s+Service|Annual\s+P&I|P&I)",
+    "total_existing_debt_eur": r"(?:Total\s+Existing\s+Liabilities|Total\s+Existing\s+Debt|Total\s+Liabilities|Existing\s+Debt)",
+    "collateral_value_eur": r"(?:Collateral(?:\s+Value)?|Real\s+Estate\s+Appraisal|Appraisal)",
+}
+ALL_FIELDS = list(AMOUNT_LABELS) + ["years_in_business", "tax_returns_verified"]
+
+
+def parse_amount(text: Optional[str]) -> Optional[float]:
+    """Parses '€500,000', '500.000,00', '€450k', '1.2m', '-€72,000' into a float number of euros."""
     if not text:
         return None
-    cleaned = text.lower().replace(",", "").replace("€", "").replace("$", "").replace("eur", "").replace("usd", "").strip()
+    s = text.strip().lower().replace("−", "-")
+    neg = "-" in s
+    s = s.replace("-", "").replace("€", "").replace("$", "").strip()
     mult = 1.0
-    if cleaned.endswith("k"):
-        mult = 1_000.0
-        cleaned = cleaned[:-1].strip()
-    elif cleaned.endswith("m") or cleaned.endswith("mio"):
-        mult = 1_000_000.0
-        cleaned = cleaned.replace("mio", "").replace("m", "").strip()
+    m = re.search(r"(k|thousand|mio|mln|million|m)$", s)
+    if m:
+        mult = 1_000.0 if m.group(1) in ("k", "thousand") else 1_000_000.0
+        s = s[:m.start()].strip()
+    if "." in s and "," in s:  # the last separator is the decimal one
+        if s.rfind(",") > s.rfind("."):
+            s = s.replace(".", "").replace(",", ".")
+        else:
+            s = s.replace(",", "")
+    elif "," in s:
+        s = s.replace(",", "") if re.fullmatch(r"\d{1,3}(,\d{3})+", s) else s.replace(",", ".")
+    elif "." in s and mult == 1.0 and re.fullmatch(r"\d{1,3}(\.\d{3})+", s):
+        s = s.replace(".", "")  # 500.000 written the European way
     try:
-        return float(cleaned) * mult
+        val = float(s) * mult
     except ValueError:
         return None
+    return -val if neg else val
 
-def extract_financials_from_text(raw_text: str) -> Tuple[ExtractedFinancials, FinancialRatios, List[str]]:
-    """
-    Parses messy text using financial keyword patterns.
-    Returns (ExtractedFinancials, FinancialRatios, missing_mandatory_fields).
-    """
-    def find_amount(label_pattern: str) -> Optional[float]:
-        pattern = label_pattern + r"[^\n\r:=0-9]{0,35}[:=]?\s*([€\$]?\s*[0-9]+(?:,[0-9]{3})*(?:\.[0-9]+)?\s*(?:k|m|mio|eur|usd)?)"
-        m = re.search(pattern, raw_text, re.IGNORECASE)
-        return parse_currency_amount(m.group(1)) if m else None
 
-    # 1. Company Name
-    name_match = re.search(r"(?:Company(?:\s+Name)?|Applicant(?:\s+Entity)?|Entity):\s*([^\n\r,\.;]+)", raw_text, re.IGNORECASE)
-    company_name = name_match.group(1).strip() if name_match else "Unknown Applicant"
+def numbers_in(text: str):
+    return [v for v in (parse_amount(m.group(0)) for m in re.finditer(AMOUNT, text, re.I)) if v is not None]
 
-    # 2. Financial Metrics
-    requested_amount = find_amount(r"(?:Requested(?:\s+Loan)?(?:\s+Amount)?|Facility\s+(?:Size|Request)|Loan\s+Request)")
-    revenue = find_amount(r"(?:Gross\s+Revenue|Annual\s+Revenue|Turnover|Revenue)")
-    ebitda = find_amount(r"(?:Operating\s+Profit\s*/\s*EBITDA|Operating\s+Profit|EBITDA|Cash\s+Flow)")
-    debt_service = find_amount(r"(?:Existing\s+Annual\s+Debt\s+Service|Annual\s+Debt\s+Service|Debt\s+Service|Annual\s+P&I|P&I)")
-    total_debt = find_amount(r"(?:Total\s+Existing\s+Liabilities|Total\s+Existing\s+Debt|Total\s+Liabilities|Existing\s+Debt)")
-    collateral = find_amount(r"(?:Collateral(?:\s+Value)?|Securities|Real\s+Estate\s+Appraisal|Appraisal|Collateral)")
 
-    # 3. Years in Business
-    yib_match = re.search(r"(?:Years\s+in\s+Business|Operating\s+History|Founded\s+Years\s+Ago):\s*([0-9]+)", raw_text, re.IGNORECASE)
-    yib = int(yib_match.group(1)) if yib_match else None
-    if yib is None:
-        yib_inline = re.search(r"([0-9]+)\s+years\s+in\s+business", raw_text, re.IGNORECASE)
-        yib = int(yib_inline.group(1)) if yib_inline else None
+def _field(value=None, quote=None, note=None) -> Dict[str, Any]:
+    return {"value": value, "quote": quote, "note": note}
 
-    # 4. Tax Returns Verified
-    tax_verified = None
-    if re.search(r"Tax\s+(?:Returns?|Filings?):\s*(?:verified|audited|confirmed|yes|compliant)", raw_text, re.IGNORECASE):
-        tax_verified = True
-    elif re.search(r"Tax\s+(?:Returns?|Filings?):\s*(?:unverified|missing|pending|unconfirmed|no|not\s+yet|not\s+provided)", raw_text, re.IGNORECASE):
-        tax_verified = False
 
-    # Check missing mandatory underwriting fields
-    missing_fields = []
-    if requested_amount is None:
-        missing_fields.append("requested_amount_eur")
-    if ebitda is None:
-        missing_fields.append("ebitda_eur")
-    if debt_service is None:
-        missing_fields.append("annual_debt_service_eur")
-    if collateral is None:
-        missing_fields.append("collateral_value_eur")
-    if tax_verified is None or tax_verified is False:
-        missing_fields.append("tax_returns_verified")
+def extract_with_rules(raw_text: str) -> Dict[str, Any]:
+    fields: Dict[str, Dict[str, Any]] = {}
 
-    # Compute Ratios
-    dscr = None
-    if ebitda is not None and debt_service is not None and debt_service > 0:
-        dscr = ebitda / debt_service
+    for name, label in AMOUNT_LABELS.items():
+        pattern = rf"{label}[^\n\r:=0-9]{{0,35}}?[:=]?[ \t]*(?P<amt>{AMOUNT})"
+        result = _field()
+        for m in re.finditer(pattern, raw_text, re.I):
+            snippet = " ".join(m.group(0).split())
+            if HEDGE.search(snippet):
+                result = _field(None, snippet, "the document marks this figure as pending or unverified, so it is not used")
+                continue
+            val = parse_amount(m.group("amt"))
+            if val is not None:
+                result = _field(val, snippet)
+                break
+        fields[name] = result
 
-    ltv = None
-    if requested_amount is not None and collateral is not None and collateral > 0:
-        ltv = requested_amount / collateral
+    m = (re.search(r"(?:Years\s+in\s+Business|Operating\s+History)[ \t]*[:=][ \t]*([0-9]+)", raw_text, re.I)
+         or re.search(r"([0-9]+)\+?\s+years?\s+in\s+business", raw_text, re.I))
+    fields["years_in_business"] = _field(int(m.group(1)), " ".join(m.group(0).split())) if m else _field()
 
-    debt_to_ebitda = None
-    if total_debt is not None and ebitda is not None and ebitda > 0:
-        debt_to_ebitda = total_debt / ebitda
+    tax = _field()
+    for m in re.finditer(r"Tax\s+(?:Returns?|Filings?)[^\n\r:]{0,20}:[ \t]*([^\n\r.;]{0,60})", raw_text, re.I):
+        quote = " ".join(m.group(0).split())
+        state = m.group(1).strip().lower()
+        if re.match(r"(unverified|missing|pending|unconfirmed|no\b|not\s)", state) or HEDGE.search(state):
+            tax = _field(False, quote)
+            break
+        if re.match(r"(verified|audited|confirmed|yes\b|compliant)", state):
+            tax = _field(True, quote)
+            break
+    fields["tax_returns_verified"] = tax
 
-    financials = ExtractedFinancials(
-        company_name=company_name,
-        requested_amount_eur=requested_amount,
-        annual_revenue_eur=revenue,
-        ebitda_eur=ebitda,
-        annual_debt_service_eur=debt_service,
-        total_existing_debt_eur=total_debt,
-        collateral_value_eur=collateral,
-        years_in_business=yib,
-        tax_returns_verified=tax_verified
-    )
-
-    ratios = FinancialRatios(
-        dscr=dscr,
-        ltv=ltv,
-        debt_to_ebitda=debt_to_ebitda
-    )
-
-    return financials, ratios, missing_fields
+    m = re.search(r"(?:Company(?:\s+Name)?|Applicant(?:\s+Entity)?|Entity):[ \t]*([^\n\r,.;]+)", raw_text, re.I)
+    return {"company_name": m.group(1).strip() if m else "Unknown applicant", "fields": fields,
+            "engine": "Rule-based extractor (offline)", "dropped": []}

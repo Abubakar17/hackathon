@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plan · Messy Credit App to DMN Ruling Engine</title>
+<style>
+:root{--ink:#18181B;--accent:#2563EB;--sec:#64748B;--muted:#A1A1AA;--surface:#F4F4F5;--paper:#FFFFFF}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "Inter",system-ui,sans-serif}
+main{max-width:860px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:26px;line-height:1.25;margin:0 0 6px}
+h2{font-size:18px;margin:36px 0 10px;padding-top:12px;border-top:1px solid var(--surface)}
+h3{font-size:15px;margin:22px 0 6px}
+h3 .n{color:var(--accent);margin-right:6px}
+p{margin:6px 0}
+.meta{color:var(--sec);font-size:13px}
+.box{background:var(--surface);border-radius:8px;padding:12px 14px;margin:10px 0}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}
+th,td{text-align:left;vertical-align:top;padding:7px 8px;border-bottom:1px solid #E4E4E7}
+th{color:var(--sec);font-weight:600}
+.v{color:var(--accent);font-weight:600}
+.missing{color:var(--muted);font-style:italic}
+ul,ol{padding-left:20px;margin:6px 0}
+code{font-family:ui-monospace,"DejaVu Sans Mono",monospace;font-size:13px;background:var(--surface);padding:1px 4px;border-radius:4px}
+</style></head>
+<body><main>
+<h1>Messy Credit App to DMN Ruling Engine</h1>
+<p class="meta">Team Abubakar &amp; Martínez · Track 4 · Decision models in an AI brain for industry · Working plan, 14 November 2026 · Facts marked [verified] · [declared] · [unverified]</p>
+
+<div class="box">
+<p><strong>In one line:</strong> messy commercial credit applications go in; the pipeline extracts structured financial inputs, evaluates them against a DMN decision model, and returns an auditable decision object with the rule that fired, or ABSTAIN when mandatory data is missing.</p>
+<p><strong>Verdict (self-assessed):</strong> <span class="v">BUILD IT</span> · Potential 85 · Readiness 80</p>
+</div>
+
+<h2>Selection criteria (written before the ideas)</h2>
+<ol>
+<li>Core decision loop demoable end to end today (input situation → constraint evaluation → auditable decision record + rationale).</li>
+<li>Clear economic pain (cost of a wrong decision or audit failure &gt; €50k/year [declared]).</li>
+<li>Moat beyond a prompt: formal decision object with constraints, alternatives evaluated, and deterministic abstention (refusal when data missing).</li>
+</ol>
+<p>Chosen because DMN is the open enterprise decision standard, enabling auditable credit approvals with deterministic abstention.</p>
+
+<h2>The canvas</h2>
+
+<h3><span class="n">Q1</span>Problem</h3>
+<p>Commercial loan underwriters and credit risk officers lose 3–5 hours per application [declared] manually cross-referencing messy PDFs, tax filings and bank statements; today they copy-paste into Excel scoring templates with no auditable trace of policy overrides.</p>
+
+<h3><span class="n">Q2</span>Focus</h3>
+<p>Step 3: application ingestion, policy constraint verification, and credit grant/deny ruling, for commercial B2B lending. Explicitly ignored: KYC identity verification, disbursement payments, loan servicing.</p>
+
+<h3><span class="n">Q3</span>UVP to test</h3>
+<p>For commercial credit officers who waste hours parsing messy loan packets under regulatory audit pressure, our pipeline extracts structured financial context and produces an executable DMN decision model and an auditable decision object — unlike black-box LLM copilots — because it decouples unstructured extraction from deterministic, standard-compliant decision logic.</p>
+<p><strong>Hypothesis:</strong> underwriters will trust AI-assisted decisions only if backed by an executable OMG-standard DMN table and deterministic abstention on missing data.</p>
+<p><strong>Test today:</strong> run 10 messy credit application files through the pipeline; decisions match ground-truth loan policies in &gt;90% of cases.</p>
+<p><strong>Kill criterion (ex-ante):</strong> the pipeline returns a ruling on missing mandatory financial metrics instead of ABSTAIN in more than 0 test cases. <strong>Result:</strong> pending.</p>
+
+<h3><span class="n">Q4</span>USPs</h3>
+<div class="tbl"><table>
+<tr><th>Pain</th><th>Resolution → gain</th><th>Proof</th><th>vs</th><th>Angle</th></tr>
+<tr><td>Messy PDF chaos</td><td>Structured extraction → instant credit triage</td><td>Live demo on a messy application</td><td>Manual Excel entry</td><td>outcome</td></tr>
+<tr><td>Black-box hallucination risk</td><td>OMG-standard .dmn XML + decision object</td><td>Executable DMN file opens in a standard DMN viewer</td><td>Chat-only copilot</td><td>proof</td></tr>
+<tr><td>Regulatory audit liability</td><td>Full decision provenance + deterministic abstention</td><td>Missing tax return triggers ABSTAIN with the missing items cited</td><td>Blind LLM guess</td><td>objection</td></tr>
+</table></div>
+
+<h3><span class="n">Q5</span>Single points of failure</h3>
+<div class="tbl"><table>
+<tr><th>#</th><th>Component</th><th>How it fails</th><th>L</th><th>Impact</th><th>Mitigation</th><th>Owner</th><th>By</th></tr>
+<tr><td>D1</td><td>PDF parsing / OCR</td><td>Garbled tables on scanned financial PDFs</td><td>M</td><td>demo</td><td>Pre-clean and cache 3 representative packets</td><td>Tech</td><td>12:00</td></tr>
+<tr><td>D2</td><td>Invalid .dmn XML</td><td>File fails DMN schema validation</td><td>M</td><td>demo</td><td>Strict DMN XML template + validator in pipeline</td><td>Tech</td><td>14:00</td></tr>
+<tr><td>D3</td><td>LLM latency / gateway</td><td>Slow during the demo</td><td>L</td><td>demo</td><td>Cached fallback run ready</td><td>Tech</td><td>15:30</td></tr>
+<tr><td>V1</td><td>Riskiest assumption</td><td>Underwriters reject the DMN logic as untrustworthy</td><td>H</td><td>thesis</td><td>Expose rationale and editable rules in DMN</td><td>Product</td><td>16:00</td></tr>
+</table></div>
+
+<h3><span class="n">Q6</span>First things to build</h3>
+<div class="tbl"><table>
+<tr><th>#</th><th>Build</th><th>Proves</th><th>Done when</th><th>Box</th><th>Status</th></tr>
+<tr><td>1</td><td>Walking skeleton</td><td>Raw application text → decision object + valid .dmn</td><td>Script runs on a sample applicant and emits valid .dmn</td><td>30m</td><td>in progress</td></tr>
+<tr><td>2</td><td>Abstention &amp; constraints</td><td>Rejects or abstains when DSCR is missing/insufficient</td><td>Pass, Reject, Abstain cases run deterministically</td><td>45m</td><td>pending</td></tr>
+<tr><td>3</td><td>Check set (10 cases)</td><td>Accuracy on loan approval rules</td><td><code>python test_pipeline.py</code> ≥ 9/10</td><td>30m</td><td>pending</td></tr>
+<tr><td>4</td><td>"Now possible" moment</td><td>Show the exact rule row fired and the DMN XML</td><td>UI/CLI renders ruling table + audit trace</td><td>30m</td><td>pending</td></tr>
+<tr><td>5</td><td>Fallbacks</td><td>Offline cached run</td><td>Demo works with wifi off</td><td>15m</td><td>pending</td></tr>
+</table></div>
+<p><strong>Cut list:</strong> multi-tenant auth, core-banking API integrations, custom OCR training.</p>
+
+<h3><span class="n">Q7</span>Target audience</h3>
+<p class="missing">MISSING — needed before the pitch.</p>
+
+<h3><span class="n">Q8</span>Moat technologies</h3>
+<p class="missing">MISSING — needed before the pitch.</p>
+
+<h2>Evidence and verification</h2>
+<p class="missing">No interviews or checks logged yet.</p>
+
+</main></body></html>

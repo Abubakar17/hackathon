@@ -1,0 +1,301 @@
+{
+  "rule_set": "Fannie Mae Eligibility Matrix, manual underwriting, principal residence, purchase, 1 unit (zero-reserve tier)",
+  "results": [
+    {
+      "id": "FM-A",
+      "applicant": "Maria Okafor",
+      "inputs": {
+        "loan_amount": {
+          "value": 380000.0,
+          "quote": "Section 4a. Loan amount: $380,000",
+          "note": null
+        },
+        "property_value": {
+          "value": 400000.0,
+          "quote": "Appraised value (appraisal dated 10/28/2026): $400,000",
+          "note": null
+        },
+        "gross_monthly_income": {
+          "value": 9500.0,
+          "quote": "Section 1e. Total gross monthly income: $9,500",
+          "note": null
+        },
+        "proposed_housing_payment": {
+          "value": 2650.0,
+          "quote": "Proposed monthly housing payment (PITI): $2,650",
+          "note": null
+        },
+        "other_monthly_debts": {
+          "value": 600.0,
+          "quote": "Section 2c. Liabilities - total other monthly payments: $600",
+          "note": null
+        },
+        "credit_score": {
+          "value": 742,
+          "quote": "Credit report (tri-merge, 11/02/2026) representative score: 742",
+          "note": null
+        }
+      },
+      "dropped": [],
+      "status": "GRANTED",
+      "rule": "FM5_DTI36_LTV95",
+      "reason": "Meets the matrix: DTI ≤ 36%, LTV > 75%, score ≥ 680, no reserves required",
+      "derived": {
+        "ltv_pct": 95.0,
+        "dti_pct": 34.21,
+        "credit_score": 742
+      },
+      "expected": [
+        "GRANTED",
+        "FM5_DTI36_LTV95"
+      ],
+      "pass": true
+    },
+    {
+      "id": "FM-B",
+      "applicant": "Daniel Reyes",
+      "inputs": {
+        "loan_amount": {
+          "value": 285000.0,
+          "quote": "Loan amount: $285,000. Appraised value: $400,000.",
+          "note": null
+        },
+        "property_value": {
+          "value": 400000.0,
+          "quote": "Loan amount: $285,000. Appraised value: $400,000.",
+          "note": null
+        },
+        "gross_monthly_income": {
+          "value": 6000.0,
+          "quote": "Income (W-2, verified): gross monthly income $6,000",
+          "note": null
+        },
+        "proposed_housing_payment": {
+          "value": 1950.0,
+          "quote": "Proposed housing payment incl. taxes, insurance and HOA: $1,950 per month",
+          "note": null
+        },
+        "other_monthly_debts": {
+          "value": 650.0,
+          "quote": "Total other monthly debt payments: $650",
+          "note": null
+        },
+        "credit_score": {
+          "value": 665,
+          "quote": "Representative credit score: 665",
+          "note": null
+        }
+      },
+      "dropped": [],
+      "status": "ABSTAIN",
+      "rule": "FM8_Uncovered",
+      "reason": "Does not meet the zero-reserve tier; may qualify with reserves, which this table does not encode",
+      "derived": {
+        "ltv_pct": 71.25,
+        "dti_pct": 43.33,
+        "credit_score": 665
+      },
+      "expected": [
+        "ABSTAIN",
+        "FM8_Uncovered"
+      ],
+      "pass": true
+    },
+    {
+      "id": "FM-C",
+      "applicant": "Priya Nair",
+      "inputs": {
+        "loan_amount": {
+          "value": 392000.0,
+          "quote": "Loan amount: $392,000",
+          "note": null
+        },
+        "property_value": {
+          "value": 400000.0,
+          "quote": "Appraised value: $400,000 (asking price was $405,000)",
+          "note": null
+        },
+        "gross_monthly_income": {
+          "value": 11200.0,
+          "quote": "Gross monthly income: $11,200",
+          "note": null
+        },
+        "proposed_housing_payment": {
+          "value": 2900.0,
+          "quote": "Proposed monthly housing payment: $2,900",
+          "note": null
+        },
+        "other_monthly_debts": {
+          "value": 450.0,
+          "quote": "Total other monthly debts: $450",
+          "note": null
+        },
+        "credit_score": {
+          "value": 760,
+          "quote": "Credit score (representative): 760",
+          "note": null
+        }
+      },
+      "dropped": [],
+      "status": "DENIED",
+      "rule": "FM1_LTVOverMax",
+      "reason": "LTV exceeds the 95% maximum for this transaction type",
+      "derived": {
+        "ltv_pct": 98.0,
+        "dti_pct": 29.91,
+        "credit_score": 760
+      },
+      "expected": [
+        "DENIED",
+        "FM1_LTVOverMax"
+      ],
+      "pass": true
+    },
+    {
+      "id": "FM-D",
+      "applicant": "Tomasz Lewandowski",
+      "inputs": {
+        "loan_amount": {
+          "value": 300000.0,
+          "quote": "Loan amount 300,000 USD | Appraised value 400,000 USD",
+          "note": null
+        },
+        "property_value": {
+          "value": 400000.0,
+          "quote": "Loan amount 300,000 USD | Appraised value 400,000 USD",
+          "note": null
+        },
+        "gross_monthly_income": {
+          "value": 5000.0,
+          "quote": "Gross monthly income 5,000 USD",
+          "note": null
+        },
+        "proposed_housing_payment": {
+          "value": 2000.0,
+          "quote": "Proposed housing payment 2,000 USD per month",
+          "note": null
+        },
+        "other_monthly_debts": {
+          "value": 450.0,
+          "quote": "Total other monthly debts 450 USD",
+          "note": null
+        },
+        "credit_score": {
+          "value": 700,
+          "quote": "Representative credit score 700",
+          "note": null
+        }
+      },
+      "dropped": [],
+      "status": "DENIED",
+      "rule": "FM2_DTIOverMax",
+      "reason": "DTI exceeds the 45% maximum for manually underwritten loans (B3-6-02)",
+      "derived": {
+        "ltv_pct": 75.0,
+        "dti_pct": 49.0,
+        "credit_score": 700
+      },
+      "expected": [
+        "DENIED",
+        "FM2_DTIOverMax"
+      ],
+      "pass": true
+    },
+    {
+      "id": "FM-E",
+      "applicant": "Aisha Bello",
+      "inputs": {
+        "loan_amount": {
+          "value": 250000.0,
+          "quote": "Loan amount: $250,000",
+          "note": null
+        },
+        "property_value": {
+          "value": 330000.0,
+          "quote": "Appraised value: $330,000",
+          "note": null
+        },
+        "gross_monthly_income": {
+          "value": 7000.0,
+          "quote": "Gross monthly income: $7,000",
+          "note": null
+        },
+        "proposed_housing_payment": {
+          "value": 1800.0,
+          "quote": "Proposed monthly housing payment: $1,800",
+          "note": null
+        },
+        "other_monthly_debts": {
+          "value": 300.0,
+          "quote": "Total other monthly debts: $300",
+          "note": null
+        },
+        "credit_score": {
+          "value": null,
+          "quote": null,
+          "note": null
+        }
+      },
+      "dropped": [],
+      "status": "ABSTAIN",
+      "rule": "GATE_INPUT_COMPLETENESS",
+      "reason": "Missing: credit_score",
+      "derived": {},
+      "expected": [
+        "ABSTAIN",
+        "GATE_INPUT_COMPLETENESS"
+      ],
+      "pass": true
+    },
+    {
+      "id": "FM-F",
+      "applicant": "Luca Ferri",
+      "inputs": {
+        "loan_amount": {
+          "value": 240000.0,
+          "quote": "He wants a loan amount of $240k, the appraised value came back at $320,000.",
+          "note": null
+        },
+        "property_value": {
+          "value": 320000.0,
+          "quote": "He wants a loan amount of $240k, the appraised value came back at $320,000.",
+          "note": null
+        },
+        "gross_monthly_income": {
+          "value": 7400.0,
+          "quote": "gross monthly income is $7,400 (two paystubs + employer letter in the folder)",
+          "note": null
+        },
+        "proposed_housing_payment": {
+          "value": 1720.0,
+          "quote": "proposed housing payment: $1,720 / month all in",
+          "note": null
+        },
+        "other_monthly_debts": {
+          "value": 590.0,
+          "quote": "total other monthly debts: $590 (car + student loan)",
+          "note": null
+        },
+        "credit_score": {
+          "value": 652,
+          "quote": "representative credit score 652",
+          "note": null
+        }
+      },
+      "dropped": [],
+      "status": "GRANTED",
+      "rule": "FM4_DTI36_LTV75",
+      "reason": "Meets the matrix: DTI ≤ 36%, LTV ≤ 75%, score ≥ 640, no reserves required",
+      "derived": {
+        "ltv_pct": 75.0,
+        "dti_pct": 31.22,
+        "credit_score": 652
+      },
+      "expected": [
+        "GRANTED",
+        "FM4_DTI36_LTV75"
+      ],
+      "pass": true
+    }
+  ]
+}
